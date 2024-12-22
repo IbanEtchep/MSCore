@@ -15,7 +15,6 @@ public class DbTables {
         createOnlinePlayersTable();
         createTrustedPlayersTable();
         createTrustedCommandsTable();
-        createLogsTable();
     }
 
     /*
@@ -28,7 +27,6 @@ public class DbTables {
                 "  name        varchar(16)  not null," +
                 "  date_created timestamp default now()," +
                 "  lastseen       bigint DEFAULT 0," +
-                "  maxclaims smallint DEFAULT 5," +
                 "  CONSTRAINT  UC_sc_players" +
                 "  UNIQUE (id)," +
                 "  CONSTRAINT UC_sc_players_uuid" +
@@ -105,17 +103,6 @@ public class DbTables {
                 "  PRIMARY KEY (command, senderType, context)" +
                 ");");
     }
-
-    // Logs - Table (sc_logs (id, date_time, server, message)
-    private static void createLogsTable() {
-        createTable("CREATE TABLE IF NOT EXISTS sc_logs (" +
-                "  id int auto_increment PRIMARY KEY," +
-                "  date_time DATETIME DEFAULT NOW()," +
-                "  server VARCHAR(50)," +
-                "  message TEXT" +
-                ");");
-    }
-
 
     private static void createTable(String statement) {
         try (Connection connection = DbAccess.getDataSource().getConnection()) {

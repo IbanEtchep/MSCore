@@ -4,7 +4,6 @@ import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.Command;
-import revxrsal.commands.velocity.VelocityCommandHandler;
 
 public class MiscellaneousCommands {
 
@@ -15,9 +14,5 @@ public class MiscellaneousCommands {
         } else {
             player.sendMessage(Component.text("Commande réservée aux utilisateurs de la version bedrock.", NamedTextColor.RED));
         }
-    }
-
-    public void setupCommands(VelocityCommandHandler handler) {
-        handler.register(this);
     }
 }

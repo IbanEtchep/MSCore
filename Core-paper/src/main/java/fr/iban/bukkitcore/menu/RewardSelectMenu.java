@@ -83,7 +83,7 @@ public class RewardSelectMenu extends PaginatedMenu {
 
 	private ItemStack getRewardItem(Reward reward) {
 		return new ItemBuilder(Head.BAG.get())
-				.setDisplayName("§2" + reward.getName())
+				.setDisplayName("§2" + reward.name())
 				.addLore("§aClic pour récupérer la récompense.")
 				.build();
 	}

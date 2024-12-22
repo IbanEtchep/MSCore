@@ -6,8 +6,6 @@ import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.event.CoreMessageEvent;
 import fr.iban.common.messaging.CoreChannel;
 import fr.iban.common.messaging.Message;
-import fr.iban.common.messaging.message.PlayerBoolean;
-import fr.iban.common.messaging.message.PlayerInfo;
 import fr.iban.common.messaging.message.PlayerStringMessage;
 import fr.iban.common.teleport.RandomTeleportMessage;
 import fr.iban.common.teleport.TeleportToLocation;
@@ -39,8 +37,9 @@ public class CoreMessageListener implements Listener {
         Message message = e.getMessage();
 
         switch (e.getMessage().getChannel()) {
-            case CoreChannel.SYNC_ACCOUNT_CHANNEL ->
-                    plugin.getAccountManager().reloadAccount(UUID.fromString(message.getMessage()));
+            case CoreChannel.SYNC_PLAYER_CHANNEL -> plugin.getScheduler().runAsync(
+                    task -> plugin.getPlayerManager().loadProfile(UUID.fromString(message.getMessage()))
+            );
             case "TeleportToLocationBukkit" -> consumeTeleportToLocationBukkitMessage(message);
             case "TeleportToPlayerBukkit" -> consumeTeleportToPlayerBukkitMessage(message);
             case CoreChannel.ADD_PENDING_TP_CHANNEL ->
@@ -51,7 +50,6 @@ public class CoreMessageListener implements Listener {
             case CoreChannel.REMOVE_TP_REQUEST_CHANNEL -> consumeRemoveTpRequestMessage(message);
             case CoreChannel.PLAYER_JOIN_CHANNEL -> consumePlayerJoinMessage(message);
             case CoreChannel.PLAYER_QUIT_CHANNEL -> consumePlayerQuitMessage(message);
-            case CoreChannel.VANISH_STATUS_CHANGE_CHANNEL -> consumeVanishStatusChangeMessage(message);
             case CoreChannel.LAST_SURVIVAL_SERVER -> consumeLastSurvivalServerMessage(message);
             case CoreChannel.RANDOM_TELEPORT ->
                     plugin.getTeleportManager().performRandomTeleport(message.getMessage(RandomTeleportMessage.class));
@@ -61,13 +59,13 @@ public class CoreMessageListener implements Listener {
     }
 
     public void consumePlayerJoinMessage(Message message) {
-        PlayerInfo playerMessage = gson.fromJson(message.getMessage(), PlayerInfo.class);
-        plugin.getPlayerManager().getOnlinePlayers().put(playerMessage.getUuid(), playerMessage.getName());
-        plugin.getPlayerManager().getOfflinePlayers().putIfAbsent(playerMessage.getName(), playerMessage.getUuid());
+        plugin.getScheduler().runAsync(task ->
+                plugin.getPlayerManager().handlePlayerJoin(UUID.fromString(message.getMessage()))
+        );
     }
 
     public void consumePlayerQuitMessage(Message message) {
-        plugin.getPlayerManager().getOnlinePlayers().remove(UUID.fromString(message.getMessage()));
+        plugin.getPlayerManager().handlePlayerQuit(UUID.fromString(message.getMessage()));
     }
 
     public void consumeAddTpRequestMessage(Message message) {
@@ -88,11 +86,6 @@ public class CoreMessageListener implements Listener {
     private void consumeTeleportToPlayerBukkitMessage(Message message) {
         TeleportToPlayer ttp = gson.fromJson(message.getMessage(), TeleportToPlayer.class);
         plugin.getTeleportManager().performTeleportToPlayer(ttp);
-    }
-
-    private void consumeVanishStatusChangeMessage(Message message) {
-        PlayerBoolean playerBoolean = message.getMessage(PlayerBoolean.class);
-        plugin.getPlayerManager().setVanished(playerBoolean.getUuid(), playerBoolean.isValue());
     }
 
     private void consumeLastSurvivalServerMessage(Message message) {

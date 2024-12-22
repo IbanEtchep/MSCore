@@ -7,7 +7,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import revxrsal.commands.annotation.*;
-import revxrsal.commands.velocity.VelocityCommandHandler;
 import revxrsal.commands.velocity.annotation.CommandPermission;
 
 public class AnnounceEventCMD {
@@ -33,10 +32,5 @@ public class AnnounceEventCMD {
                 .decoration(TextDecoration.BOLD, true);
 
         server.getAllPlayers().forEach(p -> p.sendMessage(broadcastMessage));
-    }
-
-
-    public void setupCommands(VelocityCommandHandler handler) {
-        handler.register(this);
     }
 }

@@ -34,8 +34,6 @@ public class JoinQuitListeners implements Listener {
             }
         });
 
-        plugin.getScheduler().runAsync(task -> plugin.getAccountManager().loadAccount(player.getUniqueId()));
-
         GlobalLoggerManager.saveLog(plugin.getServerName(), player.getName() + " (" + Objects.requireNonNull(player.getAddress()).getHostString() + ") logged in at " + player.getLocation());
     }
 

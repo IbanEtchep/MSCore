@@ -1,4 +1,4 @@
-package fr.iban.common.data;
+package fr.iban.common.enums;
 
 public enum Option {
 
@@ -11,14 +11,14 @@ public enum Option {
 	MENTION(true),
 	MSG(true);
 	
-	private boolean defaultvalue;
+	private final boolean defaultValue;
 	
-	private Option(boolean defaultvalue) {
-		this.defaultvalue = defaultvalue;
+	Option(boolean defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 
 	public boolean getDefaultValue() {
-		return defaultvalue;
+		return defaultValue;
 	}
 
 }

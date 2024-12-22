@@ -1,26 +1,24 @@
 package fr.iban.bukkitcore.menu;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
-import fr.iban.bukkitcore.manager.AccountManager;
-import org.bukkit.Material;
+import fr.iban.bukkitcore.manager.BukkitPlayerManager;
+import fr.iban.bukkitcore.utils.ItemBuilder;
+import fr.iban.bukkitcore.utils.Options;
+import fr.iban.common.model.MSPlayerProfile;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-
-import fr.iban.bukkitcore.utils.ItemBuilder;
-import fr.iban.bukkitcore.utils.Options;
-import fr.iban.common.data.Account;
 
 import java.util.Objects;
 
 public class OptionsMenu extends PaginatedMenu {
 
-    private OptionsMenu previousMenu;
+    private final CoreBukkitPlugin core;
 
     public OptionsMenu(Player player) {
         super(player);
+        this.core = CoreBukkitPlugin.getInstance();
     }
-
 
     @Override
     public String getMenuName() {
@@ -39,24 +37,21 @@ public class OptionsMenu extends PaginatedMenu {
 
     @Override
     public void handleMenu(InventoryClickEvent e) {
+        Player player = (Player) e.getWhoClicked();
         ItemStack item = e.getCurrentItem();
-        CoreBukkitPlugin core = CoreBukkitPlugin.getInstance();
-        AccountManager accountManager = core.getAccountManager();
-        Account account = accountManager.getAccount(player.getUniqueId());
 
-        checkBottonsClick(item, (Player) e.getWhoClicked());
-        if (previousMenu != null && displayNameEquals(item, "§4Retour")) {
-            previousMenu.open();
-            return;
-        }
+        BukkitPlayerManager playerManager = core.getPlayerManager();
+        MSPlayerProfile profile = playerManager.getProfile(player.getUniqueId());
+
+        checkBottonsClick(item, player);
 
         if (Options.getByDisplayName(item.getItemMeta().getDisplayName()) != null) {
             if (item.getItemMeta().getDisplayName().startsWith("§4")) {
-                account.setOption(Objects.requireNonNull(Options.getByDisplayName(item.getItemMeta().getDisplayName())).getOption(), true);
-                accountManager.saveAccountAsync(account);
+                profile.setOption(Objects.requireNonNull(Options.getByDisplayName(item.getItemMeta().getDisplayName())).getOption(), true);
+                playerManager.saveProfile(profile);
             } else {
-                account.setOption(Objects.requireNonNull(Options.getByDisplayName(item.getItemMeta().getDisplayName())).getOption(), false);
-                accountManager.saveAccountAsync(account);
+                profile.setOption(Objects.requireNonNull(Options.getByDisplayName(item.getItemMeta().getDisplayName())).getOption(), false);
+                playerManager.saveProfile(profile);
             }
             super.open();
         }
@@ -70,23 +65,15 @@ public class OptionsMenu extends PaginatedMenu {
             index = getMaxItemsPerPage() * page + i;
             if (index >= Options.values().length) break;
             Options option = Options.values()[index];
-            CoreBukkitPlugin core = CoreBukkitPlugin.getInstance();
-            AccountManager accountManager = core.getAccountManager();
-            Account account = accountManager.getAccount(player.getUniqueId());
+            MSPlayerProfile msPlayer = core.getPlayerManager().getProfile(player.getUniqueId());
 
             if (option != null) {
-                if (account.getOption(option.getOption())) {
+                if (msPlayer.getOption(option.getOption())) {
                     inventory.addItem(new ItemBuilder(option.getItem()).setName("§2" + option.getDisplayName()).build());
                 } else {
                     inventory.addItem(new ItemBuilder(option.getItem()).setName("§4" + option.getDisplayName()).build());
                 }
             }
-        }
-
-        if (previousMenu != null) {
-            inventory.setItem(31, new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setDisplayName("§4Retour")
-                    .addLore("§cRetourner au menu précédent")
-                    .build());
         }
     }
 

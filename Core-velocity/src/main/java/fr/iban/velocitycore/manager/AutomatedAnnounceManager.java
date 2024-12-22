@@ -72,7 +72,7 @@ public class AutomatedAnnounceManager {
 			Component announce = announces.get(id);
 
 			for (Player player : plugin.getServer().getAllPlayers()) {
-				if (!plugin.getAccountManager().getAccount(player.getUniqueId()).getBlackListedAnnounces().contains(id)) {
+				if (!plugin.getPlayerManager().getProfile(player.getUniqueId()).getBlackListedAnnounces().contains(id)) {
 					player.sendMessage(announce);
 				}
 			}

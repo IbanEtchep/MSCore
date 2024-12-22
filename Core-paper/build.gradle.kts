@@ -20,8 +20,8 @@ dependencies {
     compileOnly("net.essentialsx:EssentialsX:2.20.0")
     compileOnly("com.github.plan-player-analytics:Plan:5.5.2150")
 
-    implementation("com.github.Revxrsal.Lamp:common:3.3.2")
-    implementation("com.github.Revxrsal.Lamp:bukkit:3.3.2")
+    implementation("io.github.revxrsal:lamp.common:4.0.0-beta.24")
+    implementation("io.github.revxrsal:lamp.bukkit:4.0.0-beta.24")
     implementation("com.github.technicallycoded:FoliaLib:main-SNAPSHOT")
 }
 

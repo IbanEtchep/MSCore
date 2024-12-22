@@ -1,114 +1,126 @@
 package fr.iban.common.manager;
 
-import fr.iban.common.data.sql.DbAccess;
+import fr.iban.common.data.dao.MSPlayerDAO;
+import fr.iban.common.messaging.AbstractMessagingManager;
+import fr.iban.common.messaging.CoreChannel;
+import fr.iban.common.model.MSPlayer;
+import fr.iban.common.model.MSPlayerProfile;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class PlayerManager {
 
-    protected final Set<UUID> vanishedPlayers = new HashSet<>();
-    protected final Set<UUID> connectedPlayers = new HashSet<>();
+    protected final Map<UUID, MSPlayer> playersByUUID = new ConcurrentHashMap<>();
+    protected final Map<String, MSPlayer> playersByName = new ConcurrentHashMap<>();
+    protected final Map<UUID, MSPlayerProfile> profiles = new ConcurrentHashMap<>();
 
-    public Map<UUID, String> getProxyPlayerNamesFromDB() {
-        String sql = "SELECT uuid, name FROM sc_players P JOIN sc_online_players OP ON P.id=OP.player_id;";
-        Map<UUID, String> proxyPlayers = new HashMap<>();
-        try (Connection connection = DbAccess.getDataSource().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        UUID uuid = UUID.fromString(rs.getString("uuid"));
-                        String name = rs.getString("name");
-                        proxyPlayers.put(uuid, name);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return proxyPlayers;
+    protected final MSPlayerDAO dao;
+
+    protected AbstractMessagingManager messagingManager;
+
+    public PlayerManager(AbstractMessagingManager messagingManager) {
+        this.dao = new MSPlayerDAO();
+        this.messagingManager = messagingManager;
+        load();
     }
 
-    public Map<String, UUID> getPlayerNamesFromDb() {
-        String sql = "SELECT uuid, name FROM sc_players;";
-        Map<String, UUID> proxyPlayers = new HashMap<>();
-        try (Connection connection = DbAccess.getDataSource().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        try {
-                            UUID uuid = UUID.fromString(rs.getString("uuid"));
-                            String name = rs.getString("name");
-                            proxyPlayers.put(name, uuid);
-                        } catch (IllegalArgumentException e) {
-                            System.out.println("Core : UUID invalide :" + rs.getString("uuid"));
-                        }
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return proxyPlayers;
+    public void load() {
+        CompletableFuture.runAsync(() -> {
+            dao.getOfflinePlayers().forEach(player -> {
+                playersByUUID.put(player.getUniqueId(), player);
+                playersByName.put(player.getName(), player);
+            });
+
+            dao.getOnlinePlayerIds().forEach(uuid -> {
+                profiles.put(uuid, dao.getPlayerProfile(uuid));
+            });
+        });
     }
 
-    public void addOnlinePlayer(UUID uuid) {
-        String sql = "INSERT INTO sc_online_players (player_id) VALUES ((SELECT id FROM sc_players WHERE uuid=?)) ON DUPLICATE KEY UPDATE player_id=player_id;";
-
-        connectedPlayers.add(uuid);
-
-        try (Connection connection = DbAccess.getDataSource().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                ps.setString(1, uuid.toString());
-                ps.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public MSPlayerProfile getProfile(UUID uuid) {
+        return profiles.get(uuid);
     }
 
-    public void removeOnlinePlayer(UUID uuid) {
-        String sql = "DELETE FROM sc_online_players WHERE player_id=(SELECT id FROM sc_players WHERE uuid=?);";
+    public MSPlayerProfile getProfile(String name) {
+        return profiles.values().stream()
+                .filter(player -> player.getName().equalsIgnoreCase(name))
+                .findFirst().orElse(null);
+    }
 
-        connectedPlayers.remove(uuid);
+    public MSPlayer getOfflinePlayer(UUID uuid) {
+        return playersByUUID.get(uuid);
+    }
 
-        try (Connection connection = DbAccess.getDataSource().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                ps.setString(1, uuid.toString());
-                ps.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public MSPlayer getOfflinePlayer(String name) {
+        return playersByName.get(name);
+    }
+
+    public Set<String> getOnlinePlayerNames() {
+        return profiles.values().stream()
+                .filter(MSPlayerProfile::isOnline)
+                .map(MSPlayer::getName)
+                .collect(Collectors.toSet());
+    }
+
+    public CompletableFuture<Void> saveProfile(MSPlayerProfile profile) {
+        return CompletableFuture.runAsync(() -> {
+            dao.saveMSPlayer(profile);
+
+            playersByUUID.put(profile.getUniqueId(), profile);
+            playersByName.put(profile.getName(), profile);
+            profiles.put(profile.getUniqueId(), profile);
+
+            messagingManager.sendMessage(CoreChannel.SYNC_PLAYER_CHANNEL, profile.getUniqueId());
+        });
+    }
+
+    public MSPlayerProfile loadProfile(UUID uuid) {
+        MSPlayerProfile profile = dao.getPlayerProfile(uuid);
+
+        playersByUUID.put(uuid, profile);
+        playersByName.put(profile.getName(), profile);
+        profiles.put(uuid, new MSPlayerProfile(profile));
+
+        return profile;
+    }
+
+    public void clearOnlinePlayers() {
+        profiles.clear();
+        dao.clearOnlinePlayers();
+    }
+
+    public void handleProxyJoin(UUID uuid) {
+        dao.addOnlinePlayer(uuid);
+        messagingManager.sendMessage(CoreChannel.PLAYER_JOIN_CHANNEL, uuid.toString());
+    }
+
+    public void handleProxyQuit(UUID uniqueId) {
+        dao.removeOnlinePlayer(uniqueId);
+        messagingManager.sendMessage(CoreChannel.PLAYER_QUIT_CHANNEL, uniqueId.toString());
+    }
+
+    public void handlePlayerJoin(UUID uuid) {
+        MSPlayerProfile profile = profiles.get(uuid);
+
+        if(profile == null) {
+            profile = dao.getPlayerProfile(uuid);
         }
+
+        profile.setOnline(true);
+    }
+
+    public void handlePlayerQuit(UUID uuid) {
+        profiles.get(uuid).setOnline(false);
+    }
+
+    public Set<MSPlayerProfile> getProfiles() {
+        return new HashSet<>(profiles.values());
     }
 
     public boolean isOnline(UUID uuid) {
-        return connectedPlayers.contains(uuid);
-    }
-
-    public void clearOnlinePlayersFromDB() {
-        String sql = "DELETE FROM sc_online_players;";
-        try (Connection connection = DbAccess.getDataSource().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                ps.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean isVanished(UUID uuid) {
-        return vanishedPlayers.contains(uuid);
-    }
-
-    public void setVanished(UUID uuid, boolean newValue) {
-        if (newValue) {
-            vanishedPlayers.add(uuid);
-        } else {
-            vanishedPlayers.remove(uuid);
-        }
+        return profiles.containsKey(uuid) && profiles.get(uuid).isOnline();
     }
 }

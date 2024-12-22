@@ -5,8 +5,10 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import fr.iban.velocitycore.CoreVelocityPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import revxrsal.commands.annotation.*;
-import revxrsal.commands.velocity.VelocityCommandHandler;
+import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.CommandPlaceholder;
+import revxrsal.commands.annotation.Description;
+import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.velocity.annotation.CommandPermission;
 
 @Command("chat")
@@ -22,7 +24,7 @@ public class ChatCMD {
     }
 
     @Subcommand("help")
-    @DefaultFor("chat")
+    @CommandPlaceholder
     @Description("Affiche les commandes de gestion du chat.")
     public void chat(Player player) {
         player.sendMessage(Component.text("Commandes chat :", NamedTextColor.GREEN));
@@ -45,9 +47,5 @@ public class ChatCMD {
     @Description("Active ou désactive le chat.")
     public void toggleChat(Player player) {
         plugin.getChatManager().toggleChat(player);
-    }
-
-    public void setupCommands(VelocityCommandHandler handler) {
-        handler.register(this);
     }
 }

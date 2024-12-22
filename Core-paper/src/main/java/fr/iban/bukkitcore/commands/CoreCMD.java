@@ -3,7 +3,7 @@ package fr.iban.bukkitcore.commands;
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.common.messaging.AbstractMessenger;
 import revxrsal.commands.annotation.Command;
-import revxrsal.commands.bukkit.BukkitCommandActor;
+import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 @Command("core")

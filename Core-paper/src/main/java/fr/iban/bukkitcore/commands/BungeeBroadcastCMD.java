@@ -1,26 +1,22 @@
 package fr.iban.bukkitcore.commands;
 
-import fr.iban.bukkitcore.utils.HexColor;
-import fr.iban.bukkitcore.utils.PluginMessageHelper;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
+import fr.iban.bukkitcore.CoreBukkitPlugin;
+import fr.iban.bukkitcore.utils.ChatUtils;
+import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 
-public class BungeeBroadcastCMD implements CommandExecutor {
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+public class BungeeBroadcastCMD{
 
-        if(args.length >= 1){
-            StringBuilder bc = new StringBuilder();
-            for (String arg : args) {
-                bc.append(arg).append(" ");
-            }
-            String message = HexColor.translateColorCodes(bc.toString());
-            PluginMessageHelper.broadcastMessage(message);
-        }
+    private final CoreBukkitPlugin plugin;
 
+    public BungeeBroadcastCMD(CoreBukkitPlugin plugin) {
+        this.plugin = plugin;
+    }
 
-        return false;
+    @revxrsal.commands.annotation.Command({
+        "bungeebroadcast",
+        "bbc"
+    })
+    public void onBungeeBroadcastCommand(BukkitCommandActor actor, String message) {
+        plugin.getPlayerManager().broadcastMessage(ChatUtils.translateColors(message));
     }
 }

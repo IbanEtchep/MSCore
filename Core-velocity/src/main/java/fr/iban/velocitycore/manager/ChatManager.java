@@ -4,8 +4,9 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import de.themoep.minedown.adventure.MineDown;
 import de.themoep.minedown.adventure.MineDownParser;
-import fr.iban.common.data.Account;
-import fr.iban.common.data.Option;
+import fr.iban.common.enums.Option;
+import fr.iban.common.manager.PlayerManager;
+import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.velocitycore.CoreVelocityPlugin;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
@@ -27,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ChatManager {
 
     private final CoreVelocityPlugin plugin;
-    private final AccountManager accountManager;
+    private final PlayerManager playerManager;
     private final ProxyServer server;
     private boolean isMuted = false;
     private final String pingPrefix;
@@ -38,7 +39,7 @@ public class ChatManager {
     public ChatManager(CoreVelocityPlugin plugin) {
         this.plugin = plugin;
         this.server = plugin.getServer();
-        this.accountManager = plugin.getAccountManager();
+        this.playerManager = plugin.getPlayerManager();
         this.pingPrefix = plugin.getConfig().getString("ping-prefix", "&e");
     }
 
@@ -58,9 +59,9 @@ public class ChatManager {
             message = componentToLegacy(parseMineDownInlineFormatting(message));
         }
 
-        Account senderAccount = accountManager.getAccount(senderUUID);
+        MSPlayerProfile senderProfile = playerManager.getProfile(senderUUID);
 
-        if (!senderAccount.getOption(Option.TCHAT)) {
+        if (!senderProfile.getOption(Option.TCHAT)) {
             sender.sendMessage(MineDown.parse("&cVous ne pouvez pas envoyer ce message car votre tchat est désactivé"));
             logMessage(MineDown.parse("§8[§CDÉSACTIVÉ§8]§r " + message));
             return;
@@ -73,14 +74,14 @@ public class ChatManager {
             for (Player receiverPlayer : server.getAllPlayers()) {
                 String pmessage = finalMessage;
                 UUID receiverUUID = receiverPlayer.getUniqueId();
-                Account receiverAccount = accountManager.getAccount(receiverUUID);
+                MSPlayerProfile receiverProfile = playerManager.getProfile(receiverUUID);
                 String receiverUsername = receiverPlayer.getUsername();
 
-                if (!receiverAccount.getOption(Option.TCHAT) || receiverAccount.getIgnoredPlayers().contains(sender.getUniqueId())) {
+                if (!receiverProfile.getOption(Option.TCHAT) || receiverProfile.getIgnoredPlayers().contains(sender.getUniqueId())) {
                     continue;
                 }
 
-                if (pmessage.toLowerCase().contains(receiverUsername.toLowerCase()) && receiverAccount.getOption(Option.MENTION)) {
+                if (pmessage.toLowerCase().contains(receiverUsername.toLowerCase()) && receiverProfile.getOption(Option.MENTION)) {
                     String ping = pingPrefix + receiverUsername;
                     String legacyFormattedPing = componentToLegacy(MineDown.parse(ping));
                     receiverPlayer.playSound(Sound.sound(Key.key("block.note_block.guitar"), Sound.Source.MASTER, 1f, 0.5f));
@@ -153,15 +154,14 @@ public class ChatManager {
         UUID senderUUID = sender.getUniqueId();
         String senderName = sender.getUsername();
         String targetName = target.getUsername();
-        Account account = accountManager.getAccount(senderUUID);
-        Account targetAccount = accountManager.getAccount(target.getUniqueId());
+        MSPlayerProfile targetProfile = playerManager.getProfile(target.getUniqueId());
 
-        if (!targetAccount.getOption(Option.MSG) && !sender.hasPermission("servercore.msgtogglebypass")) {
+        if (!targetProfile.getOption(Option.MSG) && !sender.hasPermission("servercore.msgtogglebypass")) {
             sender.sendMessage(MineDown.parse("&c" + target.getUsername() + " a désactivé ses messages"));
             return;
         }
 
-        if (targetAccount.getIgnoredPlayers().contains(senderUUID)) {
+        if (targetProfile.getIgnoredPlayers().contains(senderUUID)) {
             sender.sendMessage(MineDown.parse("&cVous ne pouvez pas envoyer de message à ce joueur"));
             return;
         }

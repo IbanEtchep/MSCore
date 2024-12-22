@@ -4,10 +4,10 @@ import com.velocitypowered.api.proxy.Player;
 import fr.iban.velocitycore.CoreVelocityPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import revxrsal.commands.annotation.*;
-import revxrsal.commands.velocity.VelocityCommandActor;
+import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Description;
+import revxrsal.commands.annotation.Usage;
 import revxrsal.commands.velocity.annotation.CommandPermission;
-import revxrsal.commands.velocity.exception.SenderNotPlayerException;
 
 import java.io.IOException;
 import java.util.List;

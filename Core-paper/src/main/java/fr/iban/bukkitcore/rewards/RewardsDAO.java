@@ -85,7 +85,7 @@ public class RewardsDAO {
 			String sql = "DELETE FROM sc_rewards WHERE idR=?";
 			try (Connection connection = DbAccess.getDataSource().getConnection()) {
 				try(PreparedStatement ps = connection.prepareStatement(sql)){
-					ps.setInt(1, reward.getId());
+					ps.setInt(1, reward.id());
 					ps.executeUpdate();
 				}
 			}catch (SQLException e) {

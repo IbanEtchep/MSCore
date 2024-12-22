@@ -4,8 +4,7 @@ import com.velocitypowered.api.proxy.Player;
 import de.themoep.minedown.adventure.MineDown;
 import fr.iban.velocitycore.CoreVelocityPlugin;
 import revxrsal.commands.annotation.Command;
-import revxrsal.commands.velocity.VelocityCommandActor;
-import revxrsal.commands.velocity.VelocityCommandHandler;
+import revxrsal.commands.velocity.actor.VelocityCommandActor;
 
 public class CoreCommands {
 
@@ -46,9 +45,5 @@ public class CoreCommands {
         } else {
             actor.reply(MineDown.parse(plugin.getConfig().getString(configPath)));
         }
-    }
-
-    public void setupCommands(VelocityCommandHandler handler) {
-        handler.register(this);
     }
 }

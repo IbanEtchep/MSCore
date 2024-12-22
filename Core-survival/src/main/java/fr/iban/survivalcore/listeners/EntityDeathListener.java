@@ -1,18 +1,12 @@
 package fr.iban.survivalcore.listeners;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
-import fr.iban.bukkitcore.manager.AccountManager;
-import fr.iban.bukkitcore.utils.ChatUtils;
-import fr.iban.common.data.Account;
-import fr.iban.common.data.Option;
+import fr.iban.bukkitcore.manager.BukkitPlayerManager;
+import fr.iban.common.enums.Option;
+import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.survivalcore.SurvivalCorePlugin;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -145,17 +139,15 @@ public class EntityDeathListener implements Listener {
                 message += "est mort.";
         }
 
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            AccountManager accountManager = CoreBukkitPlugin.getInstance().getAccountManager();
-            Account account = accountManager.getAccount(p.getUniqueId());
-            if (account.getOption(Option.DEATH_MESSAGE)) {
-                if (!account.getIgnoredPlayers().contains(player.getUniqueId())) {
-                    p.sendMessage(message);
-                }
+        BukkitPlayerManager playerManager = CoreBukkitPlugin.getInstance().getPlayerManager();
+        for (MSPlayerProfile msPlayer : playerManager.getProfiles()) {
+            if (msPlayer.getOption(Option.DEATH_MESSAGE)
+                    && !msPlayer.getIgnoredPlayers().contains(player.getUniqueId())) {
+                playerManager.sendMessage(msPlayer, Component.text(message));
             }
         }
 
-        SurvivalCorePlugin.getInstance().getLogger().info(message);
+        Bukkit.getConsoleSender().sendMessage(message);
     }
 
     @EventHandler
