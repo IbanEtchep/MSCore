@@ -11,9 +11,9 @@ import fr.iban.bukkitcore.utils.ItemBuilder;
 
 public class ConfirmMenu extends Menu {
 	
-	private String title;
-	private String desc;
-	private ConfirmCallback callback;
+	private final String title;
+	private final String desc;
+	private final ConfirmCallback callback;
 
 	public ConfirmMenu(Player player, ConfirmCallback callback) {
 		this(player, "§2Confirmer", "§aVoulez-vous vraiment faire cela?", callback);

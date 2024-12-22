@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import fr.iban.survivalcore.SurvivalCorePlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,11 +12,23 @@ import org.bukkit.event.raid.RaidTriggerEvent;
 
 public class RaidTriggerListener implements Listener {
 
+	private final SurvivalCorePlugin plugin;
 	private final Map<UUID, Long> cooldown = new HashMap<>();
+
+	public RaidTriggerListener(SurvivalCorePlugin plugin) {
+		this.plugin = plugin;
+	}
 
 	@EventHandler
 	public void onRaidTrigger(RaidTriggerEvent e) {
 		final Player player = e.getPlayer();
+
+		if(plugin.getConfig().getBoolean("raids.disable")) {
+			player.sendMessage("§cLes raids sont désactivés.");
+			e.setCancelled(true);
+			return;
+		}
+
 		if (player.hasPermission("antiraidfarm.bypass")) {
 			return;
 		}

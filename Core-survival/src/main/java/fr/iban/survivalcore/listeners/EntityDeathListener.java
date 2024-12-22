@@ -16,16 +16,21 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Mob;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class EntityDeathListener implements Listener {
+
+    private final SurvivalCorePlugin plugin;
+
+    public EntityDeathListener(SurvivalCorePlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
@@ -172,6 +177,16 @@ public class EntityDeathListener implements Listener {
 
             Component message = MiniMessage.miniMessage().deserialize(miniMessageText);
             player.sendMessage(message);
+        }
+    }
+
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+        boolean disableEnemyDrops = plugin.getConfig().getBoolean("loots.disable-enemy-drops", false);
+        Entity entity = event.getEntity();
+
+        if(disableEnemyDrops && entity instanceof Enemy) {
+            event.getDrops().clear();
         }
     }
 }

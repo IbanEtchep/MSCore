@@ -1,5 +1,9 @@
 mending-trade-price: 64
 mending-trade-material: DIAMOND
+
+raids:
+  disable: false
+
 salary:
   #time in minutes
   time-per-payout: 60
@@ -17,3 +21,7 @@ cooldowns:
   feed:
     permissions:
       - permission:3000
+
+loots:
+  # disable enemy drops https://jd.papermc.io/paper/1.21.1/org/bukkit/entity/Enemy.html
+  disable-enemy-drops: false

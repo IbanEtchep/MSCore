@@ -34,10 +34,10 @@ public final class SurvivalCorePlugin extends JavaPlugin implements Listener {
         setupEconomy();
 
         registerEvents(
-                new EntityDeathListener(),
+                new EntityDeathListener(this),
                 new CommandListener(),
                 new VillagerEvents(this),
-                new RaidTriggerListener(),
+                new RaidTriggerListener(this),
                 new PortalListeners(this),
                 new DamageListeners(),
                 new InteractListeners(),
