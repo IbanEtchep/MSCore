@@ -1,12 +1,15 @@
 package fr.iban.bukkitcore.listeners;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
+import fr.iban.bukkitcore.manager.BukkitPlayerManager;
 import fr.iban.bukkitcore.rewards.RewardsDAO;
 import fr.iban.bukkitcore.utils.PluginMessageHelper;
+import fr.iban.bukkitcore.utils.SLocationUtils;
 import fr.iban.common.manager.GlobalLoggerManager;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.messaging.CoreChannel;
 import fr.iban.common.messaging.message.PlayerStringMessage;
+import fr.iban.common.model.MSPlayerProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -56,8 +59,12 @@ public class JoinQuitListeners implements Listener {
         Player player = e.getPlayer();
         e.quitMessage(null);
         plugin.getTextInputs().remove(player.getUniqueId());
-        if (plugin.getServerName().toLowerCase().startsWith("survie")) {
-            plugin.getMessagingManager().sendMessage(CoreChannel.LAST_SURVIVAL_SERVER, new PlayerStringMessage(player.getUniqueId(), plugin.getServerName()));
+
+        if (plugin.getServerManager().isSurvivalServer()) {
+            BukkitPlayerManager playerManager = plugin.getPlayerManager();
+            MSPlayerProfile profile = playerManager.getProfile(player.getUniqueId());
+            profile.setLastSurvivalLocation(SLocationUtils.getSLocation(player.getLocation()));
+            playerManager.saveProfile(profile);
         }
 
         GlobalLoggerManager.saveLog(plugin.getServerName(), player.getName() + " (" + Objects.requireNonNull(player.getAddress()).getHostString() + ") logged out at " + player.getLocation());

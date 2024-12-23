@@ -50,7 +50,6 @@ public class CoreMessageListener implements Listener {
             case CoreChannel.REMOVE_TP_REQUEST_CHANNEL -> consumeRemoveTpRequestMessage(message);
             case CoreChannel.PLAYER_JOIN_CHANNEL -> consumePlayerJoinMessage(message);
             case CoreChannel.PLAYER_QUIT_CHANNEL -> consumePlayerQuitMessage(message);
-            case CoreChannel.LAST_SURVIVAL_SERVER -> consumeLastSurvivalServerMessage(message);
             case CoreChannel.RANDOM_TELEPORT ->
                     plugin.getTeleportManager().performRandomTeleport(message.getMessage(RandomTeleportMessage.class));
             case CoreChannel.SYNC_KIT_CLAIM -> consumeKitClaimMessage(message);
@@ -86,11 +85,6 @@ public class CoreMessageListener implements Listener {
     private void consumeTeleportToPlayerBukkitMessage(Message message) {
         TeleportToPlayer ttp = gson.fromJson(message.getMessage(), TeleportToPlayer.class);
         plugin.getTeleportManager().performTeleportToPlayer(ttp);
-    }
-
-    private void consumeLastSurvivalServerMessage(Message message) {
-        PlayerStringMessage msg = message.getMessage(PlayerStringMessage.class);
-        plugin.getServerManager().setLastSurvivalServer(msg.uuid(), msg.string());
     }
 
     private void consumeKitClaimMessage(Message message) {

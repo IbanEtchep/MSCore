@@ -10,7 +10,6 @@ import java.util.UUID;
 public class ServerManager {
 
     private final CoreBukkitPlugin plugin;
-    private final Map<UUID, String> lastSurvivalServer = new HashMap<>();
     private final List<String> survivalServers;
     private final String defaultSurvivalServer;
 
@@ -27,14 +26,6 @@ public class ServerManager {
 
     public String getDefaultSurvivalServer() {
         return defaultSurvivalServer;
-    }
-
-    public String getLastSurvivalServer(UUID uuid) {
-        return lastSurvivalServer.get(uuid);
-    }
-
-    public void setLastSurvivalServer(UUID uuid, String server) {
-        lastSurvivalServer.put(uuid, server);
     }
 
     public boolean isSurvivalServer() {

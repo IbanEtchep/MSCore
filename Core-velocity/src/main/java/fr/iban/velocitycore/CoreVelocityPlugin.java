@@ -87,8 +87,6 @@ public class CoreVelocityPlugin {
             logger.error("Error while loading config file", e);
             server.shutdown();
         }
-
-        registerCommands();
     }
 
     @Subscribe
@@ -119,6 +117,8 @@ public class CoreVelocityPlugin {
 
         tabHook = new TabHook(this);
         tabHook.enable();
+
+        registerCommands();
     }
 
     @Subscribe

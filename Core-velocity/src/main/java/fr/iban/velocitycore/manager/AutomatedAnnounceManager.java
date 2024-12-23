@@ -31,7 +31,7 @@ public class AutomatedAnnounceManager {
 	}
 
 	private Component getMessage(int id, String msg) {
-		Component croix = Component.text(" [")
+		Component croix = Component.text(" [", NamedTextColor.GRAY)
 				.append(Component.text("✕", NamedTextColor.RED))
 				.append(Component.text("]", NamedTextColor.GRAY))
 				.hoverEvent(HoverEvent.showText(Component.text("Clic pour ne plus afficher cette annonce", NamedTextColor.RED)))

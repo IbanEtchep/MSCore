@@ -2,6 +2,7 @@ package fr.iban.common.model;
 
 import com.google.gson.Gson;
 import fr.iban.common.enums.Option;
+import fr.iban.common.teleport.SLocation;
 
 import java.util.*;
 
@@ -16,6 +17,9 @@ public class MSPlayerProfile extends MSPlayer {
 
     private static class JsonData {
         private boolean vanished;
+        private SLocation deathLocation;
+        private SLocation lastRTPLocation;
+        private SLocation lastSurvivalLocation;
         private final Set<UUID> ignoredPlayers = new HashSet<>();
         private final Set<Integer> blackListedAnnounces = new HashSet<>();
         private final Map<Option, Boolean> options = new HashMap<>();
@@ -27,6 +31,30 @@ public class MSPlayerProfile extends MSPlayer {
 
     public void setVanished(boolean vanished) {
         jsonData.vanished = vanished;
+    }
+
+    public SLocation getDeathLocation() {
+        return jsonData.deathLocation;
+    }
+
+    public void setDeathLocation(SLocation deathLocation) {
+        jsonData.deathLocation = deathLocation;
+    }
+
+    public SLocation getLastRTPLocation() {
+        return jsonData.lastRTPLocation;
+    }
+
+    public void setLastRTPLocation(SLocation lastRTPLocation) {
+        jsonData.lastRTPLocation = lastRTPLocation;
+    }
+
+    public SLocation getLastSurvivalLocation() {
+        return jsonData.lastSurvivalLocation;
+    }
+
+    public void setLastSurvivalLocation(SLocation lastSurvivalLocation) {
+        jsonData.lastSurvivalLocation = lastSurvivalLocation;
     }
 
     public Set<UUID> getIgnoredPlayers() {

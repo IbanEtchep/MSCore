@@ -1,7 +1,9 @@
 package fr.iban.bukkitcore.listeners;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
+import fr.iban.bukkitcore.utils.SLocationUtils;
 import fr.iban.common.messaging.message.PlayerSLocationMessage;
+import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.teleport.SLocation;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -25,7 +27,11 @@ public class DeathListener implements Listener {
 		if(plugin.getServerName() == null) {
 			return;
 		}
-		plugin.getMessagingManager().sendMessage("DeathLocation", new PlayerSLocationMessage(e.getEntity().getUniqueId(), new SLocation(plugin.getServerName(), loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ(), loc.getPitch(), loc.getYaw())));
+
+		MSPlayerProfile profile = plugin.getPlayerManager().getProfile(player.getUniqueId());
+		SLocation deathLoc = SLocationUtils.getSLocation(loc);
+		profile.setDeathLocation(deathLoc);
+		plugin.getPlayerManager().saveProfile(profile);
 	}
 
 }

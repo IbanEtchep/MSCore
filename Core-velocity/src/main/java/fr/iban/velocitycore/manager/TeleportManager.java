@@ -18,9 +18,6 @@ import java.util.concurrent.TimeUnit;
 public class TeleportManager {
 
     private final CoreVelocityPlugin plugin;
-    private final Map<UUID, SLocation> deathLocations = new HashMap<>();
-    private final Map<UUID, SLocation> lastRTPLocations = new HashMap<>();
-    private final Map<UUID, SLocation> lastSurvivalLocations = new HashMap<>();
     private final List<UUID> pendingTeleports = new ArrayList<>();
     private final ListMultimap<UUID, TpRequest> tpRequests = ArrayListMultimap.create();
 
@@ -216,17 +213,5 @@ public class TeleportManager {
     public void removeTpRequest(UUID uuid, TpRequest tpRequest) {
         tpRequests.remove(uuid, tpRequest);
         plugin.getMessagingManager().sendMessage(CoreChannel.REMOVE_TP_REQUEST_CHANNEL, tpRequest);
-    }
-
-    public Map<UUID, SLocation> getDeathLocations() {
-        return deathLocations;
-    }
-
-    public Map<UUID, SLocation> getLastRTPLocations() {
-        return lastRTPLocations;
-    }
-
-    public Map<UUID, SLocation> getLastSurvivalLocations() {
-        return lastSurvivalLocations;
     }
 }

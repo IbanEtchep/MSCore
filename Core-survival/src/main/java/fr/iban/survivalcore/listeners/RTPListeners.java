@@ -2,7 +2,9 @@ package fr.iban.survivalcore.listeners;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.utils.SLocationUtils;
+import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.messaging.message.PlayerSLocationMessage;
+import fr.iban.common.model.MSPlayerProfile;
 import me.SuperRonanCraft.BetterRTP.references.customEvents.RTP_TeleportPostEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,8 +16,11 @@ public class RTPListeners implements Listener {
     public void onRTP(RTP_TeleportPostEvent e) {
         Player player = e.getPlayer();
         CoreBukkitPlugin core = CoreBukkitPlugin.getInstance();
-        core.getMessagingManager()
-                .sendMessage("LastRTPLocation", new PlayerSLocationMessage(player.getUniqueId(), SLocationUtils.getSLocation(e.getLocation())));
+        PlayerManager playerManager = core.getPlayerManager();
+
+        MSPlayerProfile profile = playerManager.getProfile(player.getUniqueId());
+        profile.setLastRTPLocation(SLocationUtils.getSLocation(player.getLocation()));
+        playerManager.saveProfile(profile);
 
         if (core.getServerManager().isSurvivalServer()) {
             String server = core.getServerName();

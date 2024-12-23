@@ -10,6 +10,7 @@ import fr.iban.bukkitcore.plan.PlanDataManager;
 import fr.iban.bukkitcore.utils.PluginMessageHelper;
 import fr.iban.bukkitcore.utils.SLocationUtils;
 import fr.iban.common.messaging.CoreChannel;
+import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.teleport.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -281,9 +282,12 @@ public class TeleportManager {
 
     public void teleportToSurvivalServer(Player player, String server) {
         ServerManager serverManager = plugin.getServerManager();
+        MSPlayerProfile profile = plugin.getPlayerManager().getProfile(player.getUniqueId());
+
         if (server == null) {
             if (!plugin.getServerManager().isSurvivalServer()) {
-                String lastSurvivalServer = serverManager.getLastSurvivalServer(player.getUniqueId());
+                String lastSurvivalServer = profile.getLastSurvivalLocation().getServer();
+
                 if (lastSurvivalServer != null) {
                     server = lastSurvivalServer;
                 } else {

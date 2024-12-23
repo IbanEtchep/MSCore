@@ -1,6 +1,7 @@
 package fr.iban.velocitycore.command;
 
 import com.velocitypowered.api.proxy.Player;
+import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.teleport.SLocation;
 import fr.iban.velocitycore.CoreVelocityPlugin;
 import fr.iban.velocitycore.manager.TeleportManager;
@@ -24,7 +25,9 @@ public class TeleportCommands {
     @CommandPermission("servercore.back.death")
     @Description("Retour à l'emplacement de votre dernier décès.")
     public void back(Player sender) {
-        SLocation location = teleportManager.getDeathLocations().get(sender.getUniqueId());
+        MSPlayerProfile profile = plugin.getPlayerManager().getProfile(sender.getUniqueId());
+        SLocation location = profile.getDeathLocation();
+
         if (location != null) {
             teleportManager.delayedTeleport(sender, location, 3);
         } else {
@@ -36,7 +39,9 @@ public class TeleportCommands {
     @CommandPermission("servercore.lastrtp")
     @Description("Retour à la dernière position de téléportation aléatoire.")
     public void lastRtp(Player sender) {
-        SLocation loc = plugin.getTeleportManager().getLastRTPLocations().get(sender.getUniqueId());
+        MSPlayerProfile profile = plugin.getPlayerManager().getProfile(sender.getUniqueId());
+        SLocation loc = profile.getLastRTPLocation();
+
         if (loc != null) {
             plugin.getTeleportManager().delayedTeleport(sender, loc, 2);
         } else {

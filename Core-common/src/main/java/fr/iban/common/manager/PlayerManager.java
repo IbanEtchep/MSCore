@@ -72,11 +72,6 @@ public class PlayerManager {
     public CompletableFuture<Void> saveProfile(MSPlayerProfile profile) {
         return CompletableFuture.runAsync(() -> {
             dao.savePlayerProfile(profile);
-
-            playersByUUID.put(profile.getUniqueId(), profile);
-            playersByName.put(profile.getName(), profile);
-            profiles.put(profile.getUniqueId(), profile);
-
             messagingManager.sendMessage(CoreChannel.SYNC_PLAYER_CHANNEL, profile.getUniqueId().toString());
         }).exceptionally(e -> {
             e.printStackTrace();

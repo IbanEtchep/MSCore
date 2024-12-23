@@ -39,8 +39,6 @@ public class CoreMessageListener {
 
         switch (message.getChannel()) {
             case "EventAnnounce" -> consumeAnnounceMessage(message);
-            case "DeathLocation" -> consumeDeathLocationMessage(message);
-            case "LastRTPLocation" -> consumeLastRTPLocationMessage(message);
             case "TeleportToLocationBungee" -> consumeTeleportToLocationBungeeMessage(message);
             case "TeleportToPlayerBungee" -> consumeTeleportToPlayerBungeeMessage(message);
             case "TeleportRequestBungee" -> consumeTeleportRequestBungeeMessage(message);
@@ -104,16 +102,6 @@ public class CoreMessageListener {
         } else if (request.getRequestType() == RequestType.TPHERE) {
             plugin.getTeleportManager().sendTeleportHereRequest(playerFrom, playerTo);
         }
-    }
-
-    private void consumeDeathLocationMessage(Message message) {
-        PlayerSLocationMessage deathLocation = gson.fromJson(message.getMessage(), PlayerSLocationMessage.class);
-        plugin.getTeleportManager().getDeathLocations().put(deathLocation.getUuid(), deathLocation.getLocation());
-    }
-
-    private void consumeLastRTPLocationMessage(Message message) {
-        PlayerSLocationMessage lastRTPLocation = gson.fromJson(message.getMessage(), PlayerSLocationMessage.class);
-        plugin.getTeleportManager().getLastRTPLocations().put(lastRTPLocation.getUuid(), lastRTPLocation.getLocation());
     }
 
     private void consumeAnnounceMessage(Message message) {

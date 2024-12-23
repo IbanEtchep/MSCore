@@ -141,8 +141,7 @@ public class EntityDeathListener implements Listener {
 
         BukkitPlayerManager playerManager = CoreBukkitPlugin.getInstance().getPlayerManager();
         for (MSPlayerProfile msPlayer : playerManager.getProfiles()) {
-            if (msPlayer.getOption(Option.DEATH_MESSAGE)
-                    && !msPlayer.getIgnoredPlayers().contains(player.getUniqueId())) {
+            if (msPlayer.getOption(Option.DEATH_MESSAGE) && !msPlayer.getIgnoredPlayers().contains(player.getUniqueId())) {
                 playerManager.sendMessage(msPlayer, Component.text(message));
             }
         }
