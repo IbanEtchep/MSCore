@@ -4,7 +4,7 @@ import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.utils.ChatUtils;
 import org.bukkit.Bukkit;
 import revxrsal.commands.annotation.Command;
-import revxrsal.commands.bukkit.BukkitCommandActor;
+import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.util.ArrayList;
@@ -37,9 +37,9 @@ public class ActionBarCMD {
 			time.getAndIncrement();
 
 			if(time.get() == 4) {
-				queue.remove(0);
+				queue.removeFirst();
 				if(!queue.isEmpty()) {
-					sendActionBar(queue.get(0));
+					sendActionBar(queue.getFirst());
 				}
 
 				task.cancel();

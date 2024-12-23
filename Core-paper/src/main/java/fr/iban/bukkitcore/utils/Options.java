@@ -2,7 +2,7 @@ package fr.iban.bukkitcore.utils;
 
 import org.bukkit.inventory.ItemStack;
 
-import fr.iban.common.data.Option;
+import fr.iban.common.enums.Option;
 
 public enum Options {
 	

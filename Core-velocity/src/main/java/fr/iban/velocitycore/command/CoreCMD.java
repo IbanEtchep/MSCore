@@ -6,8 +6,7 @@ import fr.iban.velocitycore.CoreVelocityPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.*;
-import revxrsal.commands.velocity.VelocityCommandActor;
-import revxrsal.commands.velocity.VelocityCommandHandler;
+import revxrsal.commands.velocity.actor.VelocityCommandActor;
 import revxrsal.commands.velocity.annotation.CommandPermission;
 
 import java.io.IOException;
@@ -22,10 +21,14 @@ public class CoreCMD {
         this.plugin = plugin;
     }
 
-    @Subcommand("help")
-    @DefaultFor("vcore")
-    @Description("Affiche les options de commande pour le serveur.")
+    @CommandPlaceholder
     public void core(VelocityCommandActor actor) {
+        help(actor);
+    }
+
+    @Subcommand("help")
+    @Description("Affiche les options de commande pour le serveur.")
+    public void help(VelocityCommandActor actor) {
         Component message = Component.text("Utilisez ", NamedTextColor.GRAY)
                 .append(Component.text("/vcore reload", NamedTextColor.GREEN))
                 .append(Component.text(" pour recharger la configuration.\n", NamedTextColor.GRAY))
@@ -50,9 +53,5 @@ public class CoreCMD {
         AbstractMessenger messenger = plugin.getMessagingManager().getMessenger();
         messenger.setDebugMode(!messenger.isDebugMode());
         player.sendMessage(Component.text("Mode débogage : " + (messenger.isDebugMode() ? "activé" : "désactivé"), NamedTextColor.YELLOW));
-    }
-
-    public void setupCommands(VelocityCommandHandler handler) {
-        handler.register(this);
     }
 }

@@ -18,36 +18,37 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import revxrsal.commands.bukkit.BukkitCommandHandler;
+import revxrsal.commands.Lamp;
+import revxrsal.commands.bukkit.BukkitLamp;
+import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public final class CoreBukkitPlugin extends JavaPlugin {
 
     private static CoreBukkitPlugin instance;
     private FoliaLib foliaLib;
     private String serverName;
-    private CoreCommandHandlerVisitor coreCommandHandlerVisitor;
     private TeleportManager teleportManager;
     private Map<UUID, TextCallback> textInputs;
     private Essentials essentials;
     private RessourcesWorldManager ressourcesWorldManager;
     private MessagingManager messagingManager;
-    private AccountManager accountManager;
     private BukkitPlayerManager playerManager;
     private TrustedCommandsManager trustedCommandManager;
     private BukkitTrustedUserManager trustedUserManager;
     private ApprovalManager approvalManager;
     private PlanDataManager planDataManager;
     private ServerManager serverManager;
-    private GlobalLoggerManager.ConsoleLogHandler consoleLogHandler;
 
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
+
+        GlobalLoggerManager.initLogger();
+
         this.foliaLib = new FoliaLib(this);
         this.serverName = getConfig().getString("servername");
 
@@ -67,14 +68,13 @@ public final class CoreBukkitPlugin extends JavaPlugin {
 
         textInputs = new HashMap<>();
 
-        this.accountManager = new AccountManager(this);
         this.teleportManager = new TeleportManager(this);
         this.ressourcesWorldManager = new RessourcesWorldManager(this);
         this.messagingManager = new MessagingManager(this);
         this.trustedCommandManager = new TrustedCommandsManager();
         foliaLib.getScheduler().runAsync(task -> getTrustedCommandManager().loadTrustedCommands());
         messagingManager.init();
-        this.playerManager = new BukkitPlayerManager(this);
+        this.playerManager = new BukkitPlayerManager(messagingManager);
         this.trustedUserManager = new BukkitTrustedUserManager(this);
         this.approvalManager = new ApprovalManager(this, messagingManager, trustedUserManager);
         this.planDataManager = new PlanDataManager(this);
@@ -92,33 +92,34 @@ public final class CoreBukkitPlugin extends JavaPlugin {
         );
 
         registerCommands();
-        initLogger();
 
         PluginMessageHelper.registerChannels(this);
     }
 
     @Override
     public void onDisable() {
-        closeLogger();
+        GlobalLoggerManager.shutdownLogger();
         messagingManager.close();
         DbAccess.closePool();
     }
 
     private void registerCommands() {
-        BukkitCommandHandler commandHandler = BukkitCommandHandler.create(this);
-        this.coreCommandHandlerVisitor = new CoreCommandHandlerVisitor(this);
-        commandHandler.accept(coreCommandHandlerVisitor);
-        commandHandler.register(new TeleportCommands(this));
-        commandHandler.register(new TrustCommandsCMD(this));
-        commandHandler.register(new ServerSwitchCommands(this));
-        commandHandler.register(new CoreCMD(this));
-        commandHandler.register(new ActionBarCMD(this));
-        commandHandler.registerBrigadier();
+        CoreCommandHandlerVisitor coreCommandHandlerVisitor = new CoreCommandHandlerVisitor(this);
+
+        Lamp.Builder<BukkitCommandActor> lampBuilder = BukkitLamp.builder(this);
+        lampBuilder.accept(coreCommandHandlerVisitor.visitor());
+        Lamp<BukkitCommandActor> lamp = lampBuilder.build();
+
+        lamp.register(new TeleportCommands(this));
+        lamp.register(new TrustCommandsCMD(this));
+        lamp.register(new ServerSwitchCommands(this));
+        lamp.register(new CoreCMD(this));
+        lamp.register(new ActionBarCMD(this));
+        lamp.register(new BungeeBroadcastCMD(this));
 
         getCommand("options").setExecutor(new OptionsCMD());
         getCommand("recompenses").setExecutor(new RecompensesCMD(this));
         getCommand("recompenses").setTabCompleter(new RecompensesCMD(this));
-        getCommand("bungeebroadcast").setExecutor(new BungeeBroadcastCMD());
     }
 
     private void registerListeners(Listener... listeners) {
@@ -129,19 +130,6 @@ public final class CoreBukkitPlugin extends JavaPlugin {
             pm.registerEvents(listener, this);
         }
 
-    }
-
-    public void initLogger() {
-        this.consoleLogHandler = new GlobalLoggerManager.ConsoleLogHandler(serverName);
-        GlobalLoggerManager.initLogger();
-        Logger globalLogger = getServer().getLogger();
-        globalLogger.addHandler(consoleLogHandler);
-    }
-
-    public void closeLogger() {
-        Logger globalLogger = getServer().getLogger();
-        globalLogger.removeHandler(consoleLogHandler);
-        GlobalLoggerManager.shutdownLogger();
     }
 
     public static CoreBukkitPlugin getInstance() {
@@ -158,10 +146,6 @@ public final class CoreBukkitPlugin extends JavaPlugin {
 
     public Map<UUID, TextCallback> getTextInputs() {
         return textInputs;
-    }
-
-    public AccountManager getAccountManager() {
-        return accountManager;
     }
 
     public TeleportManager getTeleportManager() {
@@ -186,10 +170,6 @@ public final class CoreBukkitPlugin extends JavaPlugin {
 
     public BukkitPlayerManager getPlayerManager() {
         return playerManager;
-    }
-
-    public CoreCommandHandlerVisitor getCommandHandlerVisitor() {
-        return coreCommandHandlerVisitor;
     }
 
     public BukkitTrustedUserManager getTrustedUserManager() {

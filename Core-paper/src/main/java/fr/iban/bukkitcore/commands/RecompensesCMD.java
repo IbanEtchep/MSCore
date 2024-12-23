@@ -45,8 +45,8 @@ public class RecompensesCMD implements CommandExecutor, TabCompleter {
 							int id = Integer.parseInt(args[2]);
 							RewardsDAO.getTemplateRewardsAsync().thenAccept(rewards -> {
 								for(Reward r : rewards) {
-									if(r.getId() == id) {
-										RewardsDAO.addRewardAsync(op.getUniqueId().toString(), r.getName(), r.getServer(), r.getCommand());
+									if(r.id() == id) {
+										RewardsDAO.addRewardAsync(op.getUniqueId().toString(), r.name(), r.server(), r.command());
 										if(op.isOnline()) {
 											Player p = (Player)op;
 											p.sendMessage("§aVous avez reçu une récompense (/recompenses).");
@@ -70,7 +70,7 @@ public class RecompensesCMD implements CommandExecutor, TabCompleter {
 						int id = Integer.parseInt(args[1]);
 						RewardsDAO.getTemplateRewardsAsync().thenAccept(rewards -> {
 							for(Reward r : rewards) {
-								if(r.getId() == id) {
+								if(r.id() == id) {
 									RewardsDAO.removeRewardAsync("template", r);
 								}
 							}
@@ -88,7 +88,7 @@ public class RecompensesCMD implements CommandExecutor, TabCompleter {
 						sender.sendMessage("§cIl n'y a pas de templates.");
 						return;
 					}
-					rewards.forEach(r -> sender.sendMessage("§a" + r.getId() + " - " + r.getName() + " - " + r.getServer() + " - " + r.getCommand()));
+					rewards.forEach(r -> sender.sendMessage("§a" + r.id() + " - " + r.name() + " - " + r.server() + " - " + r.command()));
 				});
 				break;
 			case "addtemplate":

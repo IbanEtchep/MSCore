@@ -20,7 +20,6 @@ import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import fr.iban.common.data.sql.DbAccess;
 import fr.iban.common.data.sql.DbCredentials;
 import fr.iban.common.data.sql.DbTables;
-import fr.iban.common.manager.GlobalLoggerManager;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.teleport.SLocation;
 import fr.iban.velocitycore.command.*;
@@ -28,7 +27,9 @@ import fr.iban.velocitycore.listener.*;
 import fr.iban.velocitycore.manager.*;
 import fr.iban.velocitycore.util.TabHook;
 import org.slf4j.Logger;
-import revxrsal.commands.velocity.VelocityCommandHandler;
+import revxrsal.commands.Lamp;
+import revxrsal.commands.velocity.VelocityLamp;
+import revxrsal.commands.velocity.actor.VelocityCommandActor;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,10 +37,12 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.TreeMap;
 
+import static revxrsal.commands.velocity.VelocityVisitors.brigadier;
+
 @Plugin(
         id = "corevelocity",
         name = "CoreVelocity",
-        version = "1.0.5",
+        version = "1.1.0",
         dependencies = {
                 @Dependency(id = "tab", optional = true),
                 @Dependency(id = "luckperms"),
@@ -58,7 +61,6 @@ public class CoreVelocityPlugin {
     private TeleportManager teleportManager;
     private PlayerManager playerManager;
     private MessagingManager messagingManager;
-    private AccountManager accountManager;
 
     private TabHook tabHook;
     private final TreeMap<String, SLocation> currentEvents = new TreeMap<>();
@@ -85,6 +87,8 @@ public class CoreVelocityPlugin {
             logger.error("Error while loading config file", e);
             server.shutdown();
         }
+
+        registerCommands();
     }
 
     @Subscribe
@@ -100,9 +104,8 @@ public class CoreVelocityPlugin {
         messagingManager = new MessagingManager(this);
         messagingManager.init();
         teleportManager = new TeleportManager(this);
-        playerManager = new PlayerManager();
-        playerManager.clearOnlinePlayersFromDB();
-        accountManager = new AccountManager(this);
+        playerManager = new PlayerManager(messagingManager);
+        playerManager.clearOnlinePlayers();
         chatManager = new ChatManager(this);
         announceManager = new AutomatedAnnounceManager(this);
 
@@ -113,8 +116,6 @@ public class CoreVelocityPlugin {
         eventManager.register(this, new CoreMessageListener(this));
         eventManager.register(this, new ProxyPingListener(this));
         eventManager.register(this, new CommandListener(this));
-
-        registerCommands();
 
         tabHook = new TabHook(this);
         tabHook.enable();
@@ -127,24 +128,26 @@ public class CoreVelocityPlugin {
     }
 
     public void registerCommands() {
-        VelocityCommandHandler handler = VelocityCommandHandler.create(this, server);
+        Lamp<VelocityCommandActor> lamp = VelocityLamp.builder(this, server).build();
 
-        handler.register(new AnnounceCMD(this));
-        handler.register(new AnnounceEventCMD(this));
-        handler.register(new ChatCMD(this));
-        handler.register(new CoreCMD(this));
-        handler.register(new CoreCommands(this));
-        handler.register(new IgnoreCommand(this));
-        handler.register(new JoinEventCMD(this));
-        handler.register(new MessageCMD(this));
-        handler.register(new MiscellaneousCommands());
-        handler.register(new MsgToggleCMD(this));
-        handler.register(new ReplyCMD(this));
-        handler.register(new StaffChatToggle(this));
-        handler.register(new SudoCMD(this));
-        handler.register(new TabCompleteCMD(this));
-        handler.register(new TeleportCommands(this));
-        handler.register(new TptoggleCMD(this));
+        lamp.register(new AnnounceCMD(this));
+        lamp.register(new AnnounceEventCMD(this));
+        lamp.register(new ChatCMD(this));
+        lamp.register(new CoreCMD(this));
+        lamp.register(new CoreCommands(this));
+        lamp.register(new IgnoreCommand(this));
+        lamp.register(new JoinEventCMD(this));
+        lamp.register(new MessageCMD(this));
+        lamp.register(new MiscellaneousCommands());
+        lamp.register(new MsgToggleCMD(this));
+        lamp.register(new ReplyCMD(this));
+        lamp.register(new StaffChatToggle(this));
+        lamp.register(new SudoCMD(this));
+        lamp.register(new TabCompleteCMD(this));
+        lamp.register(new TeleportCommands(this));
+        lamp.register(new TpToggleCMD(this));
+
+        lamp.accept(brigadier(server));
     }
 
     public void initDatabase() {
@@ -194,10 +197,6 @@ public class CoreVelocityPlugin {
 
     public MessagingManager getMessagingManager() {
         return messagingManager;
-    }
-
-    public AccountManager getAccountManager() {
-        return accountManager;
     }
 
     public ProxyServer getServer() {

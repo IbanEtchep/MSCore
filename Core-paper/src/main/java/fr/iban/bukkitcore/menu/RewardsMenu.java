@@ -53,13 +53,13 @@ public class RewardsMenu extends PaginatedMenu {
         }
 
         CoreBukkitPlugin core = CoreBukkitPlugin.getInstance();
-        String serverPrefix = reward.getServer().replace("%", "").toLowerCase();
+        String serverPrefix = reward.server().replace("%", "").toLowerCase();
 
-        if (reward.getServer().equalsIgnoreCase(core.getServerName())
-                || (reward.getServer().endsWith("%") && core.getServerName().toLowerCase().startsWith(serverPrefix))) {
+        if (reward.server().equalsIgnoreCase(core.getServerName())
+                || (reward.server().endsWith("%") && core.getServerName().toLowerCase().startsWith(serverPrefix))) {
             if (rewards.contains(reward)) {
                 rewards.remove(reward);
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), reward.getCommand().replace("{player}", player.getName()));
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), reward.command().replace("{player}", player.getName()));
                 player.sendMessage("§aVous avez récupéré une récompense.");
                 RewardsDAO.removeRewardAsync(player.getUniqueId().toString(), reward).thenRun(() -> {
                     core.getScheduler().runAtEntity(player, task -> this.open());
@@ -102,7 +102,7 @@ public class RewardsMenu extends PaginatedMenu {
 
     private ItemStack getRewardItem(Reward reward) {
         return new ItemBuilder(Head.BAG.get())
-                .setDisplayName("§2" + reward.getName())
+                .setDisplayName("§2" + reward.name())
                 .addLore("§aClic pour récupérer la récompense.")
                 .build();
     }

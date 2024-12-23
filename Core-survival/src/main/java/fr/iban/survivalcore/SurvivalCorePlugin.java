@@ -3,6 +3,7 @@ package fr.iban.survivalcore;
 import com.tcoded.folialib.FoliaLib;
 import com.tcoded.folialib.impl.PlatformScheduler;
 import fr.iban.bukkitcore.CoreBukkitPlugin;
+import fr.iban.bukkitcore.commands.CoreCommandHandlerVisitor;
 import fr.iban.bukkitcore.utils.PluginMessageHelper;
 import fr.iban.survivalcore.commands.*;
 import fr.iban.survivalcore.listeners.*;
@@ -13,7 +14,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import revxrsal.commands.bukkit.BukkitCommandHandler;
+import revxrsal.commands.Lamp;
+import revxrsal.commands.bukkit.BukkitLamp;
+import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 
 public final class SurvivalCorePlugin extends JavaPlugin implements Listener {
 
@@ -71,14 +74,14 @@ public final class SurvivalCorePlugin extends JavaPlugin implements Listener {
         getCommand("dolphin").setExecutor(new DolphinCMD());
         getCommand("pvp").setExecutor(new PvPCMD(CoreBukkitPlugin.getInstance()));
 
-        BukkitCommandHandler commandHandler = BukkitCommandHandler.create(this);
-        commandHandler.accept(CoreBukkitPlugin.getInstance().getCommandHandlerVisitor());
+        Lamp.Builder<BukkitCommandActor> lampBuilder = BukkitLamp.builder(this);
+        new CoreCommandHandlerVisitor(CoreBukkitPlugin.getInstance()).visitor().visit(lampBuilder);
+        Lamp<BukkitCommandActor> lamp = lampBuilder.build();
 
-        commandHandler.register(new RepairCMD(this));
-        commandHandler.register(new FeedCMD(this));
-        commandHandler.register(new ShowGroupsCMD());
-        commandHandler.register(new AnnounceCMD(this));
-        commandHandler.registerBrigadier();
+        lamp.register(new RepairCMD(this));
+        lamp.register(new FeedCMD(this));
+        lamp.register(new ShowGroupsCMD());
+        lamp.register(new AnnounceCMD(this));
     }
 
     public void registerEvents(Listener... listeners) {

@@ -1,18 +1,10 @@
 package fr.iban.velocitycore.command;
 
 import com.velocitypowered.api.proxy.Player;
-import com.velocitypowered.api.proxy.ProxyServer;
 import fr.iban.velocitycore.CoreVelocityPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.*;
-import revxrsal.commands.velocity.VelocityCommandHandler;
-import revxrsal.commands.velocity.annotation.CommandPermission;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ReplyCMD {
 

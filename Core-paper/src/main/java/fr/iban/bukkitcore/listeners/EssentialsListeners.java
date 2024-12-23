@@ -1,9 +1,9 @@
 package fr.iban.bukkitcore.listeners;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
-import fr.iban.bukkitcore.manager.MessagingManager;
 import fr.iban.common.messaging.CoreChannel;
 import fr.iban.common.messaging.message.PlayerStringMessage;
+import fr.iban.common.model.MSPlayerProfile;
 import net.ess3.api.IUser;
 import net.ess3.api.events.KitClaimEvent;
 import net.ess3.api.events.VanishStatusChangeEvent;
@@ -25,14 +25,19 @@ public class EssentialsListeners implements Listener {
 
     @EventHandler
     public void onVanish(VanishStatusChangeEvent event) {
-        plugin.getPlayerManager().setVanishedAndSync(event.getAffected().getBase().getUniqueId(), event.getValue());
+        UUID uniqueId = event.getAffected().getBase().getUniqueId();
+        MSPlayerProfile msPlayer = plugin.getPlayerManager().getProfile(uniqueId);
+        msPlayer.setVanished(event.getValue());
+        plugin.getPlayerManager().saveProfile(msPlayer);
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         IUser user = plugin.getEssentials().getUser(player);
-        if(plugin.getPlayerManager().isVanished(player.getUniqueId()) && !user.isVanished()) {
+        MSPlayerProfile profile = plugin.getPlayerManager().getProfile(player.getUniqueId());
+
+        if(profile != null && profile.isVanished() && !user.isVanished()) {
             user.setVanished(true);
         }
     }

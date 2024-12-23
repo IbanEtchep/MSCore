@@ -7,14 +7,12 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import fr.iban.common.messaging.CoreChannel;
 import fr.iban.common.messaging.Message;
 import fr.iban.common.messaging.message.EventAnnounce;
-import fr.iban.common.messaging.message.PlayerBoolean;
 import fr.iban.common.messaging.message.PlayerSLocationMessage;
 import fr.iban.common.teleport.RequestType;
 import fr.iban.common.teleport.TeleportToLocation;
 import fr.iban.common.teleport.TeleportToPlayer;
 import fr.iban.common.teleport.TpRequest;
 import fr.iban.velocitycore.CoreVelocityPlugin;
-import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import fr.iban.velocitycore.event.CoreMessageEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -22,7 +20,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 
 
-import java.util.Optional;
 import java.util.UUID;
 
 public class CoreMessageListener {
@@ -47,12 +44,11 @@ public class CoreMessageListener {
             case "TeleportToLocationBungee" -> consumeTeleportToLocationBungeeMessage(message);
             case "TeleportToPlayerBungee" -> consumeTeleportToPlayerBungeeMessage(message);
             case "TeleportRequestBungee" -> consumeTeleportRequestBungeeMessage(message);
-            case CoreChannel.SYNC_ACCOUNT_CHANNEL ->
-                    plugin.getAccountManager().reloadAccount(UUID.fromString(message.getMessage()));
+            case CoreChannel.SYNC_PLAYER_CHANNEL ->
+                    plugin.getPlayerManager().loadProfile(UUID.fromString(message.getMessage()));
             case CoreChannel.REMOVE_PENDING_TP_CHANNEL ->
                     plugin.getTeleportManager().getPendingTeleports().remove(UUID.fromString(message.getMessage()));
             case CoreChannel.REMOVE_TP_REQUEST_CHANNEL -> consumeRemoveTpRequestMessage(message);
-            case CoreChannel.VANISH_STATUS_CHANGE_CHANNEL -> consumeVanishStatusChangeMessage(message);
         }
     }
 
@@ -136,13 +132,13 @@ public class CoreMessageListener {
             server.sendMessage(Component.text(announce.getHostName() + " a lancé un event " + announce.getName(), NamedTextColor.DARK_PURPLE, TextDecoration.BOLD));
         }
 
-        broadcastLine(30);
-        server.sendMessage(getCenteredText(" " + announce.getName() + " ", 30, NamedTextColor.WHITE, NamedTextColor.DARK_PURPLE, TextDecoration.BOLD));
+        broadcastLine();
+        server.sendMessage(getCenteredText(" " + announce.getName() + " ", TextDecoration.BOLD));
         server.sendMessage(Component.text(announce.getDesc(), NamedTextColor.WHITE));
         server.sendMessage(Component.text("Arene : " + announce.getArena(), NamedTextColor.WHITE));
         server.sendMessage(Component.text("Cliquez pour rejoindre ou tapez /joinevent", NamedTextColor.DARK_PURPLE, TextDecoration.BOLD)
                 .clickEvent(ClickEvent.runCommand("/joinevent " + key)));
-        broadcastLine(30);
+        broadcastLine();
     }
 
 
@@ -151,19 +147,13 @@ public class CoreMessageListener {
      */
 
 
-    private void broadcastLine(int length) {
-        String line = "-".repeat(Math.max(0, length));
+    private void broadcastLine() {
+        String line = "-".repeat(Math.max(0, 30));
         plugin.getServer().sendMessage(Component.text(line, NamedTextColor.GRAY));
     }
 
-    private Component getCenteredText(String text, int length, NamedTextColor textColor, NamedTextColor bgColor, TextDecoration... decorations) {
-        String padding = " ".repeat(Math.max(0, (length - text.length()) / 2));
-        return Component.text(padding + text + padding, textColor).decorate(decorations);
+    private Component getCenteredText(String text, TextDecoration... decorations) {
+        String padding = " ".repeat(Math.max(0, (30 - text.length()) / 2));
+        return Component.text(padding + text + padding, NamedTextColor.WHITE).decorate(decorations);
     }
-
-    private void consumeVanishStatusChangeMessage(Message message) {
-        PlayerBoolean playerBoolean = message.getMessage(PlayerBoolean.class);
-        plugin.getPlayerManager().setVanished(playerBoolean.getUuid(), playerBoolean.isValue());
-    }
-
 }

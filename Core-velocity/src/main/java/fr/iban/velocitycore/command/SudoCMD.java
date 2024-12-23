@@ -6,7 +6,7 @@ import fr.iban.velocitycore.CoreVelocityPlugin;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
 import revxrsal.commands.annotation.Usage;
-import revxrsal.commands.velocity.VelocityCommandActor;
+import revxrsal.commands.velocity.actor.VelocityCommandActor;
 import revxrsal.commands.velocity.annotation.CommandPermission;
 
 public class SudoCMD {

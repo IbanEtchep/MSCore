@@ -26,12 +26,15 @@ dependencies {
 
     implementation(project(":core-common"))
     implementation("org.ocpsoft.prettytime:prettytime:5.0.9.Final")
-    implementation("com.github.Revxrsal.Lamp:common:3.3.2")
-    implementation("com.github.Revxrsal.Lamp:velocity:3.3.2")
+
     implementation("dev.dejvokep:boosted-yaml:1.3.4")
     implementation("de.themoep:minedown-adventure:1.7.3-SNAPSHOT")
     implementation("mysql:mysql-connector-java:8.0.33")
     implementation("org.apache.commons:commons-pool2:2.12.0")
+
+    implementation("io.github.revxrsal:lamp.common:4.0.0-beta.24")
+    implementation("io.github.revxrsal:lamp.velocity:4.0.0-beta.24")
+    implementation("io.github.revxrsal:lamp.brigadier:4.0.0-beta.24")
 
     compileOnly("net.luckperms:api:5.4")
     compileOnly("me.neznamy:tab-api:4.0.0")

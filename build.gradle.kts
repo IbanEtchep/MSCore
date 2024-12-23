@@ -3,16 +3,21 @@ plugins {
     id("io.github.goooler.shadow") version "8.1.7"
 }
 
+
 allprojects {
     apply(plugin = "java")
 
-    group = "fr.iban.servercore"
-    version = "1.0.5"
+    group = "com.github.IbanEtchep.MSCore"
+    version = "1.1.0"
 
     repositories {
         mavenCentral()
         maven("https://repo.papermc.io/repository/maven-public/")
         maven("https://jitpack.io")
+    }
+
+    tasks.withType<JavaCompile> {
+        options.compilerArgs.add("-parameters")
     }
 }
 

@@ -39,10 +39,10 @@ com-arcaniax-headdatabase-api = { module = "com.arcaniax:HeadDatabase-API", vers
 com-github-milkbowl-vaultapi = { module = "com.github.MilkBowl:VaultAPI", version.ref = "com-github-milkbowl-vaultapi" }
 com-github-milkbowl-vaultapi-x1 = { module = "com.github.MilkBowl:VaultAPI", version.ref = "com-github-milkbowl-vaultapi-x1" }
 com-github-plan-player-analytics-plan = { module = "com.github.plan-player-analytics:Plan", version.ref = "com-github-plan-player-analytics-plan" }
-com-github-revxrsal-lamp-bukkit = { module = "com.github.Revxrsal.Lamp:bukkit", version.ref = "com-github-revxrsal-lamp-bukkit" }
-com-github-revxrsal-lamp-bungee = { module = "com.github.Revxrsal.Lamp:bungee", version.ref = "com-github-revxrsal-lamp-bungee" }
-com-github-revxrsal-lamp-common = { module = "com.github.Revxrsal.Lamp:common", version.ref = "com-github-revxrsal-lamp-common" }
-com-github-revxrsal-lamp-velocity = { module = "com.github.Revxrsal.Lamp:velocity", version.ref = "com-github-revxrsal-lamp-velocity" }
+com-github-revxrsal-lamp-bukkit = { module = "io.github.revxrsal:lamp.bukkit", version.ref = "com-github-revxrsal-lamp-bukkit" }
+com-github-revxrsal-lamp-bungee = { module = "io.github.revxrsal:lamp.bungee", version.ref = "com-github-revxrsal-lamp-bungee" }
+com-github-revxrsal-lamp-common = { module = "io.github.revxrsal:lamp.common", version.ref = "com-github-revxrsal-lamp-common" }
+com-github-revxrsal-lamp-velocity = { module = "io.github.revxrsal:lamp.velocity", version.ref = "com-github-revxrsal-lamp-velocity" }
 com-github-technicallycoded-folialib = { module = "com.github.technicallycoded:FoliaLib", version.ref = "com-github-technicallycoded-folialib" }
 com-google-code-gson-gson = { module = "com.google.code.gson:gson", version.ref = "com-google-code-gson-gson" }
 com-velocitypowered-velocity-api = { module = "com.velocitypowered:velocity-api", version.ref = "com-velocitypowered-velocity-api" }

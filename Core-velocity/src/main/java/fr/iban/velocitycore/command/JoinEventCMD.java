@@ -5,9 +5,6 @@ import fr.iban.velocitycore.CoreVelocityPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.*;
-import revxrsal.commands.velocity.VelocityCommandActor;
-import revxrsal.commands.velocity.VelocityCommandHandler;
-import revxrsal.commands.velocity.annotation.CommandPermission;
 
 public class JoinEventCMD {
 
@@ -34,9 +31,5 @@ public class JoinEventCMD {
         } else {
             player.sendMessage(Component.text("Il n'y a pas d'event à ce nom.", NamedTextColor.RED));
         }
-    }
-
-    public void setupCommands(VelocityCommandHandler handler) {
-        handler.register(this);
     }
 }

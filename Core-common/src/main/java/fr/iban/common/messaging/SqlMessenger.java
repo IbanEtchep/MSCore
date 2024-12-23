@@ -14,7 +14,7 @@ public class SqlMessenger extends AbstractMessenger {
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private DataSource ds = DbAccess.getDataSource();
+    private final DataSource ds = DbAccess.getDataSource();
     private boolean locked = false;
     private long lastId;
 

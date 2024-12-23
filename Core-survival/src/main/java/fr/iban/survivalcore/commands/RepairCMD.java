@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.DefaultFor;
+import revxrsal.commands.annotation.CommandPlaceholder;
 import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
@@ -28,8 +28,12 @@ public class RepairCMD {
         this.plugin = plugin;
     }
 
+    @CommandPlaceholder
+    public void repair(Player player) {
+        repairHand(player);
+    }
+
     @Subcommand("hand")
-    @DefaultFor("repair")
     @CommandPermission("servercore.repair")
     public void repairHand(Player player) {
         ItemStack item = player.getInventory().getItemInMainHand();
