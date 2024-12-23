@@ -42,7 +42,7 @@ import static revxrsal.commands.velocity.VelocityVisitors.brigadier;
 @Plugin(
         id = "corevelocity",
         name = "CoreVelocity",
-        version = "1.0.5",
+        version = "1.1.0",
         dependencies = {
                 @Dependency(id = "tab", optional = true),
                 @Dependency(id = "luckperms"),
