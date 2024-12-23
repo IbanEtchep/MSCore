@@ -61,7 +61,7 @@ public class ChatManager {
 
         MSPlayerProfile senderProfile = playerManager.getProfile(senderUUID);
 
-        if (!senderProfile.getOption(Option.TCHAT)) {
+        if (!senderProfile.getOption(Option.CHAT)) {
             sender.sendMessage(MineDown.parse("&cVous ne pouvez pas envoyer ce message car votre tchat est désactivé"));
             logMessage(MineDown.parse("§8[§CDÉSACTIVÉ§8]§r " + message));
             return;
@@ -77,7 +77,7 @@ public class ChatManager {
                 MSPlayerProfile receiverProfile = playerManager.getProfile(receiverUUID);
                 String receiverUsername = receiverPlayer.getUsername();
 
-                if (!receiverProfile.getOption(Option.TCHAT) || receiverProfile.getIgnoredPlayers().contains(sender.getUniqueId())) {
+                if (!receiverProfile.getOption(Option.CHAT) || receiverProfile.getIgnoredPlayers().contains(sender.getUniqueId())) {
                     continue;
                 }
 

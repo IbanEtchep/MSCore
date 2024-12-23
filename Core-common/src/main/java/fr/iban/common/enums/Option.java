@@ -7,7 +7,7 @@ public enum Option {
 	LEAVE_MESSAGE(true),
 	DEATH_MESSAGE(true),
 	TP(true),
-	TCHAT(true),
+	CHAT(true),
 	MENTION(true),
 	MSG(true);
 	

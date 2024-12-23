@@ -37,20 +37,21 @@ public class MSPlayerProfile extends MSPlayer {
         return jsonData.blackListedAnnounces;
     }
 
-    public Map<Option, Boolean> getOptions() {
-        return jsonData.options;
+    public boolean getOption(Option option) {
+        return jsonData.options.getOrDefault(option, option.getDefaultValue());
     }
 
     public void setOption(Option option, boolean value) {
-        jsonData.options.put(option, value);
-    }
-
-    public boolean getOption(Option option) {
-        return jsonData.options.getOrDefault(option, false);
+        // Only save the option if it's different from the default value
+        if (value != option.getDefaultValue()) {
+            jsonData.options.put(option, value);
+        } else {
+            jsonData.options.remove(option);
+        }
     }
 
     public void toggleOption(Option option) {
-        jsonData.options.put(option, !getOption(option));
+        setOption(option, !getOption(option));
     }
 
     public String toJson() {
