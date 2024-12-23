@@ -35,7 +35,9 @@ public class EssentialsListeners implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         IUser user = plugin.getEssentials().getUser(player);
-        if(plugin.getPlayerManager().getProfile(player.getUniqueId()).isVanished() && !user.isVanished()) {
+        MSPlayerProfile profile = plugin.getPlayerManager().getProfile(player.getUniqueId());
+
+        if(profile != null && profile.isVanished() && !user.isVanished()) {
             user.setVanished(true);
         }
     }

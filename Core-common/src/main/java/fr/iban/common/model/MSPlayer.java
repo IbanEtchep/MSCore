@@ -1,6 +1,5 @@
 package fr.iban.common.model;
 
-import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -8,15 +7,10 @@ public class MSPlayer {
 
     private final UUID uuid;
     private String name;
-    private long lastSeen;
+    private long lastSeen = 0;
 
     public MSPlayer(UUID uuid) {
         this.uuid = uuid;
-    }
-
-    public MSPlayer(UUID uuid, String name) {
-        this.uuid = uuid;
-        this.name = name;
     }
 
     public UUID getUniqueId() {
@@ -31,19 +25,11 @@ public class MSPlayer {
         this.name = name;
     }
 
-    public void setLastSeen(Date date) {
-        this.lastSeen = date.getTime();
-    }
-
     public void setLastSeen(long lastSeen) {
         this.lastSeen = lastSeen;
     }
 
-    public Date getLastSeen() {
-        return new Date(lastSeen);
-    }
-
-    public long getLastSeenTimestamp() {
+    public long getLastSeen() {
         return lastSeen;
     }
 

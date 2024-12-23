@@ -4,6 +4,7 @@ import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.rewards.RewardsDAO;
 import fr.iban.bukkitcore.utils.PluginMessageHelper;
 import fr.iban.common.manager.GlobalLoggerManager;
+import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.messaging.CoreChannel;
 import fr.iban.common.messaging.message.PlayerStringMessage;
 import org.bukkit.Bukkit;
@@ -14,6 +15,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class JoinQuitListeners implements Listener {
 
@@ -27,10 +29,22 @@ public class JoinQuitListeners implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
+        UUID uniqueId = player.getUniqueId();
+
         e.joinMessage(null);
-        RewardsDAO.getRewardsAsync(player.getUniqueId()).thenAccept(list -> {
+
+        RewardsDAO.getRewardsAsync(uniqueId).thenAccept(list -> {
             if (!list.isEmpty()) {
                 player.sendMessage("§aVous avez une ou plusieurs récompenses en attente ! (recompenses)");
+            }
+        });
+
+        PlayerManager playerManager = plugin.getPlayerManager();
+
+        plugin.getScheduler().runAsync(task -> {
+            if(playerManager.getProfile(uniqueId) == null) {
+                playerManager.loadProfile(uniqueId);
+                playerManager.handlePlayerJoin(uniqueId);
             }
         });
 

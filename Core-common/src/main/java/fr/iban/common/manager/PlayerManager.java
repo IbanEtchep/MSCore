@@ -16,6 +16,7 @@ public class PlayerManager {
     protected final Map<UUID, MSPlayer> playersByUUID = new ConcurrentHashMap<>();
     protected final Map<String, MSPlayer> playersByName = new ConcurrentHashMap<>();
     protected final Map<UUID, MSPlayerProfile> profiles = new ConcurrentHashMap<>();
+    protected Set<UUID> onlinePlayers = ConcurrentHashMap.newKeySet();
 
     protected final MSPlayerDAO dao;
 
@@ -29,15 +30,19 @@ public class PlayerManager {
 
     public void load() {
         CompletableFuture.runAsync(() -> {
-            dao.getOfflinePlayers().forEach(player -> {
-                playersByUUID.put(player.getUniqueId(), player);
-                playersByName.put(player.getName(), player);
-            });
+                    dao.getOfflinePlayers().forEach(player -> {
+                        playersByUUID.put(player.getUniqueId(), player);
+                        playersByName.put(player.getName(), player);
+                    });
 
-            dao.getOnlinePlayerIds().forEach(uuid -> {
-                profiles.put(uuid, dao.getPlayerProfile(uuid));
-            });
-        });
+                    dao.getOnlinePlayerIds().forEach(uuid -> {
+                        profiles.put(uuid, dao.getPlayerProfile(uuid));
+                    });
+                })
+                .exceptionally(e -> {
+                    e.printStackTrace();
+                    return null;
+                });
     }
 
     public MSPlayerProfile getProfile(UUID uuid) {
@@ -59,21 +64,23 @@ public class PlayerManager {
     }
 
     public Set<String> getOnlinePlayerNames() {
-        return profiles.values().stream()
-                .filter(MSPlayerProfile::isOnline)
-                .map(MSPlayer::getName)
+        return onlinePlayers.stream()
+                .map(uuid -> playersByUUID.get(uuid).getName())
                 .collect(Collectors.toSet());
     }
 
     public CompletableFuture<Void> saveProfile(MSPlayerProfile profile) {
         return CompletableFuture.runAsync(() -> {
-            dao.saveMSPlayer(profile);
+            dao.savePlayerProfile(profile);
 
             playersByUUID.put(profile.getUniqueId(), profile);
             playersByName.put(profile.getName(), profile);
             profiles.put(profile.getUniqueId(), profile);
 
-            messagingManager.sendMessage(CoreChannel.SYNC_PLAYER_CHANNEL, profile.getUniqueId());
+            messagingManager.sendMessage(CoreChannel.SYNC_PLAYER_CHANNEL, profile.getUniqueId().toString());
+        }).exceptionally(e -> {
+            e.printStackTrace();
+            return null;
         });
     }
 
@@ -82,7 +89,7 @@ public class PlayerManager {
 
         playersByUUID.put(uuid, profile);
         playersByName.put(profile.getName(), profile);
-        profiles.put(uuid, new MSPlayerProfile(profile));
+        profiles.put(uuid, profile);
 
         return profile;
     }
@@ -92,8 +99,11 @@ public class PlayerManager {
         dao.clearOnlinePlayers();
     }
 
-    public void handleProxyJoin(UUID uuid) {
+    public void handleProxyJoin(MSPlayerProfile profile) {
+        UUID uuid = profile.getUniqueId();
+
         dao.addOnlinePlayer(uuid);
+        dao.saveLoginToDb(uuid, System.currentTimeMillis(), profile.getIp());
         messagingManager.sendMessage(CoreChannel.PLAYER_JOIN_CHANNEL, uuid.toString());
     }
 
@@ -103,17 +113,11 @@ public class PlayerManager {
     }
 
     public void handlePlayerJoin(UUID uuid) {
-        MSPlayerProfile profile = profiles.get(uuid);
-
-        if(profile == null) {
-            profile = dao.getPlayerProfile(uuid);
-        }
-
-        profile.setOnline(true);
+        onlinePlayers.add(uuid);
     }
 
     public void handlePlayerQuit(UUID uuid) {
-        profiles.get(uuid).setOnline(false);
+        onlinePlayers.remove(uuid);
     }
 
     public Set<MSPlayerProfile> getProfiles() {
@@ -121,6 +125,6 @@ public class PlayerManager {
     }
 
     public boolean isOnline(UUID uuid) {
-        return profiles.containsKey(uuid) && profiles.get(uuid).isOnline();
+        return onlinePlayers.contains(uuid);
     }
 }

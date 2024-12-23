@@ -12,6 +12,7 @@ import fr.iban.bukkitcore.utils.PluginMessageHelper;
 import fr.iban.bukkitcore.utils.TextCallback;
 import fr.iban.common.data.sql.DbAccess;
 import fr.iban.common.data.sql.DbCredentials;
+import fr.iban.common.manager.GlobalLoggerManager;
 import fr.iban.common.manager.TrustedCommandsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -45,6 +46,9 @@ public final class CoreBukkitPlugin extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
+
+        GlobalLoggerManager.initLogger();
+
         this.foliaLib = new FoliaLib(this);
         this.serverName = getConfig().getString("servername");
 
@@ -94,13 +98,16 @@ public final class CoreBukkitPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        GlobalLoggerManager.shutdownLogger();
         messagingManager.close();
         DbAccess.closePool();
     }
 
     private void registerCommands() {
+        CoreCommandHandlerVisitor coreCommandHandlerVisitor = new CoreCommandHandlerVisitor(this);
+
         Lamp.Builder<BukkitCommandActor> lampBuilder = BukkitLamp.builder(this);
-        new CoreCommandHandlerVisitor(this).visitor().visit(lampBuilder);
+        lampBuilder.accept(coreCommandHandlerVisitor.visitor());
         Lamp<BukkitCommandActor> lamp = lampBuilder.build();
 
         lamp.register(new TeleportCommands(this));

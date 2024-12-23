@@ -15,20 +15,22 @@ import java.util.UUID;
 @Command("ignore")
 public class IgnoreCommand {
 
-    private final CoreVelocityPlugin plugin;
     private final ProxyServer server;
     private final PlayerManager playerManager;
 
     public IgnoreCommand(CoreVelocityPlugin plugin) {
-        this.plugin = plugin;
         this.server = plugin.getServer();
         this.playerManager = plugin.getPlayerManager();
     }
 
-    @Subcommand("help")
     @CommandPlaceholder
-    @Description("Affiche les options de la commande ignore.")
     public void ignore(Player player) {
+        help(player);
+    }
+
+    @Subcommand("help")
+    @Description("Affiche les options de la commande ignore.")
+    public void help(Player player) {
         Component message = Component.text("Utilisez ", NamedTextColor.GRAY)
                 .append(Component.text("/ignore add <joueur>", NamedTextColor.GREEN))
                 .append(Component.text(" pour ignorer un joueur.\n", NamedTextColor.GRAY))
@@ -69,7 +71,7 @@ public class IgnoreCommand {
         if (account.getIgnoredPlayers().contains(target.getUniqueId())) {
             account.getIgnoredPlayers().remove(target.getUniqueId());
             player.sendMessage(Component.text("Vous n'ignorez plus " + target.getUsername() + ".", NamedTextColor.GREEN));
-            new MSPlayerDAO().removeIgnoredPlayer(target.getUniqueId(), target.getUniqueId());
+            playerManager.saveProfile(account);
         } else {
             player.sendMessage(Component.text("Ce joueur n'est pas ignoré.", NamedTextColor.RED));
         }

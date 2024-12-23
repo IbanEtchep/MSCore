@@ -21,10 +21,14 @@ public class CoreCMD {
         this.plugin = plugin;
     }
 
-    @Subcommand("help")
     @CommandPlaceholder
-    @Description("Affiche les options de commande pour le serveur.")
     public void core(VelocityCommandActor actor) {
+        help(actor);
+    }
+
+    @Subcommand("help")
+    @Description("Affiche les options de commande pour le serveur.")
+    public void help(VelocityCommandActor actor) {
         Component message = Component.text("Utilisez ", NamedTextColor.GRAY)
                 .append(Component.text("/vcore reload", NamedTextColor.GREEN))
                 .append(Component.text(" pour recharger la configuration.\n", NamedTextColor.GRAY))

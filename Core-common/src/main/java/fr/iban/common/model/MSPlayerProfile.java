@@ -1,49 +1,67 @@
 package fr.iban.common.model;
 
+import com.google.gson.Gson;
 import fr.iban.common.enums.Option;
 
 import java.util.*;
 
-public class MSPlayerProfile extends  MSPlayer {
+public class MSPlayerProfile extends MSPlayer {
 
-    private Set<Integer> blackListedAnnounces = new HashSet<>();
-    private Set<UUID> ignoredPlayers = new HashSet<>();
-    private Map<Option, Boolean> options = new HashMap<>();
+    private JsonData jsonData = new JsonData();
     private String ip;
-
-    private boolean vanished;
-    private boolean online;
 
     public MSPlayerProfile(UUID uuid) {
         super(uuid);
     }
 
-    public MSPlayerProfile(MSPlayer msPlayer) {
-        super(msPlayer.getUniqueId(), msPlayer.getName());
+    private static class JsonData {
+        private boolean vanished;
+        private final Set<UUID> ignoredPlayers = new HashSet<>();
+        private final Set<Integer> blackListedAnnounces = new HashSet<>();
+        private final Map<Option, Boolean> options = new HashMap<>();
     }
 
-    public void setBlackListedAnnounces(Set<Integer> blackListedAnnounces) {
-        this.blackListedAnnounces = blackListedAnnounces;
+    public boolean isVanished() {
+        return jsonData.vanished;
     }
 
-    public void setIgnoredPlayers(Set<UUID> ignoredPlayers) {
-        this.ignoredPlayers = ignoredPlayers;
+    public void setVanished(boolean vanished) {
+        jsonData.vanished = vanished;
     }
 
-    public void setOptions(Map<Option, Boolean> options) {
-        this.options = options;
+    public Set<UUID> getIgnoredPlayers() {
+        return jsonData.ignoredPlayers;
+    }
+
+    public Set<Integer> getBlackListedAnnounces() {
+        return jsonData.blackListedAnnounces;
+    }
+
+    public Map<Option, Boolean> getOptions() {
+        return jsonData.options;
     }
 
     public void setOption(Option option, boolean value) {
-        options.put(option, value);
-    }
-
-    public void toggleOption(Option option) {
-        options.put(option, !getOption(option));
+        jsonData.options.put(option, value);
     }
 
     public boolean getOption(Option option) {
-        return options.getOrDefault(option, option.getDefaultValue());
+        return jsonData.options.getOrDefault(option, false);
+    }
+
+    public void toggleOption(Option option) {
+        jsonData.options.put(option, !getOption(option));
+    }
+
+    public String toJson() {
+        return new Gson().toJson(jsonData);
+    }
+
+    public void fromJson(String json) {
+        this.jsonData = new Gson().fromJson(json, JsonData.class);
+        if (this.jsonData == null) {
+            this.jsonData = new JsonData();
+        }
     }
 
     public String getIp() {
@@ -52,43 +70,5 @@ public class MSPlayerProfile extends  MSPlayer {
 
     public void setIp(String ip) {
         this.ip = ip;
-    }
-
-    public Set<Integer> getBlackListedAnnounces() {
-        if (blackListedAnnounces == null) {
-            blackListedAnnounces = new HashSet<>();
-        }
-        return blackListedAnnounces;
-    }
-
-    public Set<UUID> getIgnoredPlayers() {
-        if (ignoredPlayers == null) {
-            ignoredPlayers = new HashSet<>();
-        }
-
-        return ignoredPlayers;
-    }
-
-    public Map<Option, Boolean> getOptions() {
-        if (options == null) {
-            options = new HashMap<>();
-        }
-        return options;
-    }
-
-    public boolean isVanished() {
-        return vanished;
-    }
-
-    public void setVanished(boolean vanished) {
-        this.vanished = vanished;
-    }
-
-    public void setOnline(boolean online) {
-        this.online = online;
-    }
-
-    public boolean isOnline() {
-        return online;
     }
 }

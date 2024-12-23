@@ -9,7 +9,6 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import de.themoep.minedown.adventure.MineDown;
 import fr.iban.common.enums.Option;
 import fr.iban.common.manager.PlayerManager;
-import fr.iban.common.model.MSPlayer;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.utils.ArrayUtils;
 import fr.iban.velocitycore.CoreVelocityPlugin;
@@ -77,20 +76,19 @@ public class ProxyJoinQuitListener {
         ProxyServer proxy = plugin.getServer();
 
         proxy.getScheduler().buildTask(plugin, () -> {
-            MSPlayer msPlayer = playerManager.getOfflinePlayer(uuid);
+            MSPlayerProfile profile = playerManager.loadProfile(uuid);
 
-            if (msPlayer != null) {
-
-                if ((System.currentTimeMillis() - msPlayer.getLastSeenTimestamp()) > 60000) {
+            if (profile.getLastSeen() != 0) {
+                if ((System.currentTimeMillis() - profile.getLastSeen()) > 60000) {
                     String joinMessage = "&8[&a+&8] &8";
-                    if ((System.currentTimeMillis() - msPlayer.getLastSeenTimestamp()) > 2592000000L) {
+                    if ((System.currentTimeMillis() - profile.getLastSeen()) > 2592000000L) {
                         joinMessage += String.format(ArrayUtils.getRandomFromArray(longAbsenceMessages), player.getUsername());
                     } else {
                         joinMessage += String.format(ArrayUtils.getRandomFromArray(joinMessages), player.getUsername());
                     }
 
                     Component message = MineDown.parse(joinMessage).hoverEvent(HoverEvent.showText(
-                            Component.text("Vu pour la dernière fois " + getLastSeen(msPlayer.getLastSeenTimestamp()), NamedTextColor.GRAY)
+                            Component.text("Vu pour la dernière fois " + getLastSeen(profile.getLastSeen()), NamedTextColor.GRAY)
                     ));
 
                     proxy.getAllPlayers().forEach(p -> {
@@ -111,12 +109,12 @@ public class ProxyJoinQuitListener {
                 proxy.sendMessage(welcomeComponent);
             }
 
-            MSPlayerProfile profile = playerManager.loadProfile(uuid);
             profile.setName(player.getUsername());
             profile.setIp(player.getRemoteAddress().getHostString());
             profile.setLastSeen(System.currentTimeMillis());
+
             playerManager.saveProfile(profile)
-                    .thenRun(() -> plugin.getPlayerManager().handleProxyJoin(uuid));
+                    .thenRun(() -> plugin.getPlayerManager().handleProxyJoin(profile));
 
         }).delay(100, TimeUnit.MILLISECONDS).schedule();
     }
@@ -134,7 +132,7 @@ public class ProxyJoinQuitListener {
         String quitMessage = "&8[&c-&8] &8" + String.format(ArrayUtils.getRandomFromArray(quitMessages), player.getUsername());
         Component quitMessageComponent = MineDown.parse(quitMessage);
 
-        if ((System.currentTimeMillis() - account.getLastSeenTimestamp()) > 60000) {
+        if ((System.currentTimeMillis() - account.getLastSeen()) > 60000) {
             proxy.getAllPlayers().forEach(p -> {
                 MSPlayerProfile account2 = playerManager.getProfile(p.getUniqueId());
                 if (account2.getOption(Option.LEAVE_MESSAGE) && !account2.getIgnoredPlayers().contains(player.getUniqueId())) {

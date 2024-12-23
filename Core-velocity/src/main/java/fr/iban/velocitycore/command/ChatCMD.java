@@ -23,10 +23,14 @@ public class ChatCMD {
         this.server = plugin.getServer();
     }
 
-    @Subcommand("help")
     @CommandPlaceholder
-    @Description("Affiche les commandes de gestion du chat.")
     public void chat(Player player) {
+        help(player);
+    }
+
+    @Subcommand("help")
+    @Description("Affiche les commandes de gestion du chat.")
+    public void help(Player player) {
         player.sendMessage(Component.text("Commandes chat :", NamedTextColor.GREEN));
         player.sendMessage(Component.text("/chat toggle - mute/unmute le chat", NamedTextColor.GREEN));
     }

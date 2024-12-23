@@ -11,11 +11,11 @@ import revxrsal.commands.parameter.ParameterType;
 import revxrsal.commands.parameter.PrioritySpec;
 import revxrsal.commands.stream.MutableStringStream;
 
-public class OnlineMSPlayerParameterType implements ParameterType<BukkitCommandActor, MSPlayerProfile> {
+public class MSPlayerProfileParameterType implements ParameterType<BukkitCommandActor, MSPlayerProfile> {
 
     private final PlayerManager playerManager;
 
-    public OnlineMSPlayerParameterType(PlayerManager playerManager) {
+    public MSPlayerProfileParameterType(PlayerManager playerManager) {
         this.playerManager = playerManager;
     }
 

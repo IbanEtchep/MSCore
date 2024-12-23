@@ -7,7 +7,7 @@ plugins {
 allprojects {
     apply(plugin = "java")
 
-    group = "fr.iban.servercore"
+    group = "com.github.IbanEtchep.MSCore"
     version = "1.0.5"
 
     repositories {

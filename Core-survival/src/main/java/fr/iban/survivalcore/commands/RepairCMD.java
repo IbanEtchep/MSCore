@@ -28,8 +28,12 @@ public class RepairCMD {
         this.plugin = plugin;
     }
 
-    @Subcommand("hand")
     @CommandPlaceholder
+    public void repair(Player player) {
+        repairHand(player);
+    }
+
+    @Subcommand("hand")
     @CommandPermission("servercore.repair")
     public void repairHand(Player player) {
         ItemStack item = player.getInventory().getItemInMainHand();

@@ -2,6 +2,7 @@ package fr.iban.common.data.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import fr.iban.common.data.MigrationManager;
 import org.jdbi.v3.core.Jdbi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +12,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 
 public class DbAccess {
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(DbAccess.class);
 	private static HikariDataSource dataSource;
 	private static Jdbi jdbi;
@@ -63,6 +63,12 @@ public class DbAccess {
 			// Test connection
 			if (testConnection()) {
 				LOGGER.info("Database connection established successfully");
+
+				// Exécuter les migrations
+				LOGGER.info("Running database migrations...");
+				MigrationManager migrationManager = new MigrationManager(jdbi, LOGGER);
+				migrationManager.initialize();
+				LOGGER.info("Database migrations completed");
 			}
 
 		} catch (Exception e) {
@@ -94,16 +100,6 @@ public class DbAccess {
 		return jdbi;
 	}
 
-	// Méthodes utilitaires pour les opérations asynchrones
-	public static <T> CompletableFuture<T> async(Supplier<T> supplier) {
-		return CompletableFuture.supplyAsync(supplier, DB_EXECUTOR);
-	}
-
-	public static CompletableFuture<Void> asyncVoid(Runnable runnable) {
-		return CompletableFuture.runAsync(runnable, DB_EXECUTOR);
-	}
-
-	// Test de connexion
 	private static boolean testConnection() {
 		try (Connection conn = dataSource.getConnection()) {
 			return conn.isValid(5);
