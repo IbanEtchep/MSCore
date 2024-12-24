@@ -8,6 +8,7 @@ import org.jdbi.v3.core.Jdbi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -162,7 +163,7 @@ public class MSPlayerDAO {
             ON DUPLICATE KEY UPDATE id = id
             """)
                 .bind("uuid", uuid.toString())
-                .bind("lastSeen", lastSeen)
+                .bind("lastSeen", new Timestamp(lastSeen))
                 .bind("ip", ip)
                 .execute()
         );

@@ -114,7 +114,11 @@ public class ProxyJoinQuitListener {
             profile.setLastSeen(System.currentTimeMillis());
 
             playerManager.saveProfile(profile)
-                    .thenRun(() -> plugin.getPlayerManager().handleProxyJoin(profile));
+                    .thenRun(() -> plugin.getPlayerManager().handleProxyJoin(profile))
+                    .exceptionally(e1 -> {
+                        e1.printStackTrace();
+                        return null;
+                    });
 
         }).delay(100, TimeUnit.MILLISECONDS).schedule();
     }
@@ -123,10 +127,6 @@ public class ProxyJoinQuitListener {
     public void onDisconnect(DisconnectEvent e) {
         Player player = e.getPlayer();
         ProxyServer proxy = plugin.getServer();
-
-        if(!plugin.getPlayerManager().isOnline(player.getUniqueId())) {
-            return;
-        }
 
         MSPlayerProfile account = playerManager.getProfile(player.getUniqueId());
         String quitMessage = "&8[&c-&8] &8" + String.format(ArrayUtils.getRandomFromArray(quitMessages), player.getUsername());
@@ -145,7 +145,12 @@ public class ProxyJoinQuitListener {
 
         account.setLastSeen(System.currentTimeMillis());
         playerManager.saveProfile(account)
-                .thenRun(() -> plugin.getPlayerManager().handleProxyQuit(player.getUniqueId()));
+                .thenRun(() -> plugin.getPlayerManager().handleProxyQuit(player.getUniqueId()))
+                .exceptionally(e1 -> {
+                    e1.printStackTrace();
+                    return null;
+                });
+        
         plugin.getChatManager().clearPlayerReplies(player);
     }
 

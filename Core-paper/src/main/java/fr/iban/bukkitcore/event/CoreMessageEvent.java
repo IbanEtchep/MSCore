@@ -7,7 +7,7 @@ import org.bukkit.event.HandlerList;
 public class CoreMessageEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
-    private Message message;
+    private final Message message;
 
     public CoreMessageEvent(Message message) {
         super(true);

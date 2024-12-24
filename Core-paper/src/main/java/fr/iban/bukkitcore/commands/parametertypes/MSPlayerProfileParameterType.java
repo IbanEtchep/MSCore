@@ -40,4 +40,5 @@ public class MSPlayerProfileParameterType implements ParameterType<BukkitCommand
     public @NotNull PrioritySpec parsePriority() {
         return PrioritySpec.highest();
     }
+
 }

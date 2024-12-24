@@ -6,6 +6,8 @@ import fr.iban.common.messaging.CoreChannel;
 import fr.iban.common.messaging.Message;
 import fr.iban.common.model.MSPlayer;
 import fr.iban.common.model.MSPlayerProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 
 public class PlayerManager {
 
+    private static final Logger log = LoggerFactory.getLogger(PlayerManager.class);
     protected final Map<UUID, MSPlayer> playersByUUID = new ConcurrentHashMap<>();
     protected final Map<String, MSPlayer> playersByName = new ConcurrentHashMap<>();
     protected final Map<UUID, MSPlayerProfile> profiles = new ConcurrentHashMap<>();
@@ -31,13 +34,16 @@ public class PlayerManager {
 
     public void load() {
         CompletableFuture.runAsync(() -> {
-                    dao.getOfflinePlayers().forEach(player -> {
-                        playersByUUID.put(player.getUniqueId(), player);
-                        playersByName.put(player.getName(), player);
+                    dao.getOfflinePlayers().forEach(msPlayer -> {
+                        playersByUUID.put(msPlayer.getUniqueId(), msPlayer);
+                        playersByName.put(msPlayer.getName(), msPlayer);
                     });
+
+                    log.info("Loaded {} players from the database.", playersByUUID.size());
 
                     dao.getOnlinePlayerIds().forEach(uuid -> {
                         profiles.put(uuid, dao.getPlayerProfile(uuid));
+                        onlinePlayers.add(uuid);
                     });
                 })
                 .exceptionally(e -> {
