@@ -1,6 +1,6 @@
 package fr.iban.common.messaging;
 
-import com.google.gson.Gson;
+import fr.iban.common.utils.GsonProvider;
 
 public class Message {
 
@@ -29,6 +29,6 @@ public class Message {
     }
 
     public <T> T getMessage(Class<T> clazz) {
-        return new Gson().fromJson(message, clazz);
+        return GsonProvider.getGson().fromJson(message, clazz);
     }
 }

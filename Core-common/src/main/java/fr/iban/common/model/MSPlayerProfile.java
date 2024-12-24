@@ -8,14 +8,14 @@ import java.util.*;
 
 public class MSPlayerProfile extends MSPlayer {
 
-    private JsonData jsonData = new JsonData();
-    private String ip;
+    private JsonData data = new JsonData();
 
     public MSPlayerProfile(UUID uuid) {
         super(uuid);
     }
 
     private static class JsonData {
+        private String ip;
         private boolean vanished;
         private SLocation deathLocation;
         private SLocation lastRTPLocation;
@@ -26,55 +26,55 @@ public class MSPlayerProfile extends MSPlayer {
     }
 
     public boolean isVanished() {
-        return jsonData.vanished;
+        return data.vanished;
     }
 
     public void setVanished(boolean vanished) {
-        jsonData.vanished = vanished;
+        data.vanished = vanished;
     }
 
     public SLocation getDeathLocation() {
-        return jsonData.deathLocation;
+        return data.deathLocation;
     }
 
     public void setDeathLocation(SLocation deathLocation) {
-        jsonData.deathLocation = deathLocation;
+        data.deathLocation = deathLocation;
     }
 
     public SLocation getLastRTPLocation() {
-        return jsonData.lastRTPLocation;
+        return data.lastRTPLocation;
     }
 
     public void setLastRTPLocation(SLocation lastRTPLocation) {
-        jsonData.lastRTPLocation = lastRTPLocation;
+        data.lastRTPLocation = lastRTPLocation;
     }
 
     public SLocation getLastSurvivalLocation() {
-        return jsonData.lastSurvivalLocation;
+        return data.lastSurvivalLocation;
     }
 
     public void setLastSurvivalLocation(SLocation lastSurvivalLocation) {
-        jsonData.lastSurvivalLocation = lastSurvivalLocation;
+        data.lastSurvivalLocation = lastSurvivalLocation;
     }
 
     public Set<UUID> getIgnoredPlayers() {
-        return jsonData.ignoredPlayers;
+        return data.ignoredPlayers;
     }
 
     public Set<Integer> getBlackListedAnnounces() {
-        return jsonData.blackListedAnnounces;
+        return data.blackListedAnnounces;
     }
 
     public boolean getOption(Option option) {
-        return jsonData.options.getOrDefault(option, option.getDefaultValue());
+        return data.options.getOrDefault(option, option.getDefaultValue());
     }
 
     public void setOption(Option option, boolean value) {
         // Only save the option if it's different from the default value
         if (value != option.getDefaultValue()) {
-            jsonData.options.put(option, value);
+            data.options.put(option, value);
         } else {
-            jsonData.options.remove(option);
+            data.options.remove(option);
         }
     }
 
@@ -82,22 +82,32 @@ public class MSPlayerProfile extends MSPlayer {
         setOption(option, !getOption(option));
     }
 
-    public String toJson() {
-        return new Gson().toJson(jsonData);
-    }
-
-    public void fromJson(String json) {
-        this.jsonData = new Gson().fromJson(json, JsonData.class);
-        if (this.jsonData == null) {
-            this.jsonData = new JsonData();
-        }
-    }
-
     public String getIp() {
-        return ip;
+        return data.ip;
     }
 
     public void setIp(String ip) {
-        this.ip = ip;
+        data.ip = ip;
     }
+
+    public static void validateJsonData(String json) {
+        JsonData testData = new Gson().fromJson(json, JsonData.class);
+        if (testData == null) {
+            throw new IllegalStateException("Deserialized data is null");
+        }
+    }
+
+    public void setDataFromJson(String json) {
+        if (json != null) {
+            this.data = new Gson().fromJson(json, JsonData.class);
+            if (this.data == null) {
+                this.data = new JsonData();
+            }
+        }
+    }
+
+    public String dataToJson() {
+        return new Gson().toJson(data);
+    }
+
 }

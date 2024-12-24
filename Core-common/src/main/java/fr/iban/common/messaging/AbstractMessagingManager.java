@@ -1,11 +1,10 @@
 package fr.iban.common.messaging;
 
-import com.google.gson.Gson;
+import fr.iban.common.utils.GsonProvider;
 
 public abstract class AbstractMessagingManager {
 
     protected AbstractMessenger messenger;
-    private final Gson gson = new Gson();
 
     /**
      * Init an implementation of AbstractMessenger
@@ -21,7 +20,7 @@ public abstract class AbstractMessagingManager {
     }
 
     public <T> void sendMessage(String channel, T message) {
-        sendMessage(channel, gson.toJson(message));
+        sendMessage(channel, GsonProvider.getGson().toJson(message));
     }
 
     public AbstractMessenger getMessenger() {

@@ -3,6 +3,7 @@ package fr.iban.common.manager;
 import fr.iban.common.data.dao.MSPlayerDAO;
 import fr.iban.common.messaging.AbstractMessagingManager;
 import fr.iban.common.messaging.CoreChannel;
+import fr.iban.common.messaging.Message;
 import fr.iban.common.model.MSPlayer;
 import fr.iban.common.model.MSPlayerProfile;
 
@@ -72,7 +73,7 @@ public class PlayerManager {
     public CompletableFuture<Void> saveProfile(MSPlayerProfile profile) {
         return CompletableFuture.runAsync(() -> {
             dao.savePlayerProfile(profile);
-            messagingManager.sendMessage(CoreChannel.SYNC_PLAYER_CHANNEL, profile.getUniqueId().toString());
+            messagingManager.sendMessage(CoreChannel.SYNC_PLAYER_CHANNEL, profile);
         }).exceptionally(e -> {
             e.printStackTrace();
             return null;
@@ -87,6 +88,13 @@ public class PlayerManager {
         profiles.put(uuid, profile);
 
         return profile;
+    }
+
+    public void handleSync(Message message) {
+        MSPlayerProfile profile = message.getMessage(MSPlayerProfile.class);
+        profiles.put(profile.getUniqueId(), profile);
+        playersByUUID.put(profile.getUniqueId(), profile);
+        playersByName.put(profile.getName(), profile);
     }
 
     public void clearOnlinePlayers() {

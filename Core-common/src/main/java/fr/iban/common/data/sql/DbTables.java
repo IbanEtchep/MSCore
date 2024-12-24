@@ -15,6 +15,7 @@ public class DbTables {
         createOnlinePlayersTable();
         createTrustedPlayersTable();
         createTrustedCommandsTable();
+        createBackupsTable();
     }
 
     /*
@@ -102,6 +103,21 @@ public class DbTables {
                 "  `context` VARCHAR(50)," +
                 "  PRIMARY KEY (command, senderType, context)" +
                 ");");
+    }
+
+    private static void createBackupsTable() {
+        createTable("""
+                CREATE TABLE IF NOT EXISTS sc_players_backup (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    player_uuid VARCHAR(36) NOT NULL,
+                    data JSON NOT NULL,
+                    valid BOOLEAN DEFAULT TRUE,
+                    error TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (player_uuid) REFERENCES sc_players(uuid) ON DELETE CASCADE,
+                    INDEX idx_player_backup (player_uuid, valid, created_at)
+                );
+                """);
     }
 
     private static void createTable(String statement) {

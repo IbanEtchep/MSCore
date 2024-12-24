@@ -42,8 +42,7 @@ public class CoreMessageListener {
             case "TeleportToLocationBungee" -> consumeTeleportToLocationBungeeMessage(message);
             case "TeleportToPlayerBungee" -> consumeTeleportToPlayerBungeeMessage(message);
             case "TeleportRequestBungee" -> consumeTeleportRequestBungeeMessage(message);
-            case CoreChannel.SYNC_PLAYER_CHANNEL ->
-                    plugin.getPlayerManager().loadProfile(UUID.fromString(message.getMessage()));
+            case CoreChannel.SYNC_PLAYER_CHANNEL -> plugin.getPlayerManager().handleSync(message);
             case CoreChannel.REMOVE_PENDING_TP_CHANNEL ->
                     plugin.getTeleportManager().getPendingTeleports().remove(UUID.fromString(message.getMessage()));
             case CoreChannel.REMOVE_TP_REQUEST_CHANNEL -> consumeRemoveTpRequestMessage(message);
@@ -95,8 +94,6 @@ public class CoreMessageListener {
             return;
         }
 
-        System.out.println("Received request from " + playerFrom.getUsername() + " to " + playerTo.getUsername() + " with type " + request.getRequestType());
-
         if (request.getRequestType() == RequestType.TP) {
             plugin.getTeleportManager().sendTeleportRequest(playerFrom, playerTo);
         } else if (request.getRequestType() == RequestType.TPHERE) {
@@ -129,11 +126,9 @@ public class CoreMessageListener {
         broadcastLine();
     }
 
-
     /*
     UTILS
      */
-
 
     private void broadcastLine() {
         String line = "-".repeat(Math.max(0, 30));

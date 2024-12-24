@@ -25,7 +25,6 @@ import java.util.UUID;
 public class CoreMessageListener implements Listener {
 
     private final CoreBukkitPlugin plugin;
-    private final Gson gson = new Gson();
     private final JSONComponentSerializer componentSerializer = JSONComponentSerializer.json();
 
     public CoreMessageListener(CoreBukkitPlugin plugin) {
@@ -37,9 +36,7 @@ public class CoreMessageListener implements Listener {
         Message message = e.getMessage();
 
         switch (e.getMessage().getChannel()) {
-            case CoreChannel.SYNC_PLAYER_CHANNEL -> plugin.getScheduler().runAsync(
-                    task -> plugin.getPlayerManager().loadProfile(UUID.fromString(message.getMessage()))
-            );
+            case CoreChannel.SYNC_PLAYER_CHANNEL -> consumePlayerSyncMessage(message);
             case "TeleportToLocationBukkit" -> consumeTeleportToLocationBukkitMessage(message);
             case "TeleportToPlayerBukkit" -> consumeTeleportToPlayerBukkitMessage(message);
             case CoreChannel.ADD_PENDING_TP_CHANNEL ->
@@ -68,22 +65,22 @@ public class CoreMessageListener implements Listener {
     }
 
     public void consumeAddTpRequestMessage(Message message) {
-        TpRequest request = gson.fromJson(message.getMessage(), TpRequest.class);
+        TpRequest request = message.getMessage(TpRequest.class);
         plugin.getTeleportManager().getTpRequests().put(request.getPlayerTo(), request);
     }
 
     public void consumeRemoveTpRequestMessage(Message message) {
-        TpRequest request = gson.fromJson(message.getMessage(), TpRequest.class);
+        TpRequest request = message.getMessage(TpRequest.class);
         plugin.getTeleportManager().getTpRequests().remove(request.getPlayerTo(), request);
     }
 
     private void consumeTeleportToLocationBukkitMessage(Message message) {
-        TeleportToLocation ttl = gson.fromJson(message.getMessage(), TeleportToLocation.class);
+        TeleportToLocation ttl = message.getMessage(TeleportToLocation.class);
         plugin.getTeleportManager().performTeleportToLocation(ttl);
     }
 
     private void consumeTeleportToPlayerBukkitMessage(Message message) {
-        TeleportToPlayer ttp = gson.fromJson(message.getMessage(), TeleportToPlayer.class);
+        TeleportToPlayer ttp = message.getMessage(TeleportToPlayer.class);
         plugin.getTeleportManager().performTeleportToPlayer(ttp);
     }
 
@@ -105,5 +102,9 @@ public class CoreMessageListener implements Listener {
 
         Component component = componentSerializer.deserialize(msg.string());
         player.sendMessage(component);
+    }
+
+    private void consumePlayerSyncMessage(Message message) {
+        plugin.getPlayerManager().handleSync(message);
     }
 }
