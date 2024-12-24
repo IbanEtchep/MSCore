@@ -8,10 +8,7 @@ public class DbTables {
 
     public static void createTables() {
         createplayersTable();
-        createAnnounceBLTable();
-        createIpTable();
-        createOptionsTable();
-        createIgnoredPlayersTable();
+        createLoginsTable();
         createOnlinePlayersTable();
         createTrustedPlayersTable();
         createTrustedCommandsTable();
@@ -35,40 +32,7 @@ public class DbTables {
                 ");");
     }
 
-    private static void createOptionsTable() {
-        createTable("CREATE TABLE IF NOT EXISTS sc_options (" +
-                "  id int," +
-                "  idOption varchar(16)," +
-                "  CONSTRAINT PK_sc_options" +
-                "  PRIMARY KEY (id, idOption)," +
-                "  CONSTRAINT FK_sc_options" +
-                "  FOREIGN KEY (id) REFERENCES sc_players(id)" +
-                ");");
-    }
-
-    private static void createAnnounceBLTable() {
-        createTable("CREATE TABLE IF NOT EXISTS sc_annonces_blacklist (" +
-                "  id int," +
-                "  idAnnonce int," +
-                "  CONSTRAINT PK_sc_annonces_blacklist" +
-                "  PRIMARY KEY (id, idAnnonce)," +
-                "  CONSTRAINT FK_sc_annonces" +
-                "  FOREIGN KEY (id) REFERENCES sc_players(id)" +
-                ");");
-    }
-
-    private static void createIgnoredPlayersTable() {
-        createTable("CREATE TABLE IF NOT EXISTS sc_ignored_players (" +
-                "  id int," +
-                "  uuidPlayer varchar(36) not null," +
-                "  CONSTRAINT PK_sc_ignored_players" +
-                "  PRIMARY KEY (id, uuidPlayer)," +
-                "  CONSTRAINT FK_sc_ignored" +
-                "  FOREIGN KEY (id) REFERENCES sc_players(id)" +
-                ");");
-    }
-
-    private static void createIpTable() {
+    private static void createLoginsTable() {
         createTable("CREATE TABLE IF NOT EXISTS sc_logins (" +
                 "  id int," +
                 "  date_time DATETIME," +
