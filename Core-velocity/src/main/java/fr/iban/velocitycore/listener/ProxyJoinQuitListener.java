@@ -128,12 +128,14 @@ public class ProxyJoinQuitListener {
     public void onDisconnect(DisconnectEvent e) {
         Player player = e.getPlayer();
         ProxyServer proxy = plugin.getServer();
+        MSPlayerProfile profile = playerManager.getProfile(player.getUniqueId());
 
-        MSPlayerProfile account = playerManager.getProfile(player.getUniqueId());
+        if(profile == null) return;
+
         String quitMessage = "&8[&c-&8] &8" + String.format(ArrayUtils.getRandomFromArray(quitMessages), player.getUsername());
         Component quitMessageComponent = MineDown.parse(quitMessage);
 
-        if ((System.currentTimeMillis() - account.getLastSeen()) > 60000) {
+        if ((System.currentTimeMillis() - profile.getLastSeen()) > 60000) {
             proxy.getAllPlayers().forEach(p -> {
                 MSPlayerProfile account2 = playerManager.getProfile(p.getUniqueId());
                 if (account2.getOption(Option.LEAVE_MESSAGE) && !account2.getIgnoredPlayers().contains(player.getUniqueId())) {
@@ -144,8 +146,8 @@ public class ProxyJoinQuitListener {
             plugin.getServer().getConsoleCommandSource().sendMessage(quitMessageComponent);
         }
 
-        account.setLastSeen(System.currentTimeMillis());
-        playerManager.saveProfile(account)
+        profile.setLastSeen(System.currentTimeMillis());
+        playerManager.saveProfile(profile)
                 .thenRun(() -> plugin.getPlayerManager().handleProxyQuit(player.getUniqueId()))
                 .exceptionally(e1 -> {
                     e1.printStackTrace();

@@ -88,7 +88,8 @@ public final class CoreBukkitPlugin extends JavaPlugin {
                 new PlayerMoveListener(this),
                 new DeathListener(this),
                 new CommandsListener(this),
-                new CoreMessageListener(this)
+                new CoreMessageListener(this),
+                new TeleportListener()
         );
 
         registerCommands();
