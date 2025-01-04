@@ -86,8 +86,8 @@ public class PlayerManager {
         });
     }
 
-    public MSPlayerProfile loadProfile(UUID uuid) {
-        MSPlayerProfile profile = dao.getPlayerProfile(uuid);
+    public MSPlayerProfile loadProfile(UUID uuid, String name) {
+        MSPlayerProfile profile = dao.getPlayerProfile(uuid, name);
 
         playersByUUID.put(uuid, profile);
         playersByName.put(profile.getName(), profile);
@@ -118,6 +118,7 @@ public class PlayerManager {
 
     public void handleProxyQuit(UUID uniqueId) {
         dao.removeOnlinePlayer(uniqueId);
+        onlinePlayers.remove(uniqueId);
         messagingManager.sendMessage(CoreChannel.PLAYER_QUIT_CHANNEL, uniqueId.toString());
     }
 

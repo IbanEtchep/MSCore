@@ -33,6 +33,7 @@ public class JoinQuitListeners implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         UUID uniqueId = player.getUniqueId();
+        String name = player.getName();
 
         e.joinMessage(null);
 
@@ -44,12 +45,13 @@ public class JoinQuitListeners implements Listener {
 
         PlayerManager playerManager = plugin.getPlayerManager();
 
-        plugin.getScheduler().runAsync(task -> {
+        plugin.getScheduler().runLaterAsync(task -> {
             if(playerManager.getProfile(uniqueId) == null) {
-                playerManager.loadProfile(uniqueId);
+                playerManager.loadProfile(uniqueId, name);
                 playerManager.handlePlayerJoin(uniqueId);
+                plugin.getLogger().info("Loaded profile for " + name + " (" + uniqueId + ")");
             }
-        });
+        }, 10L);
 
         GlobalLoggerManager.saveLog(plugin.getServerName(), player.getName() + " (" + Objects.requireNonNull(player.getAddress()).getHostString() + ") logged in at " + player.getLocation());
     }

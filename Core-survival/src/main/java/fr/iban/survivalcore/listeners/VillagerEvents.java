@@ -6,9 +6,11 @@ import fr.iban.survivalcore.SurvivalCorePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
@@ -49,5 +51,17 @@ public class VillagerEvents implements Listener {
 
 		villager.setRecipes(recipes);
 	}
+
+    @EventHandler
+    public void onVillagerCured(EntityTransformEvent event) {
+        if(!plugin.getConfig().getBoolean("villagers.disable-curing-discounts", false)) return;
+
+        if (event.getTransformReason() == EntityTransformEvent.TransformReason.CURED &&
+                event.getEntityType() == EntityType.ZOMBIE_VILLAGER &&
+                event.getTransformedEntity() instanceof Villager villager) {
+
+            villager.clearReputations();
+        }
+    }
 
 }

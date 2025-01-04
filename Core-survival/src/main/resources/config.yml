@@ -25,3 +25,6 @@ cooldowns:
 loots:
   # disable enemy drops https://jd.papermc.io/paper/1.21.1/org/bukkit/entity/Enemy.html
   disable-enemy-drops: false
+
+villagers:
+  disable-curing-discounts: false

@@ -23,7 +23,16 @@ public class MSPlayerDAO {
         this.jdbi = DbAccess.getJdbi();
     }
 
+    public MSPlayerProfile getPlayerProfile(UUID uuid, String name) {
+        MSPlayerProfile profile = getPlayerProfile(uuid);
+        profile.setName(name);
+
+        return profile;
+    }
+
     public MSPlayerProfile getPlayerProfile(UUID uuid) {
+        MSPlayerProfile profile = new MSPlayerProfile(uuid);
+
         return jdbi.inTransaction(handle -> {
             try {
                 return handle.createQuery("""
@@ -32,29 +41,29 @@ public class MSPlayerDAO {
                 """)
                         .bind("uuid", uuid.toString())
                         .map((rs, ctx) -> {
-                            MSPlayerProfile player = new MSPlayerProfile(uuid);
-                            player.setName(rs.getString("name"));
-                            player.setLastSeen(rs.getLong("lastseen"));
-
+                            profile.setLastSeen(rs.getLong("lastseen"));
                             String jsonData = rs.getString("data");
+
+                            profile.setName(rs.getString("name"));
+
                             if (jsonData != null) {
                                 try {
                                     MSPlayerProfile.validateJsonData(jsonData);
-                                    player.setDataFromJson(jsonData);
+                                    profile.setDataFromJson(jsonData);
                                     saveBackup(handle, uuid, jsonData, true, null);
                                 } catch (Exception e) {
                                     logger.error("Failed to parse data for " + uuid, e);
                                     saveBackup(handle, uuid, jsonData, false, e.getMessage());
-                                    loadLastValidBackup(handle, uuid).ifPresent(player::setDataFromJson);
+                                    loadLastValidBackup(handle, uuid).ifPresent(profile::setDataFromJson);
                                 }
                             }
-                            return player;
+                            return profile;
                         })
                         .findFirst()
                         .orElseGet(() -> new MSPlayerProfile(uuid));
             } catch (Exception e) {
                 logger.error("Failed to load player " + uuid, e);
-                return new MSPlayerProfile(uuid);
+                return profile;
             }
         });
     }

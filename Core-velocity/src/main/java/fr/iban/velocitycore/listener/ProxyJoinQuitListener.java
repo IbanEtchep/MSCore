@@ -2,8 +2,8 @@ package fr.iban.velocitycore.listener;
 
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
-import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.event.player.KickedFromServerEvent;
+import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import de.themoep.minedown.adventure.MineDown;
@@ -22,7 +22,6 @@ import org.ocpsoft.prettytime.PrettyTime;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class ProxyJoinQuitListener {
 
@@ -70,57 +69,59 @@ public class ProxyJoinQuitListener {
 
 
     @Subscribe
-    public void onProxyJoin(PostLoginEvent e) {
+    public void onProxyJoin(ServerConnectedEvent e) {
+        if(e.getPreviousServer().isPresent()) {
+            return;
+        }
+
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
+        String playerName = player.getUsername();
         ProxyServer proxy = plugin.getServer();
+        MSPlayerProfile profile = playerManager.loadProfile(uuid, playerName);
 
-        proxy.getScheduler().buildTask(plugin, () -> {
-            MSPlayerProfile profile = playerManager.loadProfile(uuid);
-
-            if (profile.getLastSeen() != 0) {
-                if ((System.currentTimeMillis() - profile.getLastSeen()) > 60000) {
-                    String joinMessage = "&8[&a+&8] &8";
-                    if ((System.currentTimeMillis() - profile.getLastSeen()) > 2592000000L) {
-                        joinMessage += String.format(ArrayUtils.getRandomFromArray(longAbsenceMessages), player.getUsername());
-                    } else {
-                        joinMessage += String.format(ArrayUtils.getRandomFromArray(joinMessages), player.getUsername());
-                    }
-
-                    Component message = MineDown.parse(joinMessage).hoverEvent(HoverEvent.showText(
-                            Component.text("Vu pour la dernière fois " + getLastSeen(profile.getLastSeen()), NamedTextColor.GRAY)
-                    ));
-
-                    proxy.getAllPlayers().forEach(p -> {
-                        MSPlayerProfile receiverAccount = playerManager.getProfile(p.getUniqueId());
-                        if (receiverAccount.getOption(Option.JOIN_MESSAGE) && !receiverAccount.getIgnoredPlayers().contains(player.getUniqueId())) {
-                            p.sendMessage(message);
-                        }
-                    });
-
-                    plugin.getServer().getConsoleCommandSource().sendMessage(message);
+        long lastSeen = profile.getLastSeen();
+        if (lastSeen != 0) {
+            if ((System.currentTimeMillis() - lastSeen) > 60000) {
+                String joinMessage = "&8[&a+&8] &8";
+                if ((System.currentTimeMillis() - lastSeen) > 2592000000L) {
+                    joinMessage += String.format(ArrayUtils.getRandomFromArray(longAbsenceMessages), playerName);
+                } else {
+                    joinMessage += String.format(ArrayUtils.getRandomFromArray(joinMessages), playerName);
                 }
-            } else {
-                String firstJoinMessage = "&8≫ &7" + String.format(ArrayUtils.getRandomFromArray(firstJoinMessages), player.getUsername());
-                Component welcomeComponent = MineDown.parse(firstJoinMessage)
-                        .hoverEvent(HoverEvent.showText(Component.text("Clic !")))
-                        .clickEvent(ClickEvent.suggestCommand(" Bienvenue " + player.getUsername()));
 
-                proxy.sendMessage(welcomeComponent);
+                Component message = MineDown.parse(joinMessage).hoverEvent(HoverEvent.showText(
+                        Component.text("Vu pour la dernière fois " + getLastSeen(lastSeen), NamedTextColor.GRAY)
+                ));
+
+                proxy.getAllPlayers().forEach(p -> {
+                    MSPlayerProfile receiverAccount = playerManager.getProfile(p.getUniqueId());
+                    if (receiverAccount.getOption(Option.JOIN_MESSAGE) && !receiverAccount.getIgnoredPlayers().contains(uuid)) {
+                        p.sendMessage(message);
+                    }
+                });
+
+                plugin.getServer().getConsoleCommandSource().sendMessage(message);
             }
+        } else {
+            String firstJoinMessage = "&8≫ &7" + String.format(ArrayUtils.getRandomFromArray(firstJoinMessages), playerName);
+            Component welcomeComponent = MineDown.parse(firstJoinMessage)
+                    .hoverEvent(HoverEvent.showText(Component.text("Clic !")))
+                    .clickEvent(ClickEvent.suggestCommand(" Bienvenue " + playerName));
 
-            profile.setName(player.getUsername());
-            profile.setIp(player.getRemoteAddress().getHostString());
-            profile.setLastSeen(System.currentTimeMillis());
+            proxy.sendMessage(welcomeComponent);
+        }
 
-            playerManager.saveProfile(profile)
-                    .thenRun(() -> plugin.getPlayerManager().handleProxyJoin(profile))
-                    .exceptionally(e1 -> {
-                        e1.printStackTrace();
-                        return null;
-                    });
+        profile.setName(playerName);
+        profile.setIp(player.getRemoteAddress().getHostString());
+        profile.setLastSeen(System.currentTimeMillis());
 
-        }).delay(100, TimeUnit.MILLISECONDS).schedule();
+        playerManager.saveProfile(profile)
+                .thenRun(() -> plugin.getPlayerManager().handleProxyJoin(profile))
+                .exceptionally(e1 -> {
+                    e1.printStackTrace();
+                    return null;
+                });
     }
 
     @Subscribe
@@ -150,7 +151,7 @@ public class ProxyJoinQuitListener {
                     e1.printStackTrace();
                     return null;
                 });
-        
+
         plugin.getChatManager().clearPlayerReplies(player);
     }
 
