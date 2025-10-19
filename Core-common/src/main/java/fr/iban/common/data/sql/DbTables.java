@@ -13,6 +13,7 @@ public class DbTables {
         createTrustedPlayersTable();
         createTrustedCommandsTable();
         createBackupsTable();
+        createLogsTable();
     }
 
     /*
@@ -82,6 +83,15 @@ public class DbTables {
                     INDEX idx_player_backup (player_uuid, valid, created_at)
                 );
                 """);
+    }
+
+    private static void createLogsTable() {
+        createTable("CREATE TABLE IF NOT EXISTS sc_logs (" +
+                "  id int auto_increment PRIMARY KEY," +
+                "  date_time DATETIME DEFAULT NOW()," +
+                "  server VARCHAR(50)," +
+                "  message TEXT" +
+                ");");
     }
 
     private static void createTable(String statement) {

@@ -29,10 +29,10 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly(files("${projectDir}/lib/BetterRTP-3.6.13.jar"))
 
-    compileOnly("io.github.revxrsal:lamp.common:4.0.0-beta.24")
-    compileOnly("io.github.revxrsal:lamp.bukkit:4.0.0-beta.24")
+    compileOnly("io.github.revxrsal:lamp.common:4.0.0-rc.13")
+    compileOnly("io.github.revxrsal:lamp.bukkit:4.0.0-rc.13")
 
-    implementation("com.github.technicallycoded:FoliaLib:main-SNAPSHOT")
+    implementation("com.tcoded:FoliaLib:0.5.1")
 }
 
 tasks {

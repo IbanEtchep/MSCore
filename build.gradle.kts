@@ -3,7 +3,6 @@ plugins {
     id("io.github.goooler.shadow") version "8.1.7"
 }
 
-
 allprojects {
     apply(plugin = "java")
 
@@ -14,6 +13,7 @@ allprojects {
         mavenCentral()
         maven("https://repo.papermc.io/repository/maven-public/")
         maven("https://jitpack.io")
+        maven("https://repo.tcoded.com/releases")
     }
 
     tasks.withType<JavaCompile> {

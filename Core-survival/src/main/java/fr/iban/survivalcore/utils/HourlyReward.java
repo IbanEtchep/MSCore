@@ -34,7 +34,7 @@ public class HourlyReward {
             e.printStackTrace();
         }
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        plugin.getScheduler().runTimerAsync(() -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (getSalary(player) != 0) {
                     addPlayTime(player.getUniqueId(), 1);
@@ -42,18 +42,18 @@ public class HourlyReward {
             }
         }, 1200L, 1200L);
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> getTimeBiggerThan(getTimePerPayout()).forEach(uuid -> {
+        plugin.getScheduler().runTimerAsync(() -> getTimeBiggerThan(getTimePerPayout()).forEach(uuid -> {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
                 int salary = getSalary(player);
                 if(salary == 0) return;
-                player.sendMessage("§a§lVous avez reçu "+salary+"§e⛃§a§l pour avoir joué 1 heure.");
                 Economy economy = plugin.getEconomy();
                 if (economy != null) {
+                    player.sendMessage("§a§lVous avez reçu "+economy.format(salary)+"§a§l pour avoir joué 1 heure.");
                     economy.depositPlayer(player, salary);
                 } else {
                     player.sendMessage("§a§lLa récompense vous attend dans /recompenses.");
-                    RewardsDAO.addRewardAsync(player.getUniqueId().toString(), salary+"§e⛃§r", "Survie", "eco give {player} " + salary);
+                    RewardsDAO.addRewardAsync(player.getUniqueId().toString(), salary+"$§r", "Survie", "eco give {player} " + salary);
                 }
                 removePlayTime(uuid, 60);
             }

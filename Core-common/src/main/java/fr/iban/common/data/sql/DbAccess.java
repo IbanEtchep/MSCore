@@ -19,12 +19,6 @@ public class DbAccess {
 	private static HikariDataSource dataSource;
 	private static Jdbi jdbi;
 
-	private static final ExecutorService DB_EXECUTOR = Executors.newFixedThreadPool(5, r -> {
-		Thread thread = new Thread(r, "DB-Thread");
-		thread.setDaemon(true);
-		return thread;
-	});
-
 	public static void initPool(DbCredentials credentials) {
 		try {
 			HikariConfig config = new HikariConfig();
@@ -63,6 +57,7 @@ public class DbAccess {
 			// Test connection
 			if (testConnection()) {
 				LOGGER.info("Database connection established successfully");
+				DbTables.createTables();
 
 				// Exécuter les migrations
 				LOGGER.info("Running database migrations...");
@@ -82,8 +77,6 @@ public class DbAccess {
 			LOGGER.info("Closing database connection pool");
 			dataSource.close();
 		}
-
-		DB_EXECUTOR.shutdown();
 	}
 
 	public static DataSource getDataSource() {
