@@ -118,6 +118,10 @@ public final class CoreBukkitPlugin extends JavaPlugin {
         lamp.register(new ActionBarCMD(this));
         lamp.register(new BungeeBroadcastCMD(this));
 
+        if(getConfig().getBoolean("ressources.enabled", true)) {
+            lamp.register(new RessourcesCommand(this));
+        }
+
         getCommand("options").setExecutor(new OptionsCMD());
         getCommand("recompenses").setExecutor(new RecompensesCMD(this));
         getCommand("recompenses").setTabCompleter(new RecompensesCMD(this));

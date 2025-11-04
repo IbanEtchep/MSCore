@@ -35,26 +35,6 @@ public class ServerSwitchCommands {
         new ServeurMenu(sender).open();
     }
 
-    @Command("ressources")
-    public void ressources(
-            Player sender,
-            @Suggest({"world", "nether", "end", "lastpos"})
-            @Optional String world
-    ) {
-        if (world == null) {
-            new RessourceMenu(sender).open();
-        } else {
-            RessourcesWorldManager ressourcesWorldManager = plugin.getRessourcesWorldManager();
-            switch (world) {
-                case "world" -> ressourcesWorldManager.randomTpResourceWorld(sender, "resource_world");
-                case "nether" -> ressourcesWorldManager.randomTpResourceWorld(sender, "resource_nether");
-                case "end" -> ressourcesWorldManager.randomTpResourceWorld(sender, "resource_end");
-                case "lastpos" -> teleportManager.teleport(sender, ressourcesWorldManager.getResourceServerName());
-                default -> sender.sendMessage("§cCe type de monde n'existe pas.");
-            }
-        }
-    }
-
     @Command("survivalrtp")
     @Cooldown(value = 2, unit = TimeUnit.MINUTES)
     public void survivalRandomTP(Player player,@Optional String server) {

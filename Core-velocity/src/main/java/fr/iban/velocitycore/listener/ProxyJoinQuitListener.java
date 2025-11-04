@@ -1,5 +1,6 @@
 package fr.iban.velocitycore.listener;
 
+import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.player.KickedFromServerEvent;
@@ -125,36 +126,35 @@ public class ProxyJoinQuitListener {
     }
 
     @Subscribe
-    public void onDisconnect(DisconnectEvent e) {
+    public EventTask onDisconnect(DisconnectEvent e) {
         Player player = e.getPlayer();
         ProxyServer proxy = plugin.getServer();
         MSPlayerProfile profile = playerManager.getProfile(player.getUniqueId());
 
-        if(profile == null) return;
+        if(profile == null) return null;
 
-        String quitMessage = "&8[&c-&8] &8" + String.format(ArrayUtils.getRandomFromArray(quitMessages), player.getUsername());
-        Component quitMessageComponent = MineDown.parse(quitMessage);
+        return EventTask.async(() -> {
+            String quitMessage = "&8[&c-&8] &8" + String.format(ArrayUtils.getRandomFromArray(quitMessages), player.getUsername());
+            Component quitMessageComponent = MineDown.parse(quitMessage);
 
-        if ((System.currentTimeMillis() - profile.getLastSeen()) > 60000) {
-            proxy.getAllPlayers().forEach(p -> {
-                MSPlayerProfile account2 = playerManager.getProfile(p.getUniqueId());
-                if (account2.getOption(Option.LEAVE_MESSAGE) && !account2.getIgnoredPlayers().contains(player.getUniqueId())) {
-                    p.sendMessage(quitMessageComponent);
-                }
-            });
-
-            plugin.getServer().getConsoleCommandSource().sendMessage(quitMessageComponent);
-        }
-
-        profile.setLastSeen(System.currentTimeMillis());
-        playerManager.saveProfile(profile)
-                .thenRun(() -> plugin.getPlayerManager().handleProxyQuit(player.getUniqueId()))
-                .exceptionally(e1 -> {
-                    e1.printStackTrace();
-                    return null;
+            if ((System.currentTimeMillis() - profile.getLastSeen()) > 60000) {
+                proxy.getAllPlayers().forEach(p -> {
+                    MSPlayerProfile account2 = playerManager.getProfile(p.getUniqueId());
+                    if (account2.getOption(Option.LEAVE_MESSAGE) && !account2.getIgnoredPlayers().contains(player.getUniqueId())) {
+                        p.sendMessage(quitMessageComponent);
+                    }
                 });
 
-        plugin.getChatManager().clearPlayerReplies(player);
+                plugin.getServer().getConsoleCommandSource().sendMessage(quitMessageComponent);
+            }
+
+            profile.setLastSeen(System.currentTimeMillis());
+
+            playerManager.saveProfile(profile).join();
+            plugin.getPlayerManager().handleProxyQuit(player.getUniqueId());
+
+            plugin.getChatManager().clearPlayerReplies(player);
+        });
     }
 
     private String getLastSeen(long time) {

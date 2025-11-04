@@ -4,6 +4,7 @@ import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.manager.BukkitPlayerManager;
 import fr.iban.common.enums.Option;
 import fr.iban.common.model.MSPlayerProfile;
+import fr.iban.common.teleport.SLocation;
 import fr.iban.survivalcore.SurvivalCorePlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -161,7 +162,10 @@ public class EntityDeathListener implements Listener {
                 " §bY : §f" + (int) location.getY() +
                 " §bZ : §f" + (int) location.getZ());
 
-        if(core.getServerName().equalsIgnoreCase("ressources")) {
+        MSPlayerProfile profile = core.getPlayerManager().getProfile(player.getUniqueId());
+        SLocation rtpLocation = profile.getLastRTPLocation();
+
+        if(rtpLocation != null && rtpLocation.getWorld().equals(location.getWorld().getName())) {
             String miniMessageText = "<aqua><bold>Vous pouvez vous téléporter à la position de votre dernière téléportation aléatoire en cliquant sur ce message ou en exécutant la commande /lastrtp."
                     + "<hover:show_text:'<bold>Clic ici !'>"
                     + "<click:run_command:/lastrtp>";

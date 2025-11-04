@@ -17,7 +17,6 @@ messenger: sql
 servername: "Survie"
 survival-servers:
   - "survie"
-ressources-servername: "ressources"
 
 world:
   overworld: "world"
@@ -30,3 +29,7 @@ plan-rtp-balancer: true
 command-approval: false
 
 global-chat: true
+
+ressources:
+  enabled: true
+  servername: "ressources"
