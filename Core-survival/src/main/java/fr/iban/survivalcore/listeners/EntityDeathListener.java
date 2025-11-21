@@ -2,7 +2,7 @@ package fr.iban.survivalcore.listeners;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.manager.BukkitPlayerManager;
-import fr.iban.bukkitcore.utils.Lang;
+import fr.iban.survivalcore.utils.Lang;
 import fr.iban.common.enums.Option;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.teleport.SLocation;

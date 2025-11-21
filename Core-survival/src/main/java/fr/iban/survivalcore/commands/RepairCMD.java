@@ -16,7 +16,7 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.util.*;
 
-import fr.iban.bukkitcore.utils.Lang;
+import fr.iban.survivalcore.utils.Lang;
 
 @Command("repair")
 public class RepairCMD {

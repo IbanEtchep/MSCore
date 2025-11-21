@@ -2,7 +2,7 @@ package fr.iban.survivalcore.commands;
 
 import com.earth2me.essentials.utils.DateUtil;
 import fr.iban.survivalcore.SurvivalCorePlugin;
-import fr.iban.bukkitcore.utils.Lang;
+import fr.iban.survivalcore.utils.Lang;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.bukkit.annotation.CommandPermission;

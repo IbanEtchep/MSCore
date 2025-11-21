@@ -3,7 +3,6 @@ package fr.iban.survivalcore.utils;
 import fr.iban.bukkitcore.rewards.RewardsDAO;
 import fr.iban.common.data.sql.DbAccess;
 import fr.iban.survivalcore.SurvivalCorePlugin;
-import fr.iban.bukkitcore.utils.Lang;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

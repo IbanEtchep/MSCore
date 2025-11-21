@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import fr.iban.bukkitcore.utils.Lang;
+import fr.iban.survivalcore.utils.Lang;
 
 public class DolphinCMD implements CommandExecutor {
 

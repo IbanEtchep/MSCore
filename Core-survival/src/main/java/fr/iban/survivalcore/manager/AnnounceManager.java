@@ -3,7 +3,7 @@ package fr.iban.survivalcore.manager;
 import com.earth2me.essentials.utils.DateUtil;
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.manager.MessagingManager;
-import fr.iban.bukkitcore.utils.Lang;
+import fr.iban.survivalcore.utils.Lang;
 import fr.iban.bukkitcore.utils.PluginMessageHelper;
 import fr.iban.common.messaging.CoreChannel;
 import fr.iban.survivalcore.SurvivalCorePlugin;

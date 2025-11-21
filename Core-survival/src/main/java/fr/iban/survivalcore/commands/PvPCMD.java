@@ -4,7 +4,7 @@ import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.common.enums.Option;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
-import fr.iban.bukkitcore.utils.Lang;
+import fr.iban.survivalcore.utils.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
