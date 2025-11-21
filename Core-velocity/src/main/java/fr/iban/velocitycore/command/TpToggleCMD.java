@@ -5,6 +5,7 @@ import fr.iban.common.enums.Option;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.velocitycore.CoreVelocityPlugin;
+import fr.iban.velocitycore.util.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.Command;
@@ -29,9 +30,9 @@ public class TpToggleCMD {
         accountManager.saveProfile(profile);
 
         if (profile.getOption(Option.TP)) {
-            player.sendMessage(Component.text("Vos demandes de téléportation sont maintenant ouvertes.", NamedTextColor.GREEN));
+            player.sendMessage(Component.text(Lang.get("tptoggle.opened"), NamedTextColor.GREEN));
         } else {
-            player.sendMessage(Component.text("Vos demandes de téléportation sont maintenant fermées.", NamedTextColor.RED));
+            player.sendMessage(Component.text(Lang.get("tptoggle.closed"), NamedTextColor.RED));
         }
     }
 }

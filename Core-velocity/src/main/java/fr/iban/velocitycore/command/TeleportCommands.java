@@ -5,6 +5,7 @@ import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.teleport.SLocation;
 import fr.iban.velocitycore.CoreVelocityPlugin;
 import fr.iban.velocitycore.manager.TeleportManager;
+import fr.iban.velocitycore.util.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.Command;
@@ -31,7 +32,7 @@ public class TeleportCommands {
         if (location != null) {
             teleportManager.delayedTeleport(sender, location, 3);
         } else {
-            sender.sendMessage(Component.text("L'endroit de votre décès n'a pas pu être trouvé.", NamedTextColor.RED));
+            sender.sendMessage(Component.text(Lang.get("teleport.back.not-found"), NamedTextColor.RED));
         }
     }
 
@@ -45,7 +46,7 @@ public class TeleportCommands {
         if (loc != null) {
             plugin.getTeleportManager().delayedTeleport(sender, loc, 2);
         } else {
-            sender.sendMessage(Component.text("La position n'a pas été trouvée.", NamedTextColor.RED));
+            sender.sendMessage(Component.text(Lang.get("teleport.lastrtp.not-found"), NamedTextColor.RED));
         }
     }
 }

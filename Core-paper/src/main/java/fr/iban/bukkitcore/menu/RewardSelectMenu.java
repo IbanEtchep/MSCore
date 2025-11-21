@@ -12,6 +12,7 @@ import fr.iban.bukkitcore.rewards.Reward;
 import fr.iban.bukkitcore.rewards.RewardSelectCallback;
 import fr.iban.bukkitcore.utils.Head;
 import fr.iban.bukkitcore.utils.ItemBuilder;
+import fr.iban.bukkitcore.utils.Lang;
 
 public class RewardSelectMenu extends PaginatedMenu {
 
@@ -27,7 +28,7 @@ public class RewardSelectMenu extends PaginatedMenu {
 
 	@Override
 	public String getMenuName() {
-		return "§2Vos récompenses :";
+		return Lang.get("menus.reward-select.title");
 	}
 
 	@Override
@@ -45,7 +46,6 @@ public class RewardSelectMenu extends PaginatedMenu {
 		}
 
 		checkBottonsClick(item, player);
-
 
 		Reward reward = rewardAtSlot.get(e.getSlot());
 
@@ -83,8 +83,8 @@ public class RewardSelectMenu extends PaginatedMenu {
 
 	private ItemStack getRewardItem(Reward reward) {
 		return new ItemBuilder(Head.BAG.get())
-				.setDisplayName("§2" + reward.name())
-				.addLore("§aClic pour récupérer la récompense.")
+				.setDisplayName(Lang.get("menus.reward-select.item-name").replace("%name%", reward.name()))
+				.addLore(Lang.get("menus.reward-select.item-lore"))
 				.build();
 	}
 

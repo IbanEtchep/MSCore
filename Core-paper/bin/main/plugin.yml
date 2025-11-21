@@ -1,0 +1,15 @@
+name: Core
+version: ${project_version}
+main: fr.iban.bukkitcore.CoreBukkitPlugin
+api-version: 1.21
+authors: [ Iban ]
+softdepend: [Essentials, Plan]
+folia-supported: true
+
+commands:
+  options:
+  recompenses:
+  bungeebroadcast:
+    aliases:
+      - bbc
+    permission: servercore.bbc

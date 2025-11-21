@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.iban.bukkitcore.menu.Menu;
 import fr.iban.bukkitcore.utils.ConfirmCallback;
 import fr.iban.bukkitcore.utils.ItemBuilder;
+import fr.iban.bukkitcore.utils.Lang;
 
 public class ConfirmMenu extends Menu {
 	
@@ -16,17 +17,17 @@ public class ConfirmMenu extends Menu {
 	private final ConfirmCallback callback;
 
 	public ConfirmMenu(Player player, ConfirmCallback callback) {
-		this(player, "§2Confirmer", "§aVoulez-vous vraiment faire cela?", callback);
+		this(player, Lang.get("menus.confirm.title"), Lang.get("menus.confirm.desc-default"), callback);
 	}
 	
 	public ConfirmMenu(Player player, String desc, ConfirmCallback callback) {
-		this(player, "§2Confirmer", desc, callback);
+		this(player, Lang.get("menus.confirm.title"), desc, callback);
 	}
 	
 	public ConfirmMenu(Player player, String title, String desc, ConfirmCallback callback) {
 		super(player);
 		this.title = title;
-		this.desc = desc;
+        this.desc = desc;
 		this.callback = callback;
 	}
 
@@ -69,11 +70,11 @@ public class ConfirmMenu extends Menu {
 	}
 	
 	private ItemStack getConfirmItem() {
-		return new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE).setDisplayName("§2§lCONFIRMER").build();
+		return new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE).setDisplayName(Lang.get("menus.confirm.confirm-button")).build();
 	}
 	
 	private ItemStack getCancelItem() {
-		return new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setDisplayName("§4§lANNULER").build();
+		return new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setDisplayName(Lang.get("menus.confirm.cancel-button")).build();
 	}
 	
 	private ItemStack getMiddleItem() {

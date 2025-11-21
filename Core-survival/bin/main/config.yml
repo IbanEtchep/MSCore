@@ -1,0 +1,30 @@
+mending-trade-price: 64
+mending-trade-material: DIAMOND
+
+raids:
+  disable: false
+
+salary:
+  #time in minutes
+  time-per-payout: 60
+  permissions:
+    - group.default:100
+    - group.mercenaire:100
+
+cooldowns:
+  repair:
+    permissions:
+      - permission:3000
+  repairall:
+    permissions:
+      - permission:3000
+  feed:
+    permissions:
+      - permission:3000
+
+loots:
+  # disable enemy drops https://jd.papermc.io/paper/1.21.1/org/bukkit/entity/Enemy.html
+  disable-enemy-drops: false
+
+villagers:
+  disable-curing-discounts: false

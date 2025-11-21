@@ -6,6 +6,7 @@ import fr.iban.common.data.dao.MSPlayerDAO;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.velocitycore.CoreVelocityPlugin;
+import fr.iban.velocitycore.util.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.*;
@@ -31,11 +32,11 @@ public class IgnoreCommand {
     @Subcommand("help")
     @Description("Affiche les options de la commande ignore.")
     public void help(Player player) {
-        Component message = Component.text("Utilisez ", NamedTextColor.GRAY)
-                .append(Component.text("/ignore add <joueur>", NamedTextColor.GREEN))
-                .append(Component.text(" pour ignorer un joueur.\n", NamedTextColor.GRAY))
-                .append(Component.text("/ignore remove <joueur>", NamedTextColor.GREEN))
-                .append(Component.text(" pour ne plus ignorer un joueur.", NamedTextColor.GRAY));
+        Component message = Component.text(Lang.get("ignore.help.prefix"), NamedTextColor.GRAY)
+                .append(Component.text(Lang.get("ignore.help.add"), NamedTextColor.GREEN))
+                .append(Component.text(Lang.get("ignore.help.add_suffix"), NamedTextColor.GRAY))
+                .append(Component.text(Lang.get("ignore.help.remove"), NamedTextColor.GREEN))
+                .append(Component.text(Lang.get("ignore.help.remove_suffix"), NamedTextColor.GRAY));
         player.sendMessage(message);
     }
 
@@ -49,16 +50,16 @@ public class IgnoreCommand {
             if (!account.getIgnoredPlayers().contains(target.getUniqueId())) {
                 if (!target.hasPermission("servercore.staff")) {
                     account.getIgnoredPlayers().add(target.getUniqueId());
-                    player.sendMessage(Component.text("Vous ignorez maintenant " + target.getUsername() + ".", NamedTextColor.GREEN));
+                    player.sendMessage(Component.text(Lang.get("ignore.add.success").replace("%player%", target.getUsername()), NamedTextColor.GREEN));
                     playerManager.saveProfile(account);
                 } else {
-                    player.sendMessage(Component.text("Vous ne pouvez pas ignorer un membre du staff !", NamedTextColor.RED));
+                    player.sendMessage(Component.text(Lang.get("ignore.add.staff"), NamedTextColor.RED));
                 }
             } else {
-                player.sendMessage(Component.text("Ce joueur est déjà ignoré.", NamedTextColor.RED));
+                player.sendMessage(Component.text(Lang.get("ignore.add.already"), NamedTextColor.RED));
             }
         } else {
-            player.sendMessage(Component.text("Vous ne pouvez pas vous ignorer vous-même.", NamedTextColor.RED));
+            player.sendMessage(Component.text(Lang.get("ignore.add.self"), NamedTextColor.RED));
         }
     }
 
@@ -70,10 +71,10 @@ public class IgnoreCommand {
 
         if (account.getIgnoredPlayers().contains(target.getUniqueId())) {
             account.getIgnoredPlayers().remove(target.getUniqueId());
-            player.sendMessage(Component.text("Vous n'ignorez plus " + target.getUsername() + ".", NamedTextColor.GREEN));
+            player.sendMessage(Component.text(Lang.get("ignore.remove.success").replace("%player%", target.getUsername()), NamedTextColor.GREEN));
             playerManager.saveProfile(account);
         } else {
-            player.sendMessage(Component.text("Ce joueur n'est pas ignoré.", NamedTextColor.RED));
+            player.sendMessage(Component.text(Lang.get("ignore.remove.not_ignored"), NamedTextColor.RED));
         }
     }
 
@@ -83,13 +84,13 @@ public class IgnoreCommand {
         MSPlayerProfile account = playerManager.getProfile(player.getUniqueId());
 
         if (!account.getIgnoredPlayers().isEmpty()) {
-            player.sendMessage(Component.text("|| Joueurs Ignorés ||").color(NamedTextColor.GRAY));
+            player.sendMessage(Component.text(Lang.get("ignore.list.header")).color(NamedTextColor.GRAY));
             for (UUID ignoredPlayer : account.getIgnoredPlayers()) {
-                String playerName = server.getPlayer(ignoredPlayer).map(Player::getUsername).orElse("Joueur Inconnu");
-                player.sendMessage(Component.text("- " + playerName, NamedTextColor.GREEN));
+                String playerName = server.getPlayer(ignoredPlayer).map(Player::getUsername).orElse(Lang.get("ignore.list.unknown"));
+                player.sendMessage(Component.text(Lang.get("ignore.list.entry").replace("%player%", playerName), NamedTextColor.GREEN));
             }
         } else {
-            player.sendMessage(Component.text("Vous n'ignorez personne.", NamedTextColor.RED));
+            player.sendMessage(Component.text(Lang.get("ignore.list.empty"), NamedTextColor.RED));
         }
     }
 }

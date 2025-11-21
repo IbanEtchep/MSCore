@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import fr.iban.survivalcore.SurvivalCorePlugin;
+import fr.iban.bukkitcore.utils.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,7 +25,7 @@ public class RaidTriggerListener implements Listener {
 		final Player player = e.getPlayer();
 
 		if(plugin.getConfig().getBoolean("raids.disable")) {
-			player.sendMessage("§cLes raids sont désactivés.");
+			player.sendMessage(Lang.get("raids.disabled"));
 			e.setCancelled(true);
 			return;
 		}

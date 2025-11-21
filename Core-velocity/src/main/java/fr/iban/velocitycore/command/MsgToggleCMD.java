@@ -5,6 +5,7 @@ import fr.iban.common.enums.Option;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.velocitycore.CoreVelocityPlugin;
+import fr.iban.velocitycore.util.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.Command;
@@ -28,10 +29,10 @@ public class MsgToggleCMD {
 
         if (account.getOption(Option.MSG)) {
             account.setOption(Option.MSG, false);
-            player.sendMessage(Component.text("Vous ne pouvez plus recevoir les messages des joueurs", NamedTextColor.RED));
+            player.sendMessage(Component.text(Lang.get("msgtoggle.disabled"), NamedTextColor.RED));
         } else {
             account.setOption(Option.MSG, true);
-            player.sendMessage(Component.text("Vous pouvez à nouveau recevoir les messages des joueurs", NamedTextColor.GREEN));
+            player.sendMessage(Component.text(Lang.get("msgtoggle.enabled"), NamedTextColor.GREEN));
         }
 
         playerManager.saveProfile(account);

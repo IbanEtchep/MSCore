@@ -11,6 +11,7 @@ import de.themoep.minedown.adventure.MineDown;
 import fr.iban.common.messaging.CoreChannel;
 import fr.iban.common.teleport.*;
 import fr.iban.velocitycore.CoreVelocityPlugin;
+import fr.iban.velocitycore.util.Lang;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -54,9 +55,13 @@ public class TeleportManager {
             return;
         }
 
-        player.sendMessage(MineDown.parse("&aTéléportation dans " + delay + " secondes. &cNe bougez pas !"));
+        player.sendMessage(MineDown.parse(
+                Lang.get("tp.delayed")
+                        .replace("%delay%", String.valueOf(delay))
+        ));
+
         if (isTeleportWaiting(player)) {
-            player.sendMessage(MineDown.parse("&cUne seule téléportation à la fois !"));
+            player.sendMessage(MineDown.parse(Lang.get("tp.already-waiting")));
             return;
         }
 
@@ -91,9 +96,13 @@ public class TeleportManager {
 
 
     public void delayedTeleport(Player player, Player target, int delay) {
-        player.sendMessage(MineDown.parse("&aTéléportation dans %delay% secondes. &cNe bougez pas !", "delay", String.valueOf(delay)));
+
+        player.sendMessage(MineDown.parse(
+                Lang.get("tp.delayed").replace("%delay%", String.valueOf(delay))
+        ));
+
         if (isTeleportWaiting(player)) {
-            player.sendMessage(MineDown.parse("&cUne seule téléportation à la fois !"));
+            player.sendMessage(MineDown.parse(Lang.get("tp.already-waiting")));
             return;
         }
 
@@ -108,20 +117,13 @@ public class TeleportManager {
     }
 
     public void sendTeleportRequest(Player from, Player to) {
-        from.sendMessage(MineDown.parse("&aRequête de téléportation envoyée, en attente d'une réponse..."));
-        String minedownMessage = """
-                &7&m---------------------------------------------
-                &6%fromName%&f souhaite se téléporter à vous.
-                &fVous pouvez [&aACCEPTER](&aCliquez pour accepter la demande run_command=/tpyes %fromName%) ou [&cREFUSER](&cCliquez pour refuser la demande run_command=/tpno %fromName%).
-                &7&m---------------------------------------------
-                """;
+        from.sendMessage(MineDown.parse(Lang.get("tp.request.sent")));
 
-        to.sendMessage(MineDown.parse(
-                minedownMessage,
-                "fromName", from.getUsername()
-        ));
+        String minedownMessage = Lang.get("tp.request.to-player")
+                .replace("%fromName%", from.getUsername());
 
-        //Retirer la requête déjà existante si il y en a une.
+        to.sendMessage(MineDown.parse(minedownMessage));
+
         TpRequest req = getTpRequestFrom(from, to);
         if (req != null) {
             removeTpRequest(to.getUniqueId(), req);
@@ -133,27 +135,21 @@ public class TeleportManager {
             TpRequest req2 = getTpRequestFrom(from, to);
             if (req2 != null) {
                 removeTpRequest(to.getUniqueId(), req2);
-                from.sendMessage(MineDown.parse("&cVotre requête de téléportation envoyée à %player% a expiré.", "player", to.getUsername()));
+                from.sendMessage(MineDown.parse(
+                        Lang.get("tp.request.expired").replace("%player%", to.getUsername())
+                ));
             }
         }).delay(2, TimeUnit.MINUTES).schedule();
     }
 
     public void sendTeleportHereRequest(Player from, Player to) {
-        from.sendMessage(MineDown.parse("&aRequête de téléportation envoyée, en attente d'une réponse..."));
+        from.sendMessage(MineDown.parse(Lang.get("tp.request.sent")));
 
-        String minedownMessage = """
-                &7&m---------------------------------------------
-                &6%fromName%&f souhaite que vous vous téléportiez à lui.
-                &fVous pouvez [&aACCEPTER](&aCliquez pour accepter la demande run_command=/tpyes %fromName%) ou [&cREFUSER](&cCliquez pour refuser la demande run_command=/tpno %fromName%).
-                &7&m---------------------------------------------
-                """;
+        String minedownMessage = Lang.get("tp.request.here")
+                .replace("%fromName%", from.getUsername());
 
-        to.sendMessage(MineDown.parse(
-                minedownMessage,
-                "fromName", from.getUsername()
-        ));
+        to.sendMessage(MineDown.parse(minedownMessage));
 
-        //Retirer la requête déjà existante si il y en a une.
         TpRequest req = getTpRequestFrom(to, from);
         if (req != null) {
             removeTpRequest(to.getUniqueId(), req);
@@ -165,7 +161,9 @@ public class TeleportManager {
             TpRequest req2 = getTpRequestFrom(to, from);
             if (req2 != null) {
                 removeTpRequest(to.getUniqueId(), req2);
-                from.sendMessage(MineDown.parse("&cVotre requête de téléportation envoyée à %player% a expiré.", "player", to.getUsername()));
+                from.sendMessage(MineDown.parse(
+                        Lang.get("tp.request.expired").replace("%player%", to.getUsername())
+                ));
             }
         }).delay(2, TimeUnit.MINUTES).schedule();
     }

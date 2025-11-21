@@ -3,8 +3,8 @@ package fr.iban.velocitycore.command;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import fr.iban.velocitycore.CoreVelocityPlugin;
+import fr.iban.velocitycore.util.Lang;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.CommandPlaceholder;
 import revxrsal.commands.annotation.Description;
@@ -31,8 +31,8 @@ public class ChatCMD {
     @Subcommand("help")
     @Description("Affiche les commandes de gestion du chat.")
     public void help(Player player) {
-        player.sendMessage(Component.text("Commandes chat :", NamedTextColor.GREEN));
-        player.sendMessage(Component.text("/chat toggle - mute/unmute le chat", NamedTextColor.GREEN));
+        player.sendMessage(Component.text(Lang.get("chat.help.title")));
+        player.sendMessage(Component.text(Lang.get("chat.help.toggle")));
     }
 
     @Subcommand("clear")
@@ -44,7 +44,12 @@ public class ChatCMD {
                 p.sendMessage(emptyMessage);
             }
         });
-        server.getAllPlayers().forEach(p -> p.sendMessage(Component.text("Le chat a été clear par " + player.getUsername() + ".", NamedTextColor.RED)));
+        server.getAllPlayers().forEach(p ->
+                p.sendMessage(Component.text(
+                        Lang.get("chat.clear")
+                                .replace("%player%", player.getUsername())
+                ))
+        );
     }
 
     @Subcommand("toggle")

@@ -2,6 +2,7 @@ package fr.iban.survivalcore.listeners;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.utils.SLocationUtils;
+import fr.iban.bukkitcore.utils.Lang;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.messaging.message.PlayerSLocationMessage;
 import fr.iban.common.model.MSPlayerProfile;
@@ -24,8 +25,7 @@ public class RTPListeners implements Listener {
 
         if (core.getServerManager().isSurvivalServer()) {
             String server = core.getServerName();
-            player.sendMessage("§6ⓘ §fVous avez été téléporté aléatoirement sur le serveur §8" + server + "§f. " +
-                    "Pensez à mettre une résidence avec la commande §8/sethome§f ou à dormir dans un lit afin de pouvoir retourner à cet endroit plus tard.");
+            player.sendMessage(Lang.get("rtp.teleported").replace("%server%", server));
         }
     }
 

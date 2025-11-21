@@ -1,6 +1,7 @@
 package fr.iban.bukkitcore.listeners;
 
 import fr.iban.bukkitcore.event.PlayerPreTeleportEvent;
+import fr.iban.bukkitcore.utils.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +17,7 @@ public class TeleportListener implements Listener {
         }
 
         if(player.getFallDistance() > 10) {
-            player.sendMessage("§cVous ne pouvez pas vous téléporter en étant en chute.");
+            player.sendMessage(Lang.get("teleport.no-while-falling"));
             event.setCancelled(true);
             return;
         }

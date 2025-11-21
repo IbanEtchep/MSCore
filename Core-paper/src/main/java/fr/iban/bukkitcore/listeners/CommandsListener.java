@@ -4,6 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.common.manager.GlobalLoggerManager;
+import fr.iban.bukkitcore.utils.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
@@ -67,14 +68,17 @@ public class CommandsListener implements Listener {
             approvedCommands.remove(player.getUniqueId(), command);
             return;
         }
-        
+
         Command bukkitCommand = Bukkit.getCommandMap().getCommand(command);
         if (bukkitCommand != null) {
             if (!bukkitCommand.testPermission(player)) return;
             e.setCancelled(true);
-            player.sendMessage("§cApprobation requise.");
+            player.sendMessage(Lang.get("commands.approval-required"));
             plugin.getApprovalManager().sendRequest(player,
-                    player.getName() + " (" + ip + ") essaye d'exécuter la commande " + e.getMessage() + ".",
+                    Lang.get("commands.approval-message")
+                            .replace("%player%", player.getName())
+                            .replace("%ip%", ip)
+                            .replace("%command%", e.getMessage()),
                     result -> {
                         if (result) {
                             plugin.getScheduler().runAtEntity(player, task -> {

@@ -8,6 +8,7 @@ import fr.iban.bukkitcore.listeners.*;
 import fr.iban.bukkitcore.manager.*;
 import fr.iban.bukkitcore.plan.PlanDataManager;
 import fr.iban.bukkitcore.rewards.RewardsDAO;
+import fr.iban.bukkitcore.utils.Lang;
 import fr.iban.bukkitcore.utils.PluginMessageHelper;
 import fr.iban.bukkitcore.utils.TextCallback;
 import fr.iban.common.data.sql.DbAccess;
@@ -46,7 +47,8 @@ public final class CoreBukkitPlugin extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
-
+        Lang.init(this);
+        
         GlobalLoggerManager.initLogger();
 
         this.foliaLib = new FoliaLib(this);

@@ -16,6 +16,8 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.util.*;
 
+import fr.iban.bukkitcore.utils.Lang;
+
 @Command("repair")
 public class RepairCMD {
 
@@ -43,10 +45,10 @@ public class RepairCMD {
         }
 
         if (isRepairable(item) && repairItem(item)) {
-            player.sendMessage(ChatColor.GOLD + "§aRéparation effectuée.");
+            player.sendMessage(Lang.get("repair.done-hand"));
             repairCooldowns.put(player.getUniqueId(), System.currentTimeMillis());
         } else {
-            player.sendMessage(ChatColor.RED + "Erreur: " + ChatColor.DARK_RED + "Cet item n'est pas réparable");
+            player.sendMessage(Lang.get("repair.not-repairable"));
         }
     }
 
@@ -65,7 +67,7 @@ public class RepairCMD {
                 }
             }
             repairAllCooldowns.put(player.getUniqueId(), System.currentTimeMillis());
-            player.sendMessage(ChatColor.GOLD + "§aRéparations effectuées.");
+            player.sendMessage(Lang.get("repair.done-all"));
         }
     }
 
@@ -103,7 +105,7 @@ public class RepairCMD {
                 repairAllCooldowns.remove(player.getUniqueId());
                 return false;
             } else {
-                player.sendMessage("§cVous pourrez à nouveau réparer un item dans " + DateUtil.formatDateDiff(lastRep + cooldownTime) + " secondes.");
+                player.sendMessage(Lang.get("repair.cooldown-all").replace("%time%", DateUtil.formatDateDiff(lastRep + cooldownTime)));
                 return true;
             }
         }
@@ -122,7 +124,7 @@ public class RepairCMD {
                 return false;
             } else {
                 long remain = cooldownTime - (System.currentTimeMillis() - lastRep);
-                player.sendMessage("§cVous pourrez à nouveau réparer un item dans " + remain / 1000 + " secondes.");
+                player.sendMessage(Lang.get("repair.cooldown-hand").replace("%time%", String.valueOf(remain / 1000)));
                 return true;
             }
         }

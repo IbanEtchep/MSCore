@@ -3,6 +3,7 @@ package fr.iban.bukkitcore.menu;
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.manager.RessourcesWorldManager;
 import fr.iban.bukkitcore.utils.ItemBuilder;
+import fr.iban.bukkitcore.utils.Lang;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -15,7 +16,7 @@ public class RessourceMenu extends Menu {
 
 	@Override
 	public String getMenuName() {
-		return "§dSélectionnez un monde :";
+		return Lang.get("menus.ressources.title");
 	}
 
 	@Override
@@ -34,9 +35,20 @@ public class RessourceMenu extends Menu {
 
 	@Override
 	public void setMenuItems() {
-		inventory.setItem(2, new ItemBuilder(Material.GRASS_BLOCK).setName("§2§lNormal").setLore("§aCliquez pour rejoindre le monde ressource normal.").build());
-		inventory.setItem(4, new ItemBuilder(Material.NETHERRACK).setName("§4§lNether").setLore("§aCliquez pour rejoindre le monde ressource nether.").build());
-		inventory.setItem(6, new ItemBuilder(Material.END_STONE).setName("§5§lEnder").setLore("§aCliquez pour rejoindre le monde ressource ender.").build());
+		inventory.setItem(2, new ItemBuilder(Material.GRASS_BLOCK)
+				.setName(Lang.get("menus.ressources.normal.name"))
+				.setLore(Lang.get("menus.ressources.normal.lore"))
+				.build());
+
+		inventory.setItem(4, new ItemBuilder(Material.NETHERRACK)
+				.setName(Lang.get("menus.ressources.nether.name"))
+				.setLore(Lang.get("menus.ressources.nether.lore"))
+				.build());
+
+		inventory.setItem(6, new ItemBuilder(Material.END_STONE)
+				.setName(Lang.get("menus.ressources.end.name"))
+				.setLore(Lang.get("menus.ressources.end.lore"))
+				.build());
 
 		for(int i = 0 ; i < inventory.getSize() ; i++) {
 			if(inventory.getItem(i) == null)

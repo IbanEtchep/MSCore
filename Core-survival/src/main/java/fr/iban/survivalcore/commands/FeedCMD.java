@@ -2,6 +2,7 @@ package fr.iban.survivalcore.commands;
 
 import com.earth2me.essentials.utils.DateUtil;
 import fr.iban.survivalcore.SurvivalCorePlugin;
+import fr.iban.bukkitcore.utils.Lang;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
@@ -29,7 +30,7 @@ public class FeedCMD {
 
 		player.setFoodLevel(20);
 		player.setSaturation(5f);
-		player.sendMessage("§aVous avez été rassasié.");
+		player.sendMessage(Lang.get("feed.fed"));
 
 		if(getCooldownTime(player) > 0){
 			cooldowns.put(player.getUniqueId(), System.currentTimeMillis());
@@ -44,7 +45,7 @@ public class FeedCMD {
 				cooldowns.remove(player.getUniqueId());
 				return false;
 			} else {
-				player.sendMessage("§cVous pourrez à nouveau faire ça dans " + DateUtil.formatDateDiff(lastRep+cooldownTime) + ".");
+				player.sendMessage(Lang.get("feed.cooldown").replace("%time%", DateUtil.formatDateDiff(lastRep+cooldownTime)));
 				return true;
 			}
 		}

@@ -2,6 +2,7 @@ package fr.iban.survivalcore.listeners;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.manager.BukkitPlayerManager;
+import fr.iban.bukkitcore.utils.Lang;
 import fr.iban.common.enums.Option;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.teleport.SLocation;
@@ -32,7 +33,7 @@ public class EntityDeathListener implements Listener {
         e.deathMessage(null);
         Player killer = e.getEntity().getKiller();
         Player player = e.getEntity();
-        String message = "☠ " + player.getName() + " ";
+        String message = Lang.get("death.prefix") + " " + player.getName() + " ";
 
         EntityDamageEvent damageCause = e.getEntity().getLastDamageCause();
         if (damageCause == null)
@@ -40,80 +41,80 @@ public class EntityDeathListener implements Listener {
 
         switch (damageCause.getCause()) {
             case SUICIDE:
-                message += "s'est suicidé !";
+                message += Lang.get("death.suicide");
                 break;
             case BLOCK_EXPLOSION:
-                message += "s'est fait broyer par de la TNT";
+                message += Lang.get("death.block-explosion");
                 break;
             case CONTACT:
-                message += "a essayé de piquer un cactus !";
+                message += Lang.get("death.contact");
                 break;
             case DROWNING:
-                message += "s'est noyé !";
+                message += Lang.get("death.drowning");
                 break;
             case ENTITY_EXPLOSION:
-                message += "s'est fait exploser par un Creeper !";
+                message += Lang.get("death.entity-explosion");
                 break;
             case FIRE_TICK:
-                message += "a brûlé.";
+                message += Lang.get("death.fire-tick");
                 break;
             case LAVA:
-                message += "a essayé de nager dans la lave !";
+                message += Lang.get("death.lava");
                 break;
             case MAGIC:
-                message += "a été tué par une potion!";
+                message += Lang.get("death.magic");
                 break;
             case POISON:
-                message += "a été empoisonné!";
+                message += Lang.get("death.poison");
                 break;
             case PROJECTILE:
                 if (killer != null)
-                    message += "s'est fait sniper par " + killer.getName() + " !";
+                    message += Lang.get("death.projectile-killer").replace("%killer%", killer.getName());
                 else
-                    message += "s'est pris une flèche dans le crâne.";
+                    message += Lang.get("death.projectile");
                 break;
             case STARVATION:
-                message += "est mort de faim.";
+                message += Lang.get("death.starvation");
                 break;
             case SUFFOCATION:
-                message += "a suffoqué dans un mur.";
+                message += Lang.get("death.suffocation");
                 break;
             case VOID:
-                message += "a disparu dans le néant...";
+                message += Lang.get("death.void");
                 break;
             case FALL:
-                message += "a fait une terrible chute !";
+                message += Lang.get("death.fall");
                 break;
             case WITHER:
-                message += "a été tué par un Wither.";
+                message += Lang.get("death.wither");
                 break;
             case LIGHTNING:
-                message += "a été abattu par la colère de Zeus!";
+                message += Lang.get("death.lightning");
                 break;
             case HOT_FLOOR:
-                message += "a marché sur un bloc très chaud !";
+                message += Lang.get("death.hot-floor");
                 break;
             case FLY_INTO_WALL:
-                message += "a frappé le mur à une vitesse supersonique !";
+                message += Lang.get("death.fly-into-wall");
                 break;
             case FALLING_BLOCK:
-                message += "s'est fait écraser par une entité tombée du ciel !";
+                message += Lang.get("death.falling-block");
                 break;
             case FIRE:
-                message += "a joué avec le feu mais s'est brûlé.";
+                message += Lang.get("death.fire");
                 break;
             case DRAGON_BREATH:
-                message += "a subi la colère du Dragon !";
+                message += Lang.get("death.dragon-breath");
                 break;
             case THORNS:
                 if (damageCause instanceof EntityDamageByEntityEvent entity) {
                     if (entity.getDamager() instanceof Player) {
                         killer = (Player) entity.getDamager();
-                        message += "s'est tué en frappant " + killer.getName() + " !";
+                        message += Lang.get("death.thorns-player").replace("%killer%", killer.getName());
                     } else if (entity.getDamager() instanceof Mob) {
-                        message += "s'est tué en frappant un " + entity.getDamager().getType().toString().toLowerCase().replace("_", " ") + " !";
+                        message += Lang.get("death.thorns-mob").replace("%mob%", entity.getDamager().getType().toString().toLowerCase().replace("_", " "));
                     } else if (entity.getDamager().getType() == EntityType.ARMOR_STAND) {
-                        message += "s'est tué en frappant un porte armure...";
+                        message += Lang.get("death.thorns-armorstand");
                     }
                 }
                 break;
@@ -123,21 +124,21 @@ public class EntityDeathListener implements Listener {
                         killer = (Player) entity.getDamager();
                         Material weapon = killer.getInventory().getItemInMainHand().getType();
                         if (weapon == Material.AIR) {
-                            message += "s'est fait boxer par " + killer.getName() + " !";
+                            message += Lang.get("death.attack-player-air").replace("%killer%", killer.getName());
                         } else {
-                            message += "s'est fait assassiner par " + killer.getName() + " !";
+                            message += Lang.get("death.attack-player-weapon").replace("%killer%", killer.getName());
                         }
                     } else if (entity.getDamager() instanceof Mob) {
                         if(entity.getDamager().getType() == EntityType.WARDEN) {
-                            message += "s'est fait atomiser par un Warden !";
+                            message += Lang.get("death.attack-warden");
                         }else{
-                            message += "s'est fait tuer par un " + entity.getDamager().getType().toString().toLowerCase().replace("_", " ") + " !";
+                            message += Lang.get("death.attack-mob").replace("%mob%", entity.getDamager().getType().toString().toLowerCase().replace("_", " "));
                         }
                     }
                 }
                 break;
             default:
-                message += "est mort.";
+                message += Lang.get("death.default");
         }
 
         BukkitPlayerManager playerManager = CoreBukkitPlugin.getInstance().getPlayerManager();
@@ -155,21 +156,21 @@ public class EntityDeathListener implements Listener {
         CoreBukkitPlugin core = CoreBukkitPlugin.getInstance();
         Player player = e.getEntity();
         Location location = player.getLocation();
-        player.sendMessage("§3§lVous êtes mort à la position suivante: \n" +
-                "§bServeur : §f" + core.getServerName() + "\n" +
-                "§bMonde : §f" + location.getWorld().getName() + "\n" +
-                "§bCoordonnées : X : §f" + (int) location.getX() +
-                " §bY : §f" + (int) location.getY() +
-                " §bZ : §f" + (int) location.getZ());
+
+        player.sendMessage(
+                Lang.get("death.location")
+                        .replace("%server%", core.getServerName())
+                        .replace("%world%", location.getWorld().getName())
+                        .replace("%x%", String.valueOf((int) location.getX()))
+                        .replace("%y%", String.valueOf((int) location.getY()))
+                        .replace("%z%", String.valueOf((int) location.getZ()))
+        );
 
         MSPlayerProfile profile = core.getPlayerManager().getProfile(player.getUniqueId());
         SLocation rtpLocation = profile.getLastRTPLocation();
 
         if(rtpLocation != null && rtpLocation.getWorld().equals(location.getWorld().getName())) {
-            String miniMessageText = "<aqua><bold>Vous pouvez vous téléporter à la position de votre dernière téléportation aléatoire en cliquant sur ce message ou en exécutant la commande /lastrtp."
-                    + "<hover:show_text:'<bold>Clic ici !'>"
-                    + "<click:run_command:/lastrtp>";
-
+            String miniMessageText = Lang.get("death.lastrtp");
             Component message = MiniMessage.miniMessage().deserialize(miniMessageText);
             player.sendMessage(message);
         }

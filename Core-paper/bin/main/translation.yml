@@ -1,0 +1,105 @@
+recompenses:
+  no-pending: "&cVous n'avez pas de récompense en attente."
+  received: "&aVous avez reçu une récompense (&e/recompenses&a)."
+  must-be-int: "&cL'id doit être un nombre entier !"
+  player-not-found: "&cJoueur non trouvé."
+  no-templates: "&cIl n'y a pas de templates."
+  template-added: "&aTemplate de récompense ajoutée."
+
+  usage-give: "&e/recompenses give <joueur> <templateID>"
+  usage-removetemplate: "&e/recompenses removetemplate <id>"
+  usage-addtemplate: "&e/recompenses addtemplate <name> <server> <command...> &7({player} = pseudo)"
+
+  template-entry: "&a%id% - %name% - %server% - %command%"
+
+ressources:
+  invalid-world: "&cCe type de monde n'existe pas."
+
+  tp-wait: "&cVous pourrez vous retéléporter en ressources dans %seconds% secondes."
+  tp-start: "&aTéléportation au monde ressource."
+
+
+teleport:
+  cannot-self: "&cVous ne pouvez pas vous téléporter à vous-même."
+  
+  request-accepted: "&aDemande de téléportation acceptée."
+  request-denied: "&cDemande de téléportation rejetée."
+
+  no-request: "&cVous n'avez pas de requête de téléportation."
+  no-request-from-player: "&cVous n'avez pas de requête de téléportation de ce joueur."
+
+  cancelled-move: "&cVous avez bougé, téléportation annulée."
+
+  no-while-falling: "&cVous ne pouvez pas vous téléporter en étant en chute."
+
+  delay: "&aTéléportation dans %seconds% secondes. &cNe bougez pas !"
+  loading: "&aChargement de la zone..."
+  success: "&aTéléportation effectuée !"
+  failed: "&cLa téléportation a échoué !"
+  unsafe-warning: "⚠ La zone de téléportation n'est pas sécurisée.\nCliquez ici pour continuer. (ou tapez /tplastunsafe)"
+  unsafe-hover: "Se téléporter à vos risques et périls."
+  no-unsafe: "&cVous n'avez pas de téléportation en attente."
+  already-survival: "&cVous êtes déjà dans un serveur survie."
+
+
+trustcommand:
+  already-added: "&cCette commande est déjà ajoutée."
+  added: "&aCommande ajoutée à la liste."
+  not-found: "&cCette commande n'est pas dans la liste."
+  removed: "&aCommande retirée de la liste."
+  reloaded: "&aCommandes rechargées."
+
+commands:
+  approval-required: "&cApprobation requise."
+  approval-message: "%player% (%ip%) essaye d'exécuter la commande %command%."
+
+join:
+  rewards-pending: "&aVous avez une ou plusieurs récompenses en attente ! (&e/recompenses&a)"
+
+menus:
+  confirm:
+    title: "&2Confirmer"
+    desc-default: "&aVoulez-vous vraiment faire cela?"
+    confirm-button: "&2&lCONFIRMER"
+    cancel-button: "&4&lANNULER"
+
+  paginated:
+    next: "&aSuivant"
+    previous: "&aPrécédent"
+    close: "&4Fermer"
+
+  ressources:
+    title: "&dSélectionnez un monde :"
+
+    normal:
+      name: "&2&lNormal"
+      lore: "&aCliquez pour rejoindre le monde ressource normal."
+
+    nether:
+      name: "&4&lNether"
+      lore: "&aCliquez pour rejoindre le monde ressource nether."
+
+    end:
+      name: "&5&lEnder"
+      lore: "&aCliquez pour rejoindre le monde ressource ender."
+
+  reward-select:
+    title: "&2Vos récompenses :"
+    item-name: "&2%name%"
+    item-lore: "&aClic pour récupérer la récompense."
+
+  serveur:
+    title: "&dSélectionnez un serveur :"
+    survie-name: "&2&lSurvie"
+    survie-lore: "&aCliquez pour rejoindre le serveur survie."
+    ressources-name: "&2&lRessources"
+    ressources-lore: "&aCliquez pour rejoindre le serveur ressources."
+
+options:
+  death: "Afficher les messages de morts"
+  join: "Afficher les messages de connexions"
+  leave: "Afficher les messages de déconnexions"
+  tp: "Afficher les demandes de téléportations"
+  chat: "Afficher les messages du tchat"
+  mention: "Activer les mentions dans le tchat les message du tchat"
+

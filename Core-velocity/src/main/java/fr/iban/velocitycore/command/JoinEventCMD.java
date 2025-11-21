@@ -2,6 +2,7 @@ package fr.iban.velocitycore.command;
 
 import com.velocitypowered.api.proxy.Player;
 import fr.iban.velocitycore.CoreVelocityPlugin;
+import fr.iban.velocitycore.util.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.*;
@@ -29,7 +30,7 @@ public class JoinEventCMD {
         if (plugin.getCurrentEvents().containsKey(event)) {
             plugin.getTeleportManager().delayedTeleport(player, plugin.getCurrentEvents().get(event), 3);
         } else {
-            player.sendMessage(Component.text("Il n'y a pas d'event à ce nom.", NamedTextColor.RED));
+            player.sendMessage(Component.text(Lang.get("joinevent.not-found"), NamedTextColor.RED));
         }
     }
 }

@@ -5,6 +5,7 @@ import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.velocitycore.CoreVelocityPlugin;
 import fr.iban.velocitycore.manager.AutomatedAnnounceManager;
+import fr.iban.velocitycore.util.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.Command;
@@ -43,13 +44,13 @@ public class AnnounceCMD {
 
             if (!profile.getBlackListedAnnounces().contains(id)) {
                 profile.getBlackListedAnnounces().add(id);
-                player.sendMessage(Component.text("Cette annonce ne vous sera plus affichée à l'avenir.").color(NamedTextColor.GREEN));
+                player.sendMessage(Component.text(Lang.get("announce.disabled")).color(NamedTextColor.GREEN));
                 plugin.getPlayerManager().saveProfile(profile);
             } else {
-                player.sendMessage(Component.text("Vous avez déjà bloqué cette annonce.").color(NamedTextColor.RED));
+                player.sendMessage(Component.text(Lang.get("announce.already-disabled")).color(NamedTextColor.RED));
             }
         } else {
-            player.sendMessage(Component.text("Cette annonce n'existe pas.").color(NamedTextColor.RED));
+            player.sendMessage(Component.text(Lang.get("announce.not-exist")).color(NamedTextColor.RED));
         }
     }
 }

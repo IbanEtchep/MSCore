@@ -4,6 +4,7 @@ import com.tcoded.folialib.FoliaLib;
 import com.tcoded.folialib.impl.PlatformScheduler;
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.commands.CoreCommandHandlerVisitor;
+import fr.iban.survivalcore.utils.Lang;
 import fr.iban.bukkitcore.utils.PluginMessageHelper;
 import fr.iban.survivalcore.commands.*;
 import fr.iban.survivalcore.listeners.*;
@@ -35,6 +36,7 @@ public final class SurvivalCorePlugin extends JavaPlugin implements Listener {
 
         saveDefaultConfig();
         setupEconomy();
+        Lang.init(this);
 
         registerEvents(
                 new EntityDeathListener(this),

@@ -1,0 +1,17 @@
+name: SurvivalCore
+version: ${project_version}
+api-version: 1.21
+main: fr.iban.survivalcore.SurvivalCorePlugin
+authors: [Iban]
+description: Core des serveurs en mode survie.
+softdepend: [BetterRTP]
+depend: [LuckPerms, Essentials, Core, Vault]
+folia-supported: true
+
+commands:
+  givetools:
+  annonce:
+  pvp:
+  survivalcore:
+  dolphin:
+    aliases: [dophin]

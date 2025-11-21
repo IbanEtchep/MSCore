@@ -9,16 +9,17 @@ import fr.iban.common.messaging.Message;
 import fr.iban.common.messaging.message.EventAnnounce;
 import fr.iban.common.messaging.message.PlayerSLocationMessage;
 import fr.iban.common.teleport.RequestType;
+import fr.iban.common.teleport.RequestType;
 import fr.iban.common.teleport.TeleportToLocation;
 import fr.iban.common.teleport.TeleportToPlayer;
 import fr.iban.common.teleport.TpRequest;
 import fr.iban.velocitycore.CoreVelocityPlugin;
 import fr.iban.velocitycore.event.CoreMessageEvent;
+import fr.iban.velocitycore.util.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-
 
 import java.util.UUID;
 
@@ -114,17 +115,32 @@ public class CoreMessageListener {
 
         if (!plugin.getCurrentEvents().containsKey(key)) {
             plugin.getCurrentEvents().put(key, announce.getLocation());
-            server.sendMessage(Component.text(announce.getHostName() + " a lancé un event " + announce.getName(), NamedTextColor.DARK_PURPLE, TextDecoration.BOLD));
+            server.sendMessage(
+                Component.text(
+                    Lang.get("event.started")
+                        .replace("%host%", announce.getHostName())
+                        .replace("%event%", announce.getName()),
+                    NamedTextColor.DARK_PURPLE,
+                    TextDecoration.BOLD
+                )
+            );
         }
 
         broadcastLine();
         server.sendMessage(getCenteredText(" " + announce.getName() + " ", TextDecoration.BOLD));
         server.sendMessage(Component.text(announce.getDesc(), NamedTextColor.WHITE));
-        server.sendMessage(Component.text("Arene : " + announce.getArena(), NamedTextColor.WHITE));
-        server.sendMessage(Component.text("Cliquez pour rejoindre ou tapez /joinevent", NamedTextColor.DARK_PURPLE, TextDecoration.BOLD)
-                .clickEvent(ClickEvent.runCommand("/joinevent " + key)));
+        server.sendMessage(Component.text(
+                        Lang.get("event.arena").replace("%arena%", announce.getArena()),
+                        NamedTextColor.WHITE));
+
+        server.sendMessage(
+                Component.text(Lang.get("event.click-to-join"),
+                        NamedTextColor.DARK_PURPLE, TextDecoration.BOLD)
+                        .clickEvent(ClickEvent.runCommand("/joinevent " + key))
+        );
         broadcastLine();
     }
+
 
     /*
     UTILS

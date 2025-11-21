@@ -1,0 +1,186 @@
+announce:
+  disabled: "Cette annonce ne vous sera plus affichée à l'avenir."
+  already-disabled: "Vous avez déjà bloqué cette annonce."
+  not-exist: "Cette annonce n'existe pas."
+
+announceevent:
+  usage: "Usage incorrect. Veuillez fournir un message à annoncer."
+  prefix: "EVENT : "
+
+chat:
+  help:
+    title: "&aCommandes chat :"
+    toggle: "&a/chat toggle - mute/unmute le chat"
+  clear: "&cLe chat a été clear par %player%."
+
+vcore:
+  help: |
+    Utilisez §a/vcore reload§7 pour recharger la configuration.
+    Utilisez §a/vcore debug§7 pour basculer le mode débogage.
+
+  reload-success: "La configuration a été rechargée avec succès."
+
+  debug: "Mode débogage : %state%"
+
+  enabled: "activé"
+  disabled: "désactivé"
+
+ignore:
+  help:
+    prefix: "Utilisez "
+    add: "/ignore add <joueur>"
+    add_suffix: " pour ignorer un joueur.\n"
+    remove: "/ignore remove <joueur>"
+    remove_suffix: " pour ne plus ignorer un joueur."
+
+  add:
+    success: "Vous ignorez maintenant %player%."
+    staff: "Vous ne pouvez pas ignorer un membre du staff !"
+    already: "Ce joueur est déjà ignoré."
+    self: "Vous ne pouvez pas vous ignorer vous-même."
+
+  remove:
+    success: "Vous n'ignorez plus %player%."
+    not_ignored: "Ce joueur n'est pas ignoré."
+
+  list:
+    header: "|| Joueurs Ignorés ||"
+    entry: "- %player%"
+    unknown: "Joueur Inconnu"
+    empty: "Vous n'ignorez personne."
+
+joinevent:
+  not-found: "Il n'y a pas d'event à ce nom."
+
+commands:
+  msg:
+    format: "&7[&d%sender% &7→ &d%target%&7] &f%message%"
+
+miscellaneous:
+  geyser-offhand: "/geyser offhand"
+  not-bedrock: "Commande réservée aux utilisateurs de la version bedrock."
+
+msgtoggle:
+  disabled: "Vous ne pouvez plus recevoir les messages des joueurs"
+  enabled: "Vous pouvez à nouveau recevoir les messages des joueurs"
+
+reply:
+  usage: "Utilisation: /r <message>"
+  no-target: "Tu ne peux pas répondre, car personne ne t'a écrit."
+
+tabcomplete:
+  usage: "/addtabcomplete global/moderation commandeSansSlash"
+  unknown-group: "Commande inconnue."
+  added: "%command% ajouté au groupe %group%"
+
+teleport:
+  back:
+    not-found: "&cL'endroit de votre décès n'a pas pu être trouvé."
+  lastrtp:
+    not-found: "&cLa position n'a pas été trouvée."
+
+tptoggle:
+  opened: "Vos demandes de téléportation sont maintenant ouvertes."
+  closed: "Vos demandes de téléportation sont maintenant fermées."
+
+event:
+  started: "%host% a lancé un event %event%"
+  arena: "Arène : %arena%"
+  click-to-join: "Cliquez pour rejoindre ou tapez /joinevent"
+
+proxy:
+
+  prefix:
+    join: "&8[&a+&8]"
+    quit: "&8[&c-&8]"
+    first-join: "&8≫ &7"
+
+  hover:
+    last-seen: "Vu pour la dernière fois %time%"
+    first-join: "Clic !"
+
+  click:
+    first-join: "Bienvenue %player%"
+
+  last-seen:
+    never: "jamais"
+
+  kick:
+    keyword: "expulsé"
+
+  join-messages:
+    1: "%s s'est connecté !"
+    2: "%s est dans la place !"
+    3: "%s a rejoint le serveur !"
+    4: "Un %s sauvage apparaît !"
+    5: "Tout le monde, dites bonjour à %s !"
+    6: "%s vient d'arriver, faites place !"
+
+  quit-messages:
+    1: "%s nous a quitté :("
+    2: "%s s'est déconnecté."
+    3: "%s a disparu dans l'ombre."
+    4: "Et voilà, %s est parti."
+
+  long-absence:
+    1: "%s est enfin de retour !"
+    2: "Oh mon dieu, %s est revenu !"
+    3: "Le prodige %s est de retour !"
+    4: "%s, notre légende perdue est enfin de retour !"
+    5: "Vous vous rappelez de %s ? Eh bien, devinez qui vient de revenir !"
+
+  first-join:
+    1: "Bienvenue %s, content de te voir pour la première fois !"
+    2: "%s vient de franchir les portes du serveur pour la première fois !"
+    3: "C'est la grande première de %s sur le serveur !"
+    4: "Hey tout le monde, accueillons notre nouveau membre, %s !"
+    5: "Un nouveau visage ! Salut %s, bienvenue sur le serveur !"
+
+announce:
+  prefix-left: " ["
+  close-symbol: "✕"
+  prefix-right: "]"
+  hover-disable: "Clique pour ne plus afficher cette annonce"
+  no-announces: "Aucune annonce trouvée dans la configuration !"
+  invalid-id: "ID d'annonce invalide : %id%"
+
+chat:
+  disabled: "&cVous ne pouvez pas envoyer de message car votre tchat est désactivé."
+  annonce: "&#f07e71&lAnnonce de &#fbb29e&l%player% &#f07e71&➤ &#7bc8fe&l%message%"
+  muted: "&cLe chat est désormais muet."
+  unmuted: "&aLe chat n'est plus muet."
+
+msg:
+  disabled: "&c%player% a désactivé ses messages."
+  ignored: "&cVous ne pouvez pas envoyer de message à ce joueur."
+  hover: "Cliquez pour répondre"
+  sender: "&8Moi &7➔ &c%target% &6➤&7 %message%"
+  sender-staff: "&8Moi &7➔ &8[&6Staff&8] &c%target% &6➤&7 %message%"
+  target: "&c%sender% &7➔ &8Moi &6➤&7 %message%"
+  target-staff: "&8[&6Staff&8] &c%sender% &7➔ &8Moi &6➤&7 %message%"
+
+staffchat:
+  enabled: "&aVous pouvez à nouveau recevoir les messages du staff."
+  disabled: "&cVous ne pouvez plus recevoir les messages du staff."
+
+tp:
+  delayed: "&aTéléportation dans %delay% secondes. &cNe bougez pas !"
+  already-waiting: "&cUne seule téléportation à la fois !"
+
+  request:
+    sent: "&aRequête de téléportation envoyée, en attente d'une réponse..."
+    expired: "&cVotre requête de téléportation envoyée à %player% a expiré."
+
+    to-player: |
+      &7&m---------------------------------------------
+      &6%fromName%&f souhaite se téléporter à vous.
+      &fVous pouvez [&aACCEPTER](&aCliquez pour accepter la demande run_command=/tpyes %fromName%) 
+      ou [&cREFUSER](&cCliquez pour refuser la demande run_command=/tpno %fromName%).
+      &7&m---------------------------------------------
+
+    here: |
+      &7&m---------------------------------------------
+      &6%fromName%&f souhaite que vous vous téléportiez à lui.
+      &fVous pouvez [&aACCEPTER](&aCliquez pour accepter la demande run_command=/tpyes %fromName%) 
+      ou [&cREFUSER](&cCliquez pour refuser la demande run_command=/tpno %fromName%).
+      &7&m---------------------------------------------

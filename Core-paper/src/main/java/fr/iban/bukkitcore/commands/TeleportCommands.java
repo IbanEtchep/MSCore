@@ -2,6 +2,7 @@ package fr.iban.bukkitcore.commands;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.manager.TeleportManager;
+import fr.iban.bukkitcore.utils.Lang;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.teleport.RequestType;
 import fr.iban.common.teleport.TpRequest;
@@ -30,7 +31,7 @@ public class TeleportCommands {
         UUID targetUniqueId = target.getUniqueId();
 
         if (targetUniqueId.equals(sender.getUniqueId())) {
-            sender.sendMessage("§cVous ne pouvez pas vous téléporter à vous même.");
+            sender.sendMessage(Lang.get("teleport.cannot-self"));
             return;
         }
 
@@ -43,7 +44,7 @@ public class TeleportCommands {
         UUID targetUniqueId = target.getUniqueId();
 
         if (targetUniqueId.equals(sender.getUniqueId())) {
-            sender.sendMessage("§cVous ne pouvez pas vous téléporter à vous même.");
+            sender.sendMessage(Lang.get("teleport.cannot-self"));
             return;
         }
 
@@ -56,7 +57,7 @@ public class TeleportCommands {
         UUID targetUniqueId = target.getUniqueId();
 
         if (targetUniqueId.equals(sender.getUniqueId())) {
-            sender.sendMessage("§cVous ne pouvez pas vous téléporter à vous même.");
+            sender.sendMessage(Lang.get("teleport.cannot-self"));
             return;
         }
 
@@ -69,7 +70,7 @@ public class TeleportCommands {
         UUID targetUniqueId = target.getUniqueId();
 
         if (targetUniqueId.equals(sender.getUniqueId())) {
-            sender.sendMessage("§cVous ne pouvez pas vous téléporter à vous même.");
+            sender.sendMessage(Lang.get("teleport.cannot-self"));
             return;
         }
 
@@ -88,10 +89,10 @@ public class TeleportCommands {
                 } else if (request.getRequestType() == RequestType.TPHERE) {
                     teleportManager.teleport(sender.getUniqueId(), targetUniqueId, 3);
                 }
-                sender.sendMessage("§aDemande de téléportation acceptée.");
+                sender.sendMessage(Lang.get("teleport.request-accepted"));
                 teleportManager.removeTpRequest(sender.getUniqueId(), request);
             } else {
-                sender.sendMessage("§cVous n'avez pas de requête de téléportation de ce joueur.");
+                sender.sendMessage(Lang.get("teleport.no-request-from-player"));
             }
         } else if (!teleportManager.getTpRequests(sender).isEmpty()) {
             TpRequest request = teleportManager.getTpRequests(sender).getLast();
@@ -100,10 +101,10 @@ public class TeleportCommands {
             } else if (request.getRequestType() == RequestType.TPHERE) {
                 teleportManager.teleport(request.getPlayerTo(), request.getPlayerFrom(), 3);
             }
-            sender.sendMessage("§aDemande de téléportation acceptée.");
+            sender.sendMessage(Lang.get("teleport.request-accepted"));
             teleportManager.removeTpRequest(sender.getUniqueId(), request);
         } else {
-            sender.sendMessage("§cVous n'avez pas de requête de téléportation.");
+            sender.sendMessage(Lang.get("teleport.no-request"));
         }
     }
 
@@ -114,17 +115,17 @@ public class TeleportCommands {
             UUID targetUniqueId = target.getUniqueId();
             TpRequest request = teleportManager.getTpRequestFrom(sender, targetUniqueId);
             if (request != null) {
-                sender.sendMessage("§cDemande de téléportation rejetée.");
+                sender.sendMessage(Lang.get("teleport.request-denied"));
                 teleportManager.removeTpRequest(sender.getUniqueId(), request);
             } else {
-                sender.sendMessage("§cVous n'avez pas de requête de téléportation de ce joueur.");
+                sender.sendMessage(Lang.get("teleport.no-request-from-player"));
             }
         } else if (!teleportManager.getTpRequests(sender).isEmpty()) {
             TpRequest request = teleportManager.getTpRequests(sender).getLast();
-            sender.sendMessage("§cDemande de téléportation rejetée.");
+            sender.sendMessage(Lang.get("teleport.request-denied"));
             teleportManager.removeTpRequest(sender.getUniqueId(), request);
         } else {
-            sender.sendMessage("§cVous n'avez pas de requête de téléportation.");
+            sender.sendMessage(Lang.get("teleport.no-request"));
         }
     }
 

@@ -2,6 +2,7 @@ package fr.iban.velocitycore.command;
 
 import com.velocitypowered.api.proxy.Player;
 import fr.iban.velocitycore.CoreVelocityPlugin;
+import fr.iban.velocitycore.util.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.*;
@@ -19,7 +20,7 @@ public class ReplyCMD {
     @Usage("/reply <message> - Répond au dernier message reçu.")
     public void reply(Player player, @Default("") @Named("message") String message) {
         if (message.isEmpty()) {
-            player.sendMessage(Component.text("Utilisation: /r <message>").color(NamedTextColor.YELLOW));
+            player.sendMessage(Component.text(Lang.get("reply.usage")).color(NamedTextColor.YELLOW));
             return;
         }
 
@@ -28,7 +29,7 @@ public class ReplyCMD {
         if (target != null) {
             plugin.getChatManager().sendMessage(player, target, message.trim());
         } else {
-            player.sendMessage(Component.text("Tu ne peux pas répondre, car personne ne t'a écrit.", NamedTextColor.RED));
+            player.sendMessage(Component.text(Lang.get("reply.no-target"), NamedTextColor.RED));
         }
     }
 }

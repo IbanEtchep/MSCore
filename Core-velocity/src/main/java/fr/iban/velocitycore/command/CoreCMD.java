@@ -3,6 +3,7 @@ package fr.iban.velocitycore.command;
 import com.velocitypowered.api.proxy.Player;
 import fr.iban.common.messaging.AbstractMessenger;
 import fr.iban.velocitycore.CoreVelocityPlugin;
+import fr.iban.velocitycore.util.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.*;
@@ -29,11 +30,7 @@ public class CoreCMD {
     @Subcommand("help")
     @Description("Affiche les options de commande pour le serveur.")
     public void help(VelocityCommandActor actor) {
-        Component message = Component.text("Utilisez ", NamedTextColor.GRAY)
-                .append(Component.text("/vcore reload", NamedTextColor.GREEN))
-                .append(Component.text(" pour recharger la configuration.\n", NamedTextColor.GRAY))
-                .append(Component.text("/vcore debug", NamedTextColor.GREEN))
-                .append(Component.text(" pour basculer le mode débogage.", NamedTextColor.GRAY));
+        Component message = Component.text(Lang.get("vcore.help"), NamedTextColor.GRAY);
         actor.reply(message);
     }
 
@@ -43,7 +40,7 @@ public class CoreCMD {
     public void reloadConfig(VelocityCommandActor actor) throws IOException {
         plugin.getConfig().reload();
         plugin.getAnnounceManager().reloadAnnounces();
-        actor.reply(Component.text("La configuration a été rechargée avec succès.", NamedTextColor.GREEN));
+        actor.reply(Component.text(Lang.get("vcore.reload-success"), NamedTextColor.GREEN));
     }
 
     @Subcommand("debug")
@@ -52,6 +49,11 @@ public class CoreCMD {
     public void toggleDebug(Player player) {
         AbstractMessenger messenger = plugin.getMessagingManager().getMessenger();
         messenger.setDebugMode(!messenger.isDebugMode());
-        player.sendMessage(Component.text("Mode débogage : " + (messenger.isDebugMode() ? "activé" : "désactivé"), NamedTextColor.YELLOW));
+        player.sendMessage(Component.text(
+                Lang.get("vcore.debug", 
+                        java.util.Map.of("state", messenger.isDebugMode() ? Lang.get("vcore.enabled") : Lang.get("vcore.disabled"))
+                ),
+                NamedTextColor.YELLOW
+        ));
     }
 }

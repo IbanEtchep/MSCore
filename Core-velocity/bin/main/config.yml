@@ -1,0 +1,47 @@
+file-version: 2
+
+redis:
+    host: 172.18.0.1
+    port: 6380
+    password: pass
+    clientName: Serveur_mc
+
+database:
+    host: 172.18.0.1
+    port: 3306
+    user: user
+    dbname: dbname
+    password: password
+
+#sql or redis
+messenger: redis
+
+motd:
+    - "motd"
+chat-format: |
+    [&7[%levels_level%&7] &#feca57&%premium%&r%vault_suffix%%vault_prefix% %player% %vault_suffix% ➤ &r](Informations:
+    
+    &#55efc4&Argent: &f%bungeeeconomy_balance%
+    &#55efc4&Guilde: &f%guilds_name%
+    
+    &7Clic pour envoyer un message suggest_command=/msg %player% )
+staff-chat-format: '&8[&3&lStaff&8] &#feca57&%premium%&r%vault_suffix%%vault_prefix% %player% %vault_suffix% ➤ &r'
+ping-prefix: '&#fdcb6e&@'
+
+messages:
+    site: "url du site"
+    vote: "url pour voter"
+    discord: "url du discord"
+    grades: "url des info sur les grades"
+
+announces:
+    interval: 300
+    messages:
+        0:
+            message: "<color:#FF55FF>≫ <color:#FF55FF>Rejoignez-nous sur discord pour suivre toute l'actualité du serveur ! <click:run_command:/discord><hover:show_text:'Cliquez pour ouvrir Discord'><color:#FF55FF><bold>/discord</bold></hover></click> !"
+        1:
+            message: "<color:#FF55FF>≫ <color:#FF55FF>Pensez à voter régulièrement pour soutenir le serveur et gagner des récompenses ! <click:run_command:/vote><hover:show_text:'Cliquez pour voter'><color:#FF55FF><bold>/vote</bold></hover></click> !"
+        2:
+            message: "<color:#FF55FF>≫ <color:#FF55FF>Pensez à visiter notre site. Vous y trouverez le réglement, la boutique, la page de votes,...! <click:run_command:/site><hover:show_text:'Cliquez pour ouvrir le site'><color:#FF55FF><bold>/site</bold></hover></click> !"
+        3:
+            message: "<color:#FF55FF>≫ <color:#FF55FF>Vous pouvez nous aider à financer le serveur en faisant des achats sur la boutique ! <click:run_command:/boutique><hover:show_text:'Cliquez pour ouvrir la boutique'><color:#FF55FF><bold>/boutique</bold></hover></click> !"

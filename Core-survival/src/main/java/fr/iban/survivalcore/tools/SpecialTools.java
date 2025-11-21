@@ -16,11 +16,11 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import fr.iban.bukkitcore.utils.Lang;
 
 public class SpecialTools {
 
@@ -42,8 +42,8 @@ public class SpecialTools {
     public static ItemStack get3x3Pickaxe() {
         ItemStack hades = new ItemStack(Material.NETHERITE_PICKAXE);
         ItemMeta cus = hades.getItemMeta();
-        cus.setDisplayName("§9§lMarteau du Dieu");
-        cus.setLore(Arrays.asList("§3|| §bMine du §93x3§3 ||", "§c§l[ITEM LEGENDAIRE]"));
+        cus.setDisplayName(Lang.get("tools.pickaxe3x3.name"));
+        cus.setLore(Lang.getList("tools.pickaxe3x3.lore"));
         hades.setItemMeta(cus);
         return hades;
     }
@@ -51,28 +51,26 @@ public class SpecialTools {
     public static ItemStack getCutCleanPickaxe() {
         ItemStack hades = new ItemStack(Material.NETHERITE_PICKAXE);
         ItemMeta cus = hades.getItemMeta();
-        cus.setDisplayName("§e§lPioche d'Hades");
-        cus.setLore(Arrays.asList("§e§l-------------", "§e§lCette pioche fait fondre", "§e§lles minerais que vous minez.", "§e§l-------------", "§c§l[ITEM LEGENDAIRE]"));
+        cus.setDisplayName(Lang.get("tools.cutclean.name"));
+        cus.setLore(Lang.getList("tools.cutclean.lore"));
         hades.setItemMeta(cus);
         return hades;
     }
 
     public static ItemStack get3x3Shovel() {
         ItemStack hades = new ItemStack(Material.NETHERITE_SHOVEL);
-
         ItemMeta cus = hades.getItemMeta();
-        cus.setDisplayName("§e§lPelle du Dieu");
-        cus.setLore(Arrays.asList("§e§l-------------", "§e§lCette pelle permet de", "§e§lminer une zone de 3x3.", "§e§l-------------", "§c§l[ITEM LEGENDAIRE]"));
+        cus.setDisplayName(Lang.get("tools.shovel3x3.name"));
+        cus.setLore(Lang.getList("tools.shovel3x3.lore"));
         hades.setItemMeta(cus);
         return hades;
     }
 
     public static ItemStack getLumberjackAxe() {
         ItemStack hades = new ItemStack(Material.NETHERITE_AXE);
-
         ItemMeta cus = hades.getItemMeta();
-        cus.setDisplayName("§e§lHache du Bûcheron");
-        cus.setLore(Arrays.asList("§e§l-------------", "§e§lCette hache détruit entièrement l'arbre", "§e§lque vous cassez.", "§e§l-------------", "§c§l[ITEM LEGENDAIRE]"));
+        cus.setDisplayName(Lang.get("tools.lumberjack.name"));
+        cus.setLore(Lang.getList("tools.lumberjack.lore"));
         hades.setItemMeta(cus);
         return hades;
     }
@@ -80,18 +78,17 @@ public class SpecialTools {
     public static ItemStack getFarmerHoe() {
         ItemStack hades = new ItemStack(Material.NETHERITE_HOE);
         ItemMeta cus = hades.getItemMeta();
-        cus.setDisplayName("§e§lHoue du fermier");
-        cus.setLore(Arrays.asList("§e§l-------------", "§e§lCette houe permet de replanter", "§e§lautomatiquement vos récoltes.", "§e§l-------------", "§c§l[ITEM LEGENDAIRE]"));
+        cus.setDisplayName(Lang.get("tools.hoe.name"));
+        cus.setLore(Lang.getList("tools.hoe.lore"));
         hades.setItemMeta(cus);
         return hades;
     }
 
     public static ItemStack get3x3FarmerHoe() {
         ItemStack hades = new ItemStack(Material.NETHERITE_HOE);
-
         ItemMeta cus = hades.getItemMeta();
-        cus.setDisplayName("§e§lHoue de Déméter");
-        cus.setLore(Arrays.asList("§e§l-------------", "§e§lCette houe permet de replanter", "§e§lautomatiquement vos récoltes sur", "§e§lune surface de 3x3.", "§e§l-------------", "§c§l[ITEM LEGENDAIRE]"));
+        cus.setDisplayName(Lang.get("tools.hoe3x3.name"));
+        cus.setLore(Lang.getList("tools.hoe3x3.lore"));
         hades.setItemMeta(cus);
         return hades;
     }
@@ -99,40 +96,39 @@ public class SpecialTools {
     public static ItemStack getXpSword() {
         ItemStack xpsword = new ItemStack(Material.NETHERITE_SWORD);
         ItemMeta cus = xpsword.getItemMeta();
-        cus.setDisplayName("§e§lEpée magique");
-        cus.setLore(Arrays.asList("§e§l-------------", "§e§lCette épée permet de récolter", "§e§l§c§l50%§e§l d'XP supplémentaire !", "§e§l-------------", "§c§l[ITEM LEGENDAIRE]"));
+        cus.setDisplayName(Lang.get("tools.xpsword.name"));
+        cus.setLore(Lang.getList("tools.xpsword.lore"));
         xpsword.setItemMeta(cus);
         return xpsword;
     }
 
     public static boolean isLumberjackAxe(ItemStack item) {
-        return item.getType() == Material.NETHERITE_AXE && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains("§e§lCette hache détruit entièrement l'arbre");
+        return item.getType() == Material.NETHERITE_AXE && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains(Lang.get("tools.lumberjack.check"));
     }
 
     public static boolean is3x3Shovel(ItemStack item) {
-        return item.getType() == Material.NETHERITE_SHOVEL && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains("§e§lCette pelle permet de");
+        return item.getType() == Material.NETHERITE_SHOVEL && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains(Lang.get("tools.shovel3x3.check"));
     }
 
     public static boolean isCutCleanPickaxe(ItemStack item) {
-        return item.getType() == Material.NETHERITE_PICKAXE && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains("§e§lCette pioche fait fondre");
+        return item.getType() == Material.NETHERITE_PICKAXE && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains(Lang.get("tools.cutclean.check"));
     }
 
     public static boolean isReplantHoue(ItemStack item) {
-        return item.getType() == Material.NETHERITE_HOE && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains("§e§lCette houe permet de replanter");
+        return item.getType() == Material.NETHERITE_HOE && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains(Lang.get("tools.hoe.check"));
     }
 
     public static boolean is3x3ReplantHoue(ItemStack item) {
-        return isReplantHoue(item) && item.getItemMeta().getLore().contains("§e§lune surface de 3x3.");
+        return isReplantHoue(item) && item.getItemMeta().getLore().contains(Lang.get("tools.hoe3x3.check"));
     }
 
     public static boolean is3x3Pickaxe(ItemStack item) {
-        return item.getType() == Material.NETHERITE_PICKAXE && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains("§3|| §bMine du §93x3§3 ||");
+        return item.getType() == Material.NETHERITE_PICKAXE && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains(Lang.get("tools.pickaxe3x3.check"));
     }
 
     public static boolean isXpBoostSword(ItemStack item) {
-        return item.getType() == Material.NETHERITE_SWORD && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains("§e§lpermet de récolter §c§l50%§e§l d'XP supplémentaire.");
+        return item.getType() == Material.NETHERITE_SWORD && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains(Lang.get("tools.xpsword.check"));
     }
-
 
     public static List<Block> getSurroundingBlocksShovel(Player player, Block targetBlock) {
         return getSurroundingBlocks(faces.get(player.getUniqueId()), targetBlock).stream().filter(block -> canBreakWith3x3Shovel.contains(block.getType())).collect(Collectors.toList());

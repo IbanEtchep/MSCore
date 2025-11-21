@@ -2,6 +2,7 @@ package fr.iban.bukkitcore.listeners;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.manager.TeleportManager;
+import fr.iban.bukkitcore.utils.Lang;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,7 +32,7 @@ public class PlayerMoveListener implements Listener {
         TeleportManager teleportManager = plugin.getTeleportManager();
         if (teleportManager.getPendingTeleports().contains(player.getUniqueId())) {
             teleportManager.removeTeleportWaiting(player.getUniqueId());
-            player.sendMessage("§cVous avez bougé, téléportation annulée.");
+            player.sendMessage(Lang.get("teleport.cancelled-move"));
         }
     }
 }

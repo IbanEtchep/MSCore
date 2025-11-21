@@ -13,6 +13,7 @@ import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.utils.ArrayUtils;
 import fr.iban.velocitycore.CoreVelocityPlugin;
+import fr.iban.velocitycore.util.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -31,36 +32,36 @@ public class ProxyJoinQuitListener {
 
     private final String[] joinMessages =
             {
-                    "%s s'est connecté !",
-                    "%s est dans la place !",
-                    "%s a rejoint le serveur !",
-                    "Un %s sauvage apparaît ! ",
-                    "Tout le monde, dites bonjour à %s !",
-                    "%s vient d'arriver, faites place !"
+                    Lang.get("proxy.join-messages.1"),
+                    Lang.get("proxy.join-messages.2"),
+                    Lang.get("proxy.join-messages.3"),
+                    Lang.get("proxy.join-messages.4"),
+                    Lang.get("proxy.join-messages.5"),
+                    Lang.get("proxy.join-messages.6")
             };
 
     private final String[] quitMessages =
             {
-                    "%s nous a quitté :(",
-                    "%s s'est déconnecté.",
-                    "%s a disparu dans l'ombre.",
-                    "Et voilà, %s est parti."
+                    Lang.get("proxy.quit-messages.1"),
+                    Lang.get("proxy.quit-messages.2"),
+                    Lang.get("proxy.quit-messages.3"),
+                    Lang.get("proxy.quit-messages.4")
             };
 
     private final String[] longAbsenceMessages = {
-            "%s est enfin de retour !",
-            "Oh mon dieu, %s est revenu !",
-            "Le prodige %s est de retour !",
-            "%s, notre légende perdue est enfin de retour !",
-            "Vous vous rappelez de %s ? Eh bien, devinez qui vient de revenir !"
+            Lang.get("proxy.long-absence.1"),
+            Lang.get("proxy.long-absence.2"),
+            Lang.get("proxy.long-absence.3"),
+            Lang.get("proxy.long-absence.4"),
+            Lang.get("proxy.long-absence.5")
     };
 
     private final String[] firstJoinMessages = {
-            "Bienvenue %s, content de te voir pour la première fois !",
-            "%s vient de franchir les portes du serveur pour la première fois !",
-            "C'est la grande première de %s sur le serveur !",
-            "Hey tout le monde, accueillons notre nouveau membre, %s !",
-            "Un nouveau visage ! Salut %s, bienvenue sur le serveur !"
+            Lang.get("proxy.first-join.1"),
+            Lang.get("proxy.first-join.2"),
+            Lang.get("proxy.first-join.3"),
+            Lang.get("proxy.first-join.4"),
+            Lang.get("proxy.first-join.5")
     };
 
     public ProxyJoinQuitListener(CoreVelocityPlugin plugin) {
@@ -84,7 +85,7 @@ public class ProxyJoinQuitListener {
         long lastSeen = profile.getLastSeen();
         if (lastSeen != 0) {
             if ((System.currentTimeMillis() - lastSeen) > 60000) {
-                String joinMessage = "&8[&a+&8] &8";
+                String joinMessage = Lang.get("proxy.prefix.join") + " ";
                 if ((System.currentTimeMillis() - lastSeen) > 2592000000L) {
                     joinMessage += String.format(ArrayUtils.getRandomFromArray(longAbsenceMessages), playerName);
                 } else {
@@ -92,7 +93,7 @@ public class ProxyJoinQuitListener {
                 }
 
                 Component message = MineDown.parse(joinMessage).hoverEvent(HoverEvent.showText(
-                        Component.text("Vu pour la dernière fois " + getLastSeen(lastSeen), NamedTextColor.GRAY)
+                        Component.text(Lang.get("proxy.hover.last-seen").replace("%time%", getLastSeen(lastSeen)), NamedTextColor.GRAY)
                 ));
 
                 proxy.getAllPlayers().forEach(p -> {
@@ -105,10 +106,10 @@ public class ProxyJoinQuitListener {
                 plugin.getServer().getConsoleCommandSource().sendMessage(message);
             }
         } else {
-            String firstJoinMessage = "&8≫ &7" + String.format(ArrayUtils.getRandomFromArray(firstJoinMessages), playerName);
+            String firstJoinMessage = Lang.get("proxy.prefix.first-join") + " " + String.format(ArrayUtils.getRandomFromArray(firstJoinMessages), playerName);
             Component welcomeComponent = MineDown.parse(firstJoinMessage)
-                    .hoverEvent(HoverEvent.showText(Component.text("Clic !")))
-                    .clickEvent(ClickEvent.suggestCommand(" Bienvenue " + playerName));
+                    .hoverEvent(HoverEvent.showText(Component.text(Lang.get("proxy.hover.first-join"))))
+                    .clickEvent(ClickEvent.suggestCommand(Lang.get("proxy.click.first-join").replace("%player%", playerName)));
 
             proxy.sendMessage(welcomeComponent);
         }
@@ -134,7 +135,7 @@ public class ProxyJoinQuitListener {
         if(profile == null) return null;
 
         return EventTask.async(() -> {
-            String quitMessage = "&8[&c-&8] &8" + String.format(ArrayUtils.getRandomFromArray(quitMessages), player.getUsername());
+            String quitMessage = Lang.get("proxy.prefix.quit") + " " + String.format(ArrayUtils.getRandomFromArray(quitMessages), player.getUsername());
             Component quitMessageComponent = MineDown.parse(quitMessage);
 
             if ((System.currentTimeMillis() - profile.getLastSeen()) > 60000) {
@@ -158,7 +159,7 @@ public class ProxyJoinQuitListener {
     }
 
     private String getLastSeen(long time) {
-        if (time == 0) return "jamais";
+        if (time == 0) return Lang.get("proxy.last-seen.never");
         PrettyTime prettyTime = new PrettyTime(Locale.FRANCE);
         return prettyTime.format(new Date(time));
     }
@@ -174,7 +175,7 @@ public class ProxyJoinQuitListener {
 
         String message = PlainTextComponentSerializer.plainText().serialize(serverKickReason);
 
-        if(message.contains("expulsé")) {
+        if(message.contains(Lang.get("proxy.kick.keyword"))) {
             player.disconnect(serverKickReason);
         }
     }

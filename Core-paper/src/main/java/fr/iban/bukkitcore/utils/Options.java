@@ -6,12 +6,12 @@ import fr.iban.common.enums.Option;
 
 public enum Options {
 	
-	DEATH("Afficher les messages de morts", new ItemStack(Head.DEATH.get()), Option.DEATH_MESSAGE),
-	JOIN("Afficher les messages de connexions", new ItemStack(Head.PLUS.get()), Option.JOIN_MESSAGE),
-	LEAVE("Afficher les messages de déconnexions", new ItemStack(Head.MOINS.get()), Option.LEAVE_MESSAGE),
-	TP("Afficher les demandes de téléportations", new ItemStack(Head.ENDER_PEARL.get()), Option.TP),
-	CHAT("Afficher les message du tchat", new ItemStack(Head.TCHAT.get()), Option.CHAT),
-	MENTION("Activer les mentions dans le tchat les message du tchat", new ItemStack(Head.AROBASE.get()), Option.MENTION);
+	DEATH(Lang.get("options.death"), new ItemStack(Head.DEATH.get()), Option.DEATH_MESSAGE),
+	JOIN(Lang.get("options.join"), new ItemStack(Head.PLUS.get()), Option.JOIN_MESSAGE),
+	LEAVE(Lang.get("options.leave"), new ItemStack(Head.MOINS.get()), Option.LEAVE_MESSAGE),
+	TP(Lang.get("options.tp"), new ItemStack(Head.ENDER_PEARL.get()), Option.TP),
+	CHAT(Lang.get("options.chat"), new ItemStack(Head.TCHAT.get()), Option.CHAT),
+	MENTION(Lang.get("options.mention"), new ItemStack(Head.AROBASE.get()), Option.MENTION);
 	
 	private final String displayName;
 	private final ItemStack item;
@@ -22,7 +22,6 @@ public enum Options {
 		this.item = item;
 		this.option = option;
 	}
-
 
 	public String getDisplayName() {
 		return displayName;

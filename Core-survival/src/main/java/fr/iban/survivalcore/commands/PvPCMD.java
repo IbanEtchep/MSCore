@@ -4,6 +4,7 @@ import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.common.enums.Option;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
+import fr.iban.bukkitcore.utils.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,9 +30,9 @@ public class PvPCMD implements CommandExecutor {
 
                 profile.toggleOption(Option.PVP);
                 if(profile.getOption(Option.PVP)) {
-                    player.sendMessage("§aPVP activé.");
+                    player.sendMessage(Lang.get("pvp.enabled"));
                 }else {
-                    player.sendMessage("§cPVP desactivé.");
+                    player.sendMessage(Lang.get("pvp.disabled"));
                 }
 
                 playerManager.saveProfile(profile);
@@ -41,9 +42,9 @@ public class PvPCMD implements CommandExecutor {
                     MSPlayerProfile profile = playerManager.getProfile(target.getUniqueId());
                     profile.toggleOption(Option.PVP);
                     if(profile.getOption(Option.PVP)) {
-                        player.sendMessage("§aPVP de "+ target.getName() +" activé.");
+                        player.sendMessage(Lang.get("pvp.enabled-other").replace("%player%", target.getName()));
                     }else {
-                        player.sendMessage("§cPVP "+ target.getName() +" desactivé.");
+                        player.sendMessage(Lang.get("pvp.disabled-other").replace("%player%", target.getName()));
                     }
 
                     playerManager.saveProfile(profile);

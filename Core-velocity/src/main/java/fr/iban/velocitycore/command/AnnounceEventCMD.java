@@ -3,6 +3,7 @@ package fr.iban.velocitycore.command;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import fr.iban.velocitycore.CoreVelocityPlugin;
+import fr.iban.velocitycore.util.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -23,11 +24,11 @@ public class AnnounceEventCMD {
     @Usage("/announceevent <message>")
     public void announceEvent(Player player, @Optional @Single String message) {
         if (message == null || message.isEmpty()) {
-            player.sendMessage(Component.text("Usage incorrect. Veuillez fournir un message à annoncer.", NamedTextColor.RED));
+            player.sendMessage(Component.text(Lang.get("announceevent.usage"), NamedTextColor.RED));
             return;
         }
 
-        Component broadcastMessage = Component.text("EVENT : ", NamedTextColor.GOLD)
+        Component broadcastMessage = Component.text(Lang.get("announceevent.prefix"), NamedTextColor.GOLD)
                 .append(Component.text(message.trim(), NamedTextColor.WHITE))
                 .decoration(TextDecoration.BOLD, true);
 

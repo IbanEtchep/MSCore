@@ -2,6 +2,7 @@ package fr.iban.bukkitcore.menu;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.utils.ItemBuilder;
+import fr.iban.bukkitcore.utils.Lang;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -14,7 +15,7 @@ public class ServeurMenu extends Menu {
 
     @Override
     public String getMenuName() {
-        return "§dSélectionnez un serveur :";
+        return Lang.get("menus.serveur.title");
     }
 
     @Override
@@ -35,8 +36,16 @@ public class ServeurMenu extends Menu {
 
     @Override
     public void setMenuItems() {
-        inventory.setItem(2, new ItemBuilder(Material.GRASS_BLOCK).setName("§2§lSurvie").setLore("§aCliquez pour rejoindre le serveur survie.").build());
-        inventory.setItem(6, new ItemBuilder(Material.IRON_PICKAXE).setName("§2§lRessources").setLore("§aCliquez pour rejoindre le serveur ressources.").build());
+        inventory.setItem(2, new ItemBuilder(Material.GRASS_BLOCK)
+                .setName(Lang.get("menus.serveur.survie-name"))
+                .setLore(Lang.get("menus.serveur.survie-lore"))
+                .build());
+
+        inventory.setItem(6, new ItemBuilder(Material.IRON_PICKAXE)
+                .setName(Lang.get("menus.serveur.ressources-name"))
+                .setLore(Lang.get("menus.serveur.ressources-lore"))
+                .build());
+
         for (int i = 0; i < inventory.getSize(); i++) {
             if (inventory.getItem(i) == null)
                 inventory.setItem(i, FILLER_GLASS);

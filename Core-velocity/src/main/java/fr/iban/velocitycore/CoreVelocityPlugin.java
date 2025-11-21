@@ -25,6 +25,7 @@ import fr.iban.common.teleport.SLocation;
 import fr.iban.velocitycore.command.*;
 import fr.iban.velocitycore.listener.*;
 import fr.iban.velocitycore.manager.*;
+import fr.iban.velocitycore.util.Lang;
 import fr.iban.velocitycore.util.TabHook;
 import org.slf4j.Logger;
 import revxrsal.commands.Lamp;
@@ -61,6 +62,7 @@ public class CoreVelocityPlugin {
     private TeleportManager teleportManager;
     private PlayerManager playerManager;
     private MessagingManager messagingManager;
+    private final Path dataDirectory;
 
     private TabHook tabHook;
     private final TreeMap<String, SLocation> currentEvents = new TreeMap<>();
@@ -69,6 +71,7 @@ public class CoreVelocityPlugin {
     public CoreVelocityPlugin(Logger logger, ProxyServer server, @DataDirectory Path dataDirectory) {
         this.logger = logger;
         this.server = server;
+        this.dataDirectory = dataDirectory;
 
         try {
             config = YamlDocument.create(new File(dataDirectory.toFile(), "config.yml"),
@@ -93,6 +96,7 @@ public class CoreVelocityPlugin {
     public void onProxyInitialization(ProxyInitializeEvent event) {
         instance = this;
         initDatabase();
+        Lang.init(this, server, logger);
 
         ChannelRegistrar channelRegistrar = getServer().getChannelRegistrar();
         channelRegistrar.register(MinecraftChannelIdentifier.from("proxy:chat"));
@@ -213,6 +217,10 @@ public class CoreVelocityPlugin {
 
     public TreeMap<String, SLocation> getCurrentEvents() {
         return currentEvents;
+    }
+
+    public Path getDataDirectory() {   // <--- ajouté
+        return dataDirectory;
     }
 
 }
