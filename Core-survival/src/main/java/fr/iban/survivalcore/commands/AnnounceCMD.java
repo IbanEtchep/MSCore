@@ -13,7 +13,7 @@ public class AnnounceCMD {
         this.plugin = plugin;
     }
 
-    @Command("annonce")
+    @Command("announce")
     public void sendAnnounce(Player player, String message) {
         AnnounceManager announceManager = plugin.getAnnounceManager();
         announceManager.sendAnnounce(player, message);

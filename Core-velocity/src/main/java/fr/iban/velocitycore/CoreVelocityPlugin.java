@@ -23,9 +23,9 @@ import fr.iban.common.data.sql.DbTables;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.teleport.SLocation;
 import fr.iban.velocitycore.command.*;
+import fr.iban.velocitycore.lang.VelocityTranslator;
 import fr.iban.velocitycore.listener.*;
 import fr.iban.velocitycore.manager.*;
-import fr.iban.velocitycore.util.Lang;
 import fr.iban.velocitycore.util.TabHook;
 import org.slf4j.Logger;
 import revxrsal.commands.Lamp;
@@ -67,6 +67,8 @@ public class CoreVelocityPlugin {
     private TabHook tabHook;
     private final TreeMap<String, SLocation> currentEvents = new TreeMap<>();
 
+    private VelocityTranslator translator;
+
     @Inject
     public CoreVelocityPlugin(Logger logger, ProxyServer server, @DataDirectory Path dataDirectory) {
         this.logger = logger;
@@ -96,7 +98,11 @@ public class CoreVelocityPlugin {
     public void onProxyInitialization(ProxyInitializeEvent event) {
         instance = this;
         initDatabase();
-        Lang.init(this, server, logger);
+
+        String lang = config.getString("language", "fr");
+
+        translator = new VelocityTranslator(this, server, logger, lang);
+        translator.load();
 
         ChannelRegistrar channelRegistrar = getServer().getChannelRegistrar();
         channelRegistrar.register(MinecraftChannelIdentifier.from("proxy:chat"));
@@ -110,7 +116,6 @@ public class CoreVelocityPlugin {
         playerManager.clearOnlinePlayers();
         chatManager = new ChatManager(this);
         announceManager = new AutomatedAnnounceManager(this);
-
 
         EventManager eventManager = server.getEventManager();
         eventManager.register(this, new PluginMessageListener(this));
@@ -219,8 +224,11 @@ public class CoreVelocityPlugin {
         return currentEvents;
     }
 
-    public Path getDataDirectory() {   // <--- ajouté
+    public Path getDataDirectory() {
         return dataDirectory;
     }
 
+    public VelocityTranslator getTranslator() {
+        return translator;
+    }
 }

@@ -1,0 +1,188 @@
+file-version: 1
+
+announce:
+  disabled: "<green>Cette annonce ne vous sera plus affichée à l'avenir."
+  already-disabled: "<red>Vous avez déjà bloqué cette annonce."
+  not-exist: "<red>Cette annonce n'existe pas."
+
+announceevent:
+  usage: "<red>Usage incorrect. Veuillez fournir un message à annoncer."
+  prefix: "<gold>EVENT : </gold>"
+
+chat:
+  help:
+    title: "<green>Commandes chat :</green>"
+    toggle: "<green>/chat toggle - mute/unmute le chat</green>"
+  clear: "<red>Le chat a été clear par <white>%player%</white>."
+
+vcore:
+  help: |
+    Utilisez <green>/vcore reload</green><gray> pour recharger la configuration.</gray>
+    Utilisez <green>/vcore debug</green><gray> pour basculer le mode débogage.</gray>
+
+  reload-success: "<green>La configuration a été rechargée avec succès."
+  lang-reload-success: "<green>La configuration linguistique a été rechargée avec succès."
+  debug: "Mode débogage : %state%"
+
+  enabled: "activé"
+  disabled: "désactivé"
+
+ignore:
+  help:
+    prefix: "Utilisez "
+    add: "/ignore add <joueur>"
+    add_suffix: " pour ignorer un joueur.\n"
+    remove: "/ignore remove <joueur>"
+    remove_suffix: " pour ne plus ignorer un joueur."
+
+  add:
+    success: "<green>Vous ignorez maintenant <white>%player%</white>."
+    staff: "<red>Vous ne pouvez pas ignorer un membre du staff !"
+    already: "<red>Ce joueur est déjà ignoré."
+    self: "<red>Vous ne pouvez pas vous ignorer vous-même."
+
+  remove:
+    success: "<green>Vous n'ignorez plus <white>%player%</white>."
+    not_ignored: "<red>Ce joueur n'est pas ignoré."
+
+  list:
+    header: "<gray>|| Joueurs Ignorés ||</gray>"
+    entry: "- %player%"
+    unknown: "Joueur Inconnu"
+    empty: "<gray>Vous n'ignorez personne.</gray>"
+
+joinevent:
+  not-found: "<red>Il n'y a pas d'event à ce nom."
+
+commands:
+  msg:
+    format: "<gray>[<light_purple>%sender% <gray>→ <light_purple>%target%</light_purple><gray>] <white>%message%</white>"
+
+miscellaneous:
+  geyser-offhand: "/geyser offhand"
+  not-bedrock: "<red>Commande réservée aux utilisateurs de la version Bedrock."
+
+msgtoggle:
+  disabled: "<red>Vous ne pouvez plus recevoir les messages des joueurs."
+  enabled: "<green>Vous pouvez à nouveau recevoir les messages des joueurs."
+
+reply:
+  usage: "<yellow>Utilisation: /r <message>"
+  no-target: "<red>Tu ne peux pas répondre, car personne ne t'a écrit."
+
+tabcomplete:
+  usage: "/addtabcomplete global/moderation commandeSansSlash"
+  unknown-group: "<red>Commande inconnue."
+  added: "<green>%command%</green> ajouté au groupe <yellow>%group%"
+
+teleport:
+  back:
+    not-found: "<red>L'endroit de votre décès n'a pas pu être trouvé."
+  lastrtp:
+    not-found: "<red>La position n'a pas été trouvée."
+
+tptoggle:
+  opened: "<green>Vos demandes de téléportation sont maintenant ouvertes."
+  closed: "<red>Vos demandes de téléportation sont maintenant fermées."
+
+event:
+  started: "<yellow>%host%</yellow> a lancé un event <aqua>%event%</aqua>"
+  arena: "Arène : <gold>%arena%</gold>"
+  click-to-join: "<green>Cliquez pour rejoindre ou tapez /joinevent</green>"
+
+proxy:
+
+  prefix:
+    join: "<dark_gray>[<green>+</green><dark_gray>]"
+    quit: "<dark_gray>[<red>-</red><dark_gray>]"
+    first-join: "<dark_gray>≫ <gray>"
+
+  hover:
+    last-seen: "Vu pour la dernière fois %time%"
+    first-join: "Clic !"
+
+  click:
+    first-join: "Bienvenue %player%"
+
+  last-seen:
+    never: "jamais"
+
+  kick:
+    keyword: "expulsé"
+
+  join-messages:
+    1: "%s s'est connecté !"
+    2: "%s est dans la place !"
+    3: "%s a rejoint le serveur !"
+    4: "Un %s sauvage apparaît !"
+    5: "Tout le monde, dites bonjour à %s !"
+    6: "%s vient d'arriver, faites place !"
+
+  quit-messages:
+    1: "%s nous a quitté :("
+    2: "%s s'est déconnecté."
+    3: "%s a disparu dans l'ombre."
+    4: "Et voilà, %s est parti."
+
+  long-absence:
+    1: "%s est enfin de retour !"
+    2: "Oh mon dieu, %s est revenu !"
+    3: "Le prodige %s est de retour !"
+    4: "%s, notre légende perdue est enfin de retour !"
+    5: "Vous vous rappelez de %s ? Eh bien, devinez qui vient de revenir !"
+
+  first-join:
+    1: "Bienvenue %s, content de te voir pour la première fois !"
+    2: "%s vient de franchir les portes du serveur pour la première fois !"
+    3: "C'est la grande première de %s sur le serveur !"
+    4: "Hey tout le monde, accueillons notre nouveau membre, %s !"
+    5: "Un nouveau visage ! Salut %s, bienvenue sur le serveur !"
+
+announce:
+  prefix-left: " ["
+  close-symbol: "✕"
+  prefix-right: "]"
+  hover-disable: "Clique pour ne plus afficher cette annonce"
+  no-announces: "<red>Aucune annonce trouvée dans la configuration !"
+  invalid-id: "<red>ID d'annonce invalide : <yellow>%id%</yellow>"
+
+chat:
+  disabled: "<red>Vous ne pouvez pas envoyer de message car votre tchat est désactivé."
+  annonce: "<#f07e71><b>Annonce de </b><#fbb29e><b>%player%</b> <#f07e71>➤ <#7bc8fe><b>%message%</b>"
+  muted: "<red>Le chat est désormais muet."
+  unmuted: "<green>Le chat n'est plus muet."
+
+msg:
+  disabled: "<red>%player% a désactivé ses messages."
+  ignored: "<red>Vous ne pouvez pas envoyer de message à ce joueur."
+  hover: "Cliquez pour répondre"
+  sender: "<dark_gray>Moi <gray>➔ <red>%target%</red> <gold>➤</gold><gray> %message%"
+  sender-staff: "<dark_gray>Moi <gray>➔ <dark_gray>[<gold>Staff</gold>] <red>%target%</red> <gold>➤</gold><gray> %message%"
+  target: "<red>%sender%</red> <gray>➔ <dark_gray>Moi</dark_gray> <gold>➤</gold><gray> %message%"
+  target-staff: "<dark_gray>[<gold>Staff</gold>] <red>%sender%</red> <gray>➔ <dark_gray>Moi</dark_gray> <gold>➤</gold><gray> %message%"
+
+staffchat:
+  enabled: "<green>Vous pouvez à nouveau recevoir les messages du staff."
+  disabled: "<red>Vous ne pouvez plus recevoir les messages du staff."
+
+tp:
+  delayed: "<green>Téléportation dans <white>%delay%</white> secondes.</green> <red>Ne bougez pas !</red>"
+  already-waiting: "<red>Une seule téléportation à la fois !"
+
+  request:
+    sent: "<green>Requête de téléportation envoyée, en attente d'une réponse...</green>"
+    expired: "<red>Votre requête de téléportation envoyée à <white>%player%</white> a expiré.</red>"
+
+    to-player: |
+      <gray><strikethrough>---------------------------------------------</strikethrough>
+      <gold>%fromName%</gold><white> souhaite se téléporter à vous.</white>
+      <white>Vous pouvez <green><hover:show_text:'Accepter la demande'><click:run_command:/tpyes %fromName%>[ACCEPTER]</click></hover></green>
+      ou <red><hover:show_text:'Refuser la demande'><click:run_command:/tpno %fromName%>[REFUSER]</click></hover></red>.
+      <gray><strikethrough>---------------------------------------------</strikethrough>
+
+    here: |
+      <gray><strikethrough>---------------------------------------------</strikethrough>
+      <gold>%fromName%</gold><white> souhaite que vous vous téléportiez à lui.</white>
+      <white>Vous pouvez <green><hover:show_text:'Accepter la demande'><click:run_command:/tpyes %fromName%>[ACCEPTER]</click></hover></green>
+      ou <red><hover:show_text:'Refuser la demande'><click:run_command:/tpno %fromName%>[REFUSER]</click></hover></red>.
+      <gray><strikethrough>---------------------------------------------</strikethrough>

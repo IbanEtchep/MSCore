@@ -1,19 +1,18 @@
 package fr.iban.velocitycore.command;
 
 import com.velocitypowered.api.proxy.Player;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.Command;
-import fr.iban.velocitycore.util.Lang;
+import fr.iban.velocitycore.lang.LangKey;
+import fr.iban.velocitycore.lang.MessageBuilder;
 
 public class MiscellaneousCommands {
 
     @Command("miscellaneous")
     public void miscellaneous(Player player) {
         if (player.getUsername().startsWith(".")) {
-            player.sendMessage(Component.text(Lang.get("miscellaneous.geyser-offhand"), NamedTextColor.GREEN));
+            player.sendMessage(MessageBuilder.translatable(LangKey.MISC_GD_OFFHAND).toComponent());
         } else {
-            player.sendMessage(Component.text(Lang.get("miscellaneous.not-bedrock"), NamedTextColor.RED));
+            player.sendMessage(MessageBuilder.translatable(LangKey.MISC_NOT_BEDROCK).toComponent());
         }
     }
 }

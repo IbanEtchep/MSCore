@@ -1,8 +1,9 @@
 package fr.iban.bukkitcore.menu;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
+import fr.iban.bukkitcore.lang.LangKey;
+import fr.iban.bukkitcore.lang.MessageBuilder;
 import fr.iban.bukkitcore.utils.ItemBuilder;
-import fr.iban.bukkitcore.utils.Lang;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -15,7 +16,7 @@ public class ServeurMenu extends Menu {
 
     @Override
     public String getMenuName() {
-        return Lang.get("menus.serveur.title");
+        return MessageBuilder.translatable(LangKey.MENUS_SERVEUR_TITLE).toLegacy();
     }
 
     @Override
@@ -36,15 +37,18 @@ public class ServeurMenu extends Menu {
 
     @Override
     public void setMenuItems() {
+
         inventory.setItem(2, new ItemBuilder(Material.GRASS_BLOCK)
-                .setName(Lang.get("menus.serveur.survie-name"))
-                .setLore(Lang.get("menus.serveur.survie-lore"))
-                .build());
+                .setName(MessageBuilder.translatable(LangKey.MENUS_SERVEUR_SURVIE_NAME).toLegacy())
+                .setLore(MessageBuilder.translatable(LangKey.MENUS_SERVEUR_SURVIE_LORE).toLegacy())
+                .build()
+        );
 
         inventory.setItem(6, new ItemBuilder(Material.IRON_PICKAXE)
-                .setName(Lang.get("menus.serveur.ressources-name"))
-                .setLore(Lang.get("menus.serveur.ressources-lore"))
-                .build());
+                .setName(MessageBuilder.translatable(LangKey.MENUS_SERVEUR_RESSOURCES_NAME).toLegacy())
+                .setLore(MessageBuilder.translatable(LangKey.MENUS_SERVEUR_RESSOURCES_LORE).toLegacy())
+                .build()
+        );
 
         for (int i = 0; i < inventory.getSize(); i++) {
             if (inventory.getItem(i) == null)

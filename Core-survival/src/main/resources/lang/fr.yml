@@ -1,0 +1,147 @@
+file_version: 1
+
+dolphin:
+  enabled: "<green>Effet dolphin activé."
+  disabled: "<red>Effet dolphin désactivé."
+
+feed:
+  fed: "<green>Vous avez été rassasié."
+  cooldown: "<red>Vous pourrez à nouveau faire ça dans %time%."
+
+pvp:
+  enabled: "<green>PVP activé."
+  disabled: "<red>PVP désactivé."
+  enabled-other: "<green>PVP de %player% activé."
+  disabled-other: "<red>PVP de %player% désactivé."
+
+repair:
+  done-hand: "<green>Réparation effectuée."
+  done-all: "<green>Réparations effectuées."
+  not-repairable: "<red>Erreur : <dark_red>Cet item n'est pas réparable."
+  cooldown-hand: "<red>Vous pourrez à nouveau réparer un item dans %time% secondes."
+  legendary-tag: " §c§l[ITEM LEGENDAIRE]"
+  cooldown-all: "<red>Vous pourrez à nouveau réparer tous vos items dans %time% secondes."
+
+core:
+  reload-success: "<green>La configuration a été rechargées."
+  lang-reload-success: "<green>La configuration linguistique a été rechargée avec succès."
+
+death:
+  prefix: "☠"
+  suicide: "s'est suicidé !"
+  block-explosion: "s'est fait broyer par de la TNT"
+  contact: "a essayé de piquer un cactus !"
+  drowning: "s'est noyé !"
+  entity-explosion: "s'est fait exploser par un Creeper !"
+  fire-tick: "a brûlé."
+  lava: "a essayé de nager dans la lave !"
+  magic: "a été tué par une potion!"
+  poison: "a été empoisonné!"
+  projectile-killer: "s'est fait sniper par %killer% !"
+  projectile: "s'est pris une flèche dans le crâne."
+  starvation: "est mort de faim."
+  suffocation: "a suffoqué dans un mur."
+  void: "a disparu dans le néant..."
+  fall: "a fait une terrible chute !"
+  wither: "a été tué par un Wither."
+  lightning: "a été abattu par la colère de Zeus!"
+  hot-floor: "a marché sur un bloc très chaud !"
+  fly-into-wall: "a frappé le mur à une vitesse supersonique !"
+  falling-block: "s'est fait écraser par une entité tombée du ciel !"
+  fire: "a joué avec le feu mais s'est brûlé."
+  dragon-breath: "a subi la colère du Dragon !"
+  thorns-player: "s'est tué en frappant %killer% !"
+  thorns-mob: "s'est tué en frappant un %mob% !"
+  thorns-armorstand: "s'est tué en frappant un porte armure..."
+  attack-player-air: "s'est fait boxer par %killer% !"
+  attack-player-weapon: "s'est fait assassiner par %killer% !"
+  attack-warden: "s'est fait atomiser par un Warden !"
+  attack-mob: "s'est fait tuer par un %mob% !"
+  default: "est mort."
+
+  location: "<dark_aqua><bold>Vous êtes mort à la position suivante:\n<aqua>Serveur : <white>%server%\n<aqua>Monde : <white>%world%\n<aqua>Coordonnées : X : <white>%x% <aqua>Y : <white>%y% <aqua>Z : <white>%z%"
+
+  lastrtp: "<aqua><bold>Vous pouvez vous téléporter à la position de votre dernière téléportation aléatoire en cliquant sur ce message ou en exécutant la commande /lastrtp.<hover:show_text:'<bold>Clic ici !'><click:run_command:/lastrtp>"
+
+raids:
+  disabled: "<red>Les raids sont désactivés."
+
+rtp:
+  teleported: "<gold>ⓘ <white>Vous avez été téléporté aléatoirement sur le serveur <dark_gray>%server%<white>. Pensez à mettre une résidence avec la commande <dark_gray>/sethome<white> ou à dormir dans un lit afin de pouvoir retourner à cet endroit plus tard."
+
+announce:
+  not-enough-money: "<red>Il vous faut 250$ pour faire une annonce !"
+  cooldown: "<red>Vous pourrez à nouveau faire ça dans %time%."
+
+tools:
+  pickaxe3x3:
+    name: "<blue><bold>Marteau du Dieu"
+    lore:
+      - "<dark_aqua>|| <aqua>Mine du <blue>3x3<dark_aqua> ||"
+      - "<red><bold>[ITEM LEGENDAIRE]"
+    check: "<dark_aqua>|| <aqua>Mine du <blue>3x3<dark_aqua> ||"
+
+  cutclean:
+    name: "<yellow><bold>Pioche d'Hades"
+    lore:
+      - "<yellow><bold>-------------"
+      - "<yellow><bold>Cette pioche fait fondre"
+      - "<yellow><bold>les minerais que vous minez."
+      - "<yellow><bold>-------------"
+      - "<red><bold>[ITEM LEGENDAIRE]"
+    check: "<yellow><bold>Cette pioche fait fondre"
+
+  shovel3x3:
+    name: "<yellow><bold>Pelle du Dieu"
+    lore:
+      - "<yellow><bold>-------------"
+      - "<yellow><bold>Cette pelle permet de"
+      - "<yellow><bold>miner une zone de 3x3."
+      - "<yellow><bold>-------------"
+      - "<red><bold>[ITEM LEGENDAIRE]"
+    check: "<yellow><bold>Cette pelle permet de"
+
+  lumberjack:
+    name: "<yellow><bold>Hache du Bûcheron"
+    lore:
+      - "<yellow><bold>-------------"
+      - "<yellow><bold>Cette hache détruit entièrement l'arbre"
+      - "<yellow><bold>que vous cassez."
+      - "<yellow><bold>-------------"
+      - "<red><bold>[ITEM LEGENDAIRE]"
+    check: "<yellow><bold>Cette hache détruit entièrement l'arbre"
+
+  hoe:
+    name: "<yellow><bold>Houe du fermier"
+    lore:
+      - "<yellow><bold>-------------"
+      - "<yellow><bold>Cette houe permet de replanter"
+      - "<yellow><bold>automatiquement vos récoltes."
+      - "<yellow><bold>-------------"
+      - "<red><bold>[ITEM LEGENDAIRE]"
+    check: "<yellow><bold>Cette houe permet de replanter"
+
+  hoe3x3:
+    name: "<yellow><bold>Houe de Déméter"
+    lore:
+      - "<yellow><bold>-------------"
+      - "<yellow><bold>Cette houe permet de replanter"
+      - "<yellow><bold>automatiquement vos récoltes sur"
+      - "<yellow><bold>une surface de 3x3."
+      - "<yellow><bold>-------------"
+      - "<red><bold>[ITEM LEGENDAIRE]"
+    check: "<yellow><bold>une surface de 3x3."
+
+  xpsword:
+    name: "<yellow><bold>Épée magique"
+    lore:
+      - "<yellow><bold>-------------"
+      - "<yellow><bold>Cette épée permet de récolter"
+      - "<yellow><bold><red><bold>50%<yellow><bold> d'XP supplémentaire !"
+      - "<yellow><bold>-------------"
+      - "<red><bold>[ITEM LEGENDAIRE]"
+    check: "<yellow><bold>permet de récolter <red><bold>50%<yellow><bold> d'XP supplémentaire."
+
+hourlyreward:
+  received-money: "<green><bold>Vous avez reçu %amount% <green><bold>pour avoir joué 1 heure."
+  pending-reward: "<green><bold>La récompense vous attend dans /recompenses."

@@ -11,7 +11,8 @@ import de.themoep.minedown.adventure.MineDown;
 import fr.iban.common.messaging.CoreChannel;
 import fr.iban.common.teleport.*;
 import fr.iban.velocitycore.CoreVelocityPlugin;
-import fr.iban.velocitycore.util.Lang;
+import fr.iban.velocitycore.lang.LangKey;
+import fr.iban.velocitycore.lang.MessageBuilder;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -56,12 +57,15 @@ public class TeleportManager {
         }
 
         player.sendMessage(MineDown.parse(
-                Lang.get("tp.delayed")
-                        .replace("%delay%", String.valueOf(delay))
+                MessageBuilder.translatable(LangKey.TP_DELAYED)
+                        .placeholder("delay", String.valueOf(delay))
+                        .toStringRaw()
         ));
 
         if (isTeleportWaiting(player)) {
-            player.sendMessage(MineDown.parse(Lang.get("tp.already-waiting")));
+            player.sendMessage(MineDown.parse(
+                    MessageBuilder.translatable(LangKey.TP_ALREADY_WAITING).toStringRaw()
+            ));
             return;
         }
 
@@ -94,15 +98,18 @@ public class TeleportManager {
         }
     }
 
-
     public void delayedTeleport(Player player, Player target, int delay) {
 
         player.sendMessage(MineDown.parse(
-                Lang.get("tp.delayed").replace("%delay%", String.valueOf(delay))
+                MessageBuilder.translatable(LangKey.TP_DELAYED)
+                        .placeholder("delay", String.valueOf(delay))
+                        .toStringRaw()
         ));
 
         if (isTeleportWaiting(player)) {
-            player.sendMessage(MineDown.parse(Lang.get("tp.already-waiting")));
+            player.sendMessage(MineDown.parse(
+                    MessageBuilder.translatable(LangKey.TP_ALREADY_WAITING).toStringRaw()
+            ));
             return;
         }
 
@@ -117,10 +124,13 @@ public class TeleportManager {
     }
 
     public void sendTeleportRequest(Player from, Player to) {
-        from.sendMessage(MineDown.parse(Lang.get("tp.request.sent")));
+        from.sendMessage(MineDown.parse(
+                MessageBuilder.translatable(LangKey.TP_REQUEST_SENT).toStringRaw()
+        ));
 
-        String minedownMessage = Lang.get("tp.request.to-player")
-                .replace("%fromName%", from.getUsername());
+        String minedownMessage = MessageBuilder.translatable(LangKey.TP_REQUEST_TO_PLAYER)
+                .placeholder("fromName", from.getUsername())
+                .toStringRaw();
 
         to.sendMessage(MineDown.parse(minedownMessage));
 
@@ -136,17 +146,22 @@ public class TeleportManager {
             if (req2 != null) {
                 removeTpRequest(to.getUniqueId(), req2);
                 from.sendMessage(MineDown.parse(
-                        Lang.get("tp.request.expired").replace("%player%", to.getUsername())
+                        MessageBuilder.translatable(LangKey.TP_REQUEST_EXPIRED)
+                                .placeholder("player", to.getUsername())
+                                .toStringRaw()
                 ));
             }
         }).delay(2, TimeUnit.MINUTES).schedule();
     }
 
     public void sendTeleportHereRequest(Player from, Player to) {
-        from.sendMessage(MineDown.parse(Lang.get("tp.request.sent")));
+        from.sendMessage(MineDown.parse(
+                MessageBuilder.translatable(LangKey.TP_REQUEST_SENT).toStringRaw()
+        ));
 
-        String minedownMessage = Lang.get("tp.request.here")
-                .replace("%fromName%", from.getUsername());
+        String minedownMessage = MessageBuilder.translatable(LangKey.TP_REQUEST_HERE)
+                .placeholder("fromName", from.getUsername())
+                .toStringRaw();
 
         to.sendMessage(MineDown.parse(minedownMessage));
 
@@ -162,7 +177,9 @@ public class TeleportManager {
             if (req2 != null) {
                 removeTpRequest(to.getUniqueId(), req2);
                 from.sendMessage(MineDown.parse(
-                        Lang.get("tp.request.expired").replace("%player%", to.getUsername())
+                        MessageBuilder.translatable(LangKey.TP_REQUEST_EXPIRED)
+                                .placeholder("player", to.getUsername())
+                                .toStringRaw()
                 ));
             }
         }).delay(2, TimeUnit.MINUTES).schedule();

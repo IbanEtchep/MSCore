@@ -4,11 +4,11 @@ import com.earth2me.essentials.Essentials;
 import com.tcoded.folialib.FoliaLib;
 import com.tcoded.folialib.impl.PlatformScheduler;
 import fr.iban.bukkitcore.commands.*;
+import fr.iban.bukkitcore.lang.BukkitTranslator;
 import fr.iban.bukkitcore.listeners.*;
 import fr.iban.bukkitcore.manager.*;
 import fr.iban.bukkitcore.plan.PlanDataManager;
 import fr.iban.bukkitcore.rewards.RewardsDAO;
-import fr.iban.bukkitcore.utils.Lang;
 import fr.iban.bukkitcore.utils.PluginMessageHelper;
 import fr.iban.bukkitcore.utils.TextCallback;
 import fr.iban.common.data.sql.DbAccess;
@@ -44,11 +44,17 @@ public final class CoreBukkitPlugin extends JavaPlugin {
     private PlanDataManager planDataManager;
     private ServerManager serverManager;
 
+    private BukkitTranslator translator;
+
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
-        Lang.init(this);
-        
+
+        String lang = getConfig().getString("language", "fr");
+
+        translator = new BukkitTranslator(this, lang);
+        translator.load(this);
+
         GlobalLoggerManager.initLogger();
 
         this.foliaLib = new FoliaLib(this);
@@ -60,7 +66,13 @@ public final class CoreBukkitPlugin extends JavaPlugin {
         }
 
         try {
-            DbAccess.initPool(new DbCredentials(getConfig().getString("database.host"), getConfig().getString("database.user"), getConfig().getString("database.password"), getConfig().getString("database.dbname"), getConfig().getInt("database.port")));
+            DbAccess.initPool(new DbCredentials(
+                    getConfig().getString("database.host"),
+                    getConfig().getString("database.user"),
+                    getConfig().getString("database.password"),
+                    getConfig().getString("database.dbname"),
+                    getConfig().getInt("database.port")
+            ));
         } catch (Exception e) {
             getLogger().severe("Erreur lors de l'initialisation de la connexion sql.");
             Bukkit.shutdown();
@@ -74,7 +86,7 @@ public final class CoreBukkitPlugin extends JavaPlugin {
         this.ressourcesWorldManager = new RessourcesWorldManager(this);
         this.messagingManager = new MessagingManager(this);
         this.trustedCommandManager = new TrustedCommandsManager();
-        foliaLib.getScheduler().runAsync(task -> getTrustedCommandManager().loadTrustedCommands());
+        foliaLib.getScheduler().runAsync(task -> trustedCommandManager.loadTrustedCommands());
         messagingManager.init();
         this.playerManager = new BukkitPlayerManager(messagingManager);
         this.trustedUserManager = new BukkitTrustedUserManager(this);
@@ -107,10 +119,10 @@ public final class CoreBukkitPlugin extends JavaPlugin {
     }
 
     private void registerCommands() {
-        CoreCommandHandlerVisitor coreCommandHandlerVisitor = new CoreCommandHandlerVisitor(this);
+        var visitor = new CoreCommandHandlerVisitor(this);
 
         Lamp.Builder<BukkitCommandActor> lampBuilder = BukkitLamp.builder(this);
-        lampBuilder.accept(coreCommandHandlerVisitor.visitor());
+        lampBuilder.accept(visitor.visitor());
         Lamp<BukkitCommandActor> lamp = lampBuilder.build();
 
         lamp.register(new TeleportCommands(this));
@@ -120,7 +132,7 @@ public final class CoreBukkitPlugin extends JavaPlugin {
         lamp.register(new ActionBarCMD(this));
         lamp.register(new BungeeBroadcastCMD(this));
 
-        if(getConfig().getBoolean("ressources.enabled", true)) {
+        if (getConfig().getBoolean("ressources.enabled", true)) {
             lamp.register(new RessourcesCommand(this));
         }
 
@@ -130,25 +142,26 @@ public final class CoreBukkitPlugin extends JavaPlugin {
     }
 
     private void registerListeners(Listener... listeners) {
-
         PluginManager pm = Bukkit.getPluginManager();
-
         for (Listener listener : listeners) {
             pm.registerEvents(listener, this);
         }
-
     }
 
     public static CoreBukkitPlugin getInstance() {
         return instance;
     }
 
+    public BukkitTranslator getTranslator() {
+        return translator;
+    }
+
     public String getServerName() {
         return serverName;
     }
 
-    public void setServerName(String serverName) {
-        this.serverName = serverName;
+    public void setServerName(String s) {
+        serverName = s;
     }
 
     public Map<UUID, TextCallback> getTextInputs() {

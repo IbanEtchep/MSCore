@@ -6,10 +6,11 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.event.PlayerPreTeleportEvent;
+import fr.iban.bukkitcore.lang.LangKey;
+import fr.iban.bukkitcore.lang.MessageBuilder;
 import fr.iban.bukkitcore.plan.PlanDataManager;
 import fr.iban.bukkitcore.utils.PluginMessageHelper;
 import fr.iban.bukkitcore.utils.SLocationUtils;
-import fr.iban.bukkitcore.utils.Lang;
 import fr.iban.common.messaging.CoreChannel;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.teleport.*;
@@ -76,8 +77,13 @@ public class TeleportManager {
                 setLastLocation(player.getUniqueId());
                 PluginMessageHelper.sendPlayerToServer(player, server);
             } else {
-                player.sendMessage(Lang.get("teleport.delay")
-                        .replace("%seconds%", String.valueOf(delay)));
+
+                player.sendMessage(
+                        MessageBuilder.translatable(LangKey.TELEPORT_DELAY)
+                                .placeholder("seconds", String.valueOf(delay))
+                                .toLegacy()
+                );
+
                 pendingTeleports.add(player.getUniqueId());
                 plugin.getScheduler().runLater(task -> {
                     if (isTeleportWaiting(player.getUniqueId())) {
@@ -91,7 +97,6 @@ public class TeleportManager {
 
     private void setLastLocation(UUID uuid) {
         Essentials essentials = plugin.getEssentials();
-
         if (essentials != null) {
             User user = essentials.getUser(uuid);
             if (user != null) {
@@ -219,22 +224,43 @@ public class TeleportManager {
     }
 
     private void tpAsync(Player player, Location loc) {
-        player.sendActionBar(Lang.get("teleport.loading"));
+
+        player.sendActionBar(
+                MessageBuilder.translatable(LangKey.TELEPORT_LOADING).toComponent()
+        );
+
         loc.getWorld().getChunkAtAsyncUrgently(loc).thenAccept(chunk -> {
             if (SLocationUtils.isSafeLocation(loc) || player.getGameMode() != GameMode.SURVIVAL) {
+
                 player.teleportAsync(loc).thenAccept(result -> {
                     if (result) {
-                        player.sendActionBar(Lang.get("teleport.success"));
+                        player.sendActionBar(
+                                MessageBuilder.translatable(LangKey.TELEPORT_SUCCESS).toComponent()
+                        );
                     } else {
-                        player.sendActionBar(Lang.get("teleport.failed"));
+                        player.sendActionBar(
+                                MessageBuilder.translatable(LangKey.TELEPORT_FAILED).toComponent()
+                        );
                     }
                 });
+
             } else {
                 unsafeTpPending.put(player.getUniqueId(), loc);
-                player.sendMessage(Component.text(Lang.get("teleport.unsafe-warning"))
+
+                Component hover = MessageBuilder
+                        .translatable(LangKey.TELEPORT_UNSAFE_HOVER)
+                        .toComponent()
+                        .color(NamedTextColor.WHITE)
+                        .decorate(TextDecoration.BOLD);
+
+                Component warn = MessageBuilder
+                        .translatable(LangKey.TELEPORT_UNSAFE_WARNING)
+                        .toComponent()
                         .color(NamedTextColor.RED)
                         .clickEvent(ClickEvent.runCommand("/tplastunsafe"))
-                        .hoverEvent(HoverEvent.showText(Component.text(Lang.get("teleport.unsafe-hover"), NamedTextColor.WHITE).decorate(TextDecoration.BOLD))));
+                        .hoverEvent(HoverEvent.showText(hover));
+
+                player.sendMessage(warn);
             }
         });
     }
@@ -244,14 +270,20 @@ public class TeleportManager {
         if (location != null) {
             player.teleportAsync(location).thenAccept(result -> {
                 if (result) {
-                    player.sendActionBar(Lang.get("teleport.success"));
+                    player.sendActionBar(
+                            MessageBuilder.translatable(LangKey.TELEPORT_SUCCESS).toComponent()
+                    );
                 } else {
-                    player.sendActionBar(Lang.get("teleport.failed"));
+                    player.sendActionBar(
+                            MessageBuilder.translatable(LangKey.TELEPORT_FAILED).toComponent()
+                    );
                 }
             });
             unsafeTpPending.remove(player.getUniqueId());
         } else {
-            player.sendMessage(Lang.get("teleport.no-unsafe"));
+            player.sendMessage(
+                    MessageBuilder.translatable(LangKey.TELEPORT_NO_UNSAFE).toLegacy()
+            );
         }
     }
 
@@ -269,7 +301,9 @@ public class TeleportManager {
                     server = serverManager.getDefaultSurvivalServer();
                 }
             } else {
-                player.sendMessage(Lang.get("teleport.already-survival"));
+                player.sendMessage(
+                        MessageBuilder.translatable(LangKey.TELEPORT_ALREADY_SURVIVAL).toLegacy()
+                );
                 return;
             }
         }

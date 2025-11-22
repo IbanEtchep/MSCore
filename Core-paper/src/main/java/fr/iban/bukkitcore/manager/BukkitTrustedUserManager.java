@@ -3,8 +3,6 @@ package fr.iban.bukkitcore.manager;
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.common.TrustedUser;
 import fr.iban.common.manager.TrustedUserManager;
-import fr.iban.common.messaging.message.PlayerInfo;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.net.InetSocketAddress;

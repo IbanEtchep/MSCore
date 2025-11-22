@@ -1,8 +1,9 @@
 package fr.iban.bukkitcore.commands;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
+import fr.iban.bukkitcore.lang.LangKey;
+import fr.iban.bukkitcore.lang.MessageBuilder;
 import fr.iban.bukkitcore.manager.TeleportManager;
-import fr.iban.bukkitcore.utils.Lang;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.teleport.RequestType;
 import fr.iban.common.teleport.TpRequest;
@@ -13,7 +14,6 @@ import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.util.UUID;
-
 
 public class TeleportCommands {
 
@@ -31,7 +31,7 @@ public class TeleportCommands {
         UUID targetUniqueId = target.getUniqueId();
 
         if (targetUniqueId.equals(sender.getUniqueId())) {
-            sender.sendMessage(Lang.get("teleport.cannot-self"));
+            sender.sendMessage(MessageBuilder.translatable(LangKey.TELEPORT_CANNOT_SELF).toLegacy());
             return;
         }
 
@@ -44,7 +44,7 @@ public class TeleportCommands {
         UUID targetUniqueId = target.getUniqueId();
 
         if (targetUniqueId.equals(sender.getUniqueId())) {
-            sender.sendMessage(Lang.get("teleport.cannot-self"));
+            sender.sendMessage(MessageBuilder.translatable(LangKey.TELEPORT_CANNOT_SELF).toLegacy());
             return;
         }
 
@@ -57,7 +57,7 @@ public class TeleportCommands {
         UUID targetUniqueId = target.getUniqueId();
 
         if (targetUniqueId.equals(sender.getUniqueId())) {
-            sender.sendMessage(Lang.get("teleport.cannot-self"));
+            sender.sendMessage(MessageBuilder.translatable(LangKey.TELEPORT_CANNOT_SELF).toLegacy());
             return;
         }
 
@@ -70,7 +70,7 @@ public class TeleportCommands {
         UUID targetUniqueId = target.getUniqueId();
 
         if (targetUniqueId.equals(sender.getUniqueId())) {
-            sender.sendMessage(Lang.get("teleport.cannot-self"));
+            sender.sendMessage(MessageBuilder.translatable(LangKey.TELEPORT_CANNOT_SELF).toLegacy());
             return;
         }
 
@@ -80,52 +80,66 @@ public class TeleportCommands {
     @Command({"tpyes", "tpaccept"})
     @CommandPermission("core.tpyes")
     public void tpyes(Player sender, @Optional MSPlayerProfile target) {
+
         if (target != null) {
             UUID targetUniqueId = target.getUniqueId();
             TpRequest request = teleportManager.getTpRequestFrom(sender, targetUniqueId);
+
             if (request != null) {
                 if (request.getRequestType() == RequestType.TP) {
                     teleportManager.teleport(targetUniqueId, sender.getUniqueId(), 3);
                 } else if (request.getRequestType() == RequestType.TPHERE) {
                     teleportManager.teleport(sender.getUniqueId(), targetUniqueId, 3);
                 }
-                sender.sendMessage(Lang.get("teleport.request-accepted"));
+
+                sender.sendMessage(MessageBuilder.translatable(LangKey.TELEPORT_REQUEST_ACCEPTED).toLegacy());
                 teleportManager.removeTpRequest(sender.getUniqueId(), request);
+
             } else {
-                sender.sendMessage(Lang.get("teleport.no-request-from-player"));
+                sender.sendMessage(MessageBuilder.translatable(LangKey.TELEPORT_NO_REQUEST_FROM_PLAYER).toLegacy());
             }
+
         } else if (!teleportManager.getTpRequests(sender).isEmpty()) {
+
             TpRequest request = teleportManager.getTpRequests(sender).getLast();
+
             if (request.getRequestType() == RequestType.TP) {
                 teleportManager.teleport(request.getPlayerFrom(), request.getPlayerTo(), 3);
             } else if (request.getRequestType() == RequestType.TPHERE) {
                 teleportManager.teleport(request.getPlayerTo(), request.getPlayerFrom(), 3);
             }
-            sender.sendMessage(Lang.get("teleport.request-accepted"));
+
+            sender.sendMessage(MessageBuilder.translatable(LangKey.TELEPORT_REQUEST_ACCEPTED).toLegacy());
             teleportManager.removeTpRequest(sender.getUniqueId(), request);
+
         } else {
-            sender.sendMessage(Lang.get("teleport.no-request"));
+            sender.sendMessage(MessageBuilder.translatable(LangKey.TELEPORT_NO_REQUEST).toLegacy());
         }
     }
 
     @Command({"tpno", "tpdeny"})
     @CommandPermission("core.tpno")
     public void tpno(Player sender, @Optional MSPlayerProfile target) {
+
         if (target != null) {
             UUID targetUniqueId = target.getUniqueId();
             TpRequest request = teleportManager.getTpRequestFrom(sender, targetUniqueId);
+
             if (request != null) {
-                sender.sendMessage(Lang.get("teleport.request-denied"));
+                sender.sendMessage(MessageBuilder.translatable(LangKey.TELEPORT_REQUEST_DENIED).toLegacy());
                 teleportManager.removeTpRequest(sender.getUniqueId(), request);
             } else {
-                sender.sendMessage(Lang.get("teleport.no-request-from-player"));
+                sender.sendMessage(MessageBuilder.translatable(LangKey.TELEPORT_NO_REQUEST_FROM_PLAYER).toLegacy());
             }
+
         } else if (!teleportManager.getTpRequests(sender).isEmpty()) {
+
             TpRequest request = teleportManager.getTpRequests(sender).getLast();
-            sender.sendMessage(Lang.get("teleport.request-denied"));
+            sender.sendMessage(MessageBuilder.translatable(LangKey.TELEPORT_REQUEST_DENIED).toLegacy());
             teleportManager.removeTpRequest(sender.getUniqueId(), request);
+
         } else {
-            sender.sendMessage(Lang.get("teleport.no-request"));
+            sender.sendMessage(MessageBuilder.translatable(LangKey.TELEPORT_NO_REQUEST).toLegacy());
         }
     }
 
@@ -133,5 +147,4 @@ public class TeleportCommands {
     public void tpLastUnsafe(Player player) {
         teleportManager.tpAsyncLastUnsafe(player);
     }
-
 }

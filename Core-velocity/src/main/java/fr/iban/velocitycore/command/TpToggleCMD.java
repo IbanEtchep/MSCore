@@ -5,11 +5,10 @@ import fr.iban.common.enums.Option;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.velocitycore.CoreVelocityPlugin;
-import fr.iban.velocitycore.util.Lang;
-import net.kyori.adventure.text.Component;
+import fr.iban.velocitycore.lang.LangKey;
+import fr.iban.velocitycore.lang.MessageBuilder;
 import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.Description;
 import revxrsal.commands.velocity.annotation.CommandPermission;
 
 public class TpToggleCMD {
@@ -21,7 +20,6 @@ public class TpToggleCMD {
     }
 
     @Command("tptoggle")
-    @Description("Active ou désactive les demandes de téléportation pour le joueur.")
     @CommandPermission("servercore.tptoggle")
     public void execute(Player player) {
         PlayerManager accountManager = plugin.getPlayerManager();
@@ -30,9 +28,15 @@ public class TpToggleCMD {
         accountManager.saveProfile(profile);
 
         if (profile.getOption(Option.TP)) {
-            player.sendMessage(Component.text(Lang.get("tptoggle.opened"), NamedTextColor.GREEN));
+            player.sendMessage(
+                    MessageBuilder.translatable(LangKey.TPTOGGLE_OPENED).toComponent()
+                            .color(NamedTextColor.GREEN)
+            );
         } else {
-            player.sendMessage(Component.text(Lang.get("tptoggle.closed"), NamedTextColor.RED));
+            player.sendMessage(
+                    MessageBuilder.translatable(LangKey.TPTOGGLE_CLOSED).toComponent()
+                            .color(NamedTextColor.RED)
+            );
         }
     }
 }

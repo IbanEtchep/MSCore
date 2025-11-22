@@ -3,7 +3,8 @@ package fr.iban.survivalcore.manager;
 import com.earth2me.essentials.utils.DateUtil;
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.manager.MessagingManager;
-import fr.iban.survivalcore.utils.Lang;
+import fr.iban.survivalcore.lang.LangKey;
+import fr.iban.survivalcore.lang.MessageBuilder;
 import fr.iban.bukkitcore.utils.PluginMessageHelper;
 import fr.iban.common.messaging.CoreChannel;
 import fr.iban.survivalcore.SurvivalCorePlugin;
@@ -37,7 +38,9 @@ public class AnnounceManager {
             MessagingManager messagingManager = CoreBukkitPlugin.getInstance().getMessagingManager();
             messagingManager.sendMessage(CoreChannel.SYNC_ANNOUNCE_COOLDOWN_CHANNEL, uuid.toString());
         } else {
-            player.sendMessage(Lang.get("announce.not-enough-money"));
+            player.sendMessage(
+                    MessageBuilder.translatable(LangKey.ANNOUNCE_NOT_ENOUGH_MONEY).toLegacy()
+            );
         }
     }
 
@@ -48,8 +51,11 @@ public class AnnounceManager {
 
             long secondsLeft = ((lastUsage / 1000) + COOLDOWN_TIME) - (System.currentTimeMillis() / 1000);
             if (secondsLeft > 0) {
-                player.sendMessage(Lang.get("announce.cooldown")
-                        .replace("%time%", DateUtil.formatDateDiff(lastUsage + COOLDOWN_TIME * 1000)));
+                player.sendMessage(
+                        MessageBuilder.translatable(LangKey.ANNOUNCE_COOLDOWN)
+                                .placeholder("time", DateUtil.formatDateDiff(lastUsage + COOLDOWN_TIME * 1000))
+                                .toLegacy()
+                );
 
                 return true;
             }

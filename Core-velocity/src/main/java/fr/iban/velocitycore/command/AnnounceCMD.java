@@ -5,17 +5,15 @@ import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.velocitycore.CoreVelocityPlugin;
 import fr.iban.velocitycore.manager.AutomatedAnnounceManager;
-import fr.iban.velocitycore.util.Lang;
+import fr.iban.velocitycore.lang.LangKey;
+import fr.iban.velocitycore.lang.MessageBuilder;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Default;
-import revxrsal.commands.annotation.Description;
 import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.velocity.actor.VelocityCommandActor;
 
 @Command("announce")
-@Description("Commandes pour gérer les annonces.")
 public class AnnounceCMD {
 
     private final CoreVelocityPlugin plugin;
@@ -25,7 +23,6 @@ public class AnnounceCMD {
     }
 
     @Subcommand("listdisabled")
-    @Description("Liste toutes les annonces désactivées par l'utilisateur.")
     public void listDisabledAnnouncements(VelocityCommandActor actor, Player player) {
         PlayerManager playerManager = plugin.getPlayerManager();
         MSPlayerProfile profile = playerManager.getProfile(player.getUniqueId());
@@ -36,7 +33,6 @@ public class AnnounceCMD {
     }
 
     @Subcommand("disable")
-    @Description("Désactive une annonce spécifique pour l'utilisateur.")
     public void disableAnnouncement(Player player, @Default("0") int id) {
         AutomatedAnnounceManager announceManager = plugin.getAnnounceManager();
         if (announceManager.getAnnounces().containsKey(id)) {
@@ -44,13 +40,13 @@ public class AnnounceCMD {
 
             if (!profile.getBlackListedAnnounces().contains(id)) {
                 profile.getBlackListedAnnounces().add(id);
-                player.sendMessage(Component.text(Lang.get("announce.disabled")).color(NamedTextColor.GREEN));
+                player.sendMessage(MessageBuilder.translatable(LangKey.ANNOUNCE_DISABLED).toComponent());
                 plugin.getPlayerManager().saveProfile(profile);
             } else {
-                player.sendMessage(Component.text(Lang.get("announce.already-disabled")).color(NamedTextColor.RED));
+                player.sendMessage(MessageBuilder.translatable(LangKey.ANNOUNCE_ALREADY_DISABLED).toComponent());
             }
         } else {
-            player.sendMessage(Component.text(Lang.get("announce.not-exist")).color(NamedTextColor.RED));
+            player.sendMessage(MessageBuilder.translatable(LangKey.ANNOUNCE_NOT_EXIST).toComponent());
         }
     }
 }

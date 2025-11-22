@@ -3,10 +3,10 @@ package fr.iban.bukkitcore.commands;
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.commands.annotation.Context;
 import fr.iban.bukkitcore.commands.annotation.SenderType;
-import fr.iban.bukkitcore.utils.Lang;
+import fr.iban.bukkitcore.lang.LangKey;
+import fr.iban.bukkitcore.lang.MessageBuilder;
 import fr.iban.common.TrustedCommand;
 import fr.iban.common.manager.TrustedCommandsManager;
-import org.bukkit.Bukkit;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Default;
 import revxrsal.commands.annotation.Named;
@@ -33,13 +33,14 @@ public class TrustCommandsCMD {
                                   @Named("context") @Default("global") @Context String context) {
 
         TrustedCommand trustedCommand = new TrustedCommand(command, senderType, context);
-        if(trustedCommandsManager.getTrustedCommands().contains(trustedCommand)) {
-            sender.reply(Lang.get("trustcommand.already-added"));
+
+        if (trustedCommandsManager.getTrustedCommands().contains(trustedCommand)) {
+            sender.reply(MessageBuilder.translatable(LangKey.TRUSTCOMMAND_ALREADY_ADDED).toLegacy());
             return;
         }
 
         trustedCommandsManager.addTrustedCommand(trustedCommand);
-        sender.reply(Lang.get("trustcommand.added"));
+        sender.reply(MessageBuilder.translatable(LangKey.TRUSTCOMMAND_ADDED).toLegacy());
     }
 
     @Subcommand("remove")
@@ -47,15 +48,17 @@ public class TrustCommandsCMD {
             BukkitCommandActor sender,
             @Named("command") String command,
             @Named("senderType") @SenderType String senderType,
-            @Named("context") @Default("global") @Context String context) {
+            @Named("context") @Default("global") @Context String context
+    ) {
         TrustedCommand trustedCommand = new TrustedCommand(command, senderType, context);
-        if(!trustedCommandsManager.getTrustedCommands().contains(trustedCommand)) {
-            sender.reply(Lang.get("trustcommand.not-found"));
+
+        if (!trustedCommandsManager.getTrustedCommands().contains(trustedCommand)) {
+            sender.reply(MessageBuilder.translatable(LangKey.TRUSTCOMMAND_NOT_FOUND).toLegacy());
             return;
         }
 
         trustedCommandsManager.deleteTrustedCommand(trustedCommand);
-        sender.reply(Lang.get("trustcommand.removed"));
+        sender.reply(MessageBuilder.translatable(LangKey.TRUSTCOMMAND_REMOVED).toLegacy());
     }
 
     @Subcommand("transferToSql")
@@ -72,7 +75,7 @@ public class TrustCommandsCMD {
     public void reload(BukkitCommandActor sender) {
         plugin.getScheduler().runAsync(task -> {
             trustedCommandsManager.loadTrustedCommands();
-            sender.reply(Lang.get("trustcommand.reloaded"));
+            sender.reply(MessageBuilder.translatable(LangKey.TRUSTCOMMAND_RELOADED).toLegacy());
         });
     }
 

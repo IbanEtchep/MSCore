@@ -4,15 +4,17 @@ import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.common.enums.Option;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
-import fr.iban.survivalcore.utils.Lang;
+import fr.iban.survivalcore.lang.LangKey;
+import fr.iban.survivalcore.lang.MessageBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.CommandPlaceholder;
+import revxrsal.commands.annotation.Subcommand;
+import revxrsal.commands.bukkit.annotation.CommandPermission;
 
-public class PvPCMD implements CommandExecutor {
+@Command("pvp")
+public class PvPCMD {
 
     private final CoreBukkitPlugin plugin;
 
@@ -20,37 +22,52 @@ public class PvPCMD implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(sender instanceof Player player){
-            PlayerManager playerManager = plugin.getPlayerManager();
+    @CommandPlaceholder
+    @CommandPermission("servercore.pvp")
+    public void toggleSelf(Player player) {
 
-            if(args.length == 0) {
-                MSPlayerProfile profile = playerManager.getProfile(player.getUniqueId());
+        PlayerManager playerManager = plugin.getPlayerManager();
+        MSPlayerProfile profile = playerManager.getProfile(player.getUniqueId());
 
-                profile.toggleOption(Option.PVP);
-                if(profile.getOption(Option.PVP)) {
-                    player.sendMessage(Lang.get("pvp.enabled"));
-                }else {
-                    player.sendMessage(Lang.get("pvp.disabled"));
-                }
+        profile.toggleOption(Option.PVP);
 
-                playerManager.saveProfile(profile);
-            }else if(args.length == 1 && sender.hasPermission("servercore.pvp.others")) {
-                Player target = Bukkit.getPlayer(args[0]);
-                if(target != null) {
-                    MSPlayerProfile profile = playerManager.getProfile(target.getUniqueId());
-                    profile.toggleOption(Option.PVP);
-                    if(profile.getOption(Option.PVP)) {
-                        player.sendMessage(Lang.get("pvp.enabled-other").replace("%player%", target.getName()));
-                    }else {
-                        player.sendMessage(Lang.get("pvp.disabled-other").replace("%player%", target.getName()));
-                    }
-
-                    playerManager.saveProfile(profile);
-                }
-            }
+        if (profile.getOption(Option.PVP)) {
+            player.sendMessage(MessageBuilder.translatable(LangKey.PVP_ENABLED).toLegacy());
+        } else {
+            player.sendMessage(MessageBuilder.translatable(LangKey.PVP_DISABLED).toLegacy());
         }
-        return false;
+
+        playerManager.saveProfile(profile);
+    }
+
+    @Subcommand("toggle")
+    @CommandPermission("servercore.pvp.others")
+    public void toggleOther(Player sender, String targetName) {
+
+        Player target = Bukkit.getPlayer(targetName);
+        if (target == null) {
+            return;
+        }
+
+        PlayerManager playerManager = plugin.getPlayerManager();
+        MSPlayerProfile profile = playerManager.getProfile(target.getUniqueId());
+
+        profile.toggleOption(Option.PVP);
+
+        if (profile.getOption(Option.PVP)) {
+            sender.sendMessage(
+                    MessageBuilder.translatable(LangKey.PVP_ENABLED_OTHER)
+                            .placeholder("player", target.getName())
+                            .toLegacy()
+            );
+        } else {
+            sender.sendMessage(
+                    MessageBuilder.translatable(LangKey.PVP_DISABLED_OTHER)
+                            .placeholder("player", target.getName())
+                            .toLegacy()
+            );
+        }
+
+        playerManager.saveProfile(profile);
     }
 }

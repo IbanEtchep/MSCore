@@ -1,7 +1,8 @@
 package fr.iban.bukkitcore.manager;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
-import fr.iban.bukkitcore.utils.Lang;
+import fr.iban.bukkitcore.lang.LangKey;
+import fr.iban.bukkitcore.lang.MessageBuilder;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -22,14 +23,19 @@ public class RessourcesWorldManager {
 
         if(secondsLeft > 0){
             player.sendMessage(
-                    Lang.get("ressources.tp-wait")
-                            .replace("%seconds%", String.valueOf(secondsLeft))
+                    MessageBuilder.translatable(LangKey.RESSOURCES_TP_WAIT)
+                            .placeholder("seconds", String.valueOf(secondsLeft))
+                            .toLegacy()
             );
             return;
         }
 
         lastTeleportTime.put(player.getUniqueId(), System.currentTimeMillis());
-        player.sendMessage(Lang.get("ressources.tp-start"));
+
+        player.sendMessage(
+                MessageBuilder.translatable(LangKey.RESSOURCES_TP_START).toLegacy()
+        );
+
         String ressourcesServer = plugin.getConfig().getString("ressources.servername", "ressources");
         plugin.getTeleportManager().randomTeleport(player, ressourcesServer, worldname);
     }
@@ -49,5 +55,4 @@ public class RessourcesWorldManager {
     public String getResourceServerName() {
         return plugin.getConfig().getString("ressources.servername", "ressources");
     }
-
 }

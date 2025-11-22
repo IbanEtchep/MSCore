@@ -1,76 +1,111 @@
 package fr.iban.bukkitcore.menu;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import fr.iban.bukkitcore.utils.Lang;
+import fr.iban.bukkitcore.lang.LangKey;
+import fr.iban.bukkitcore.lang.MessageBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 public abstract class PaginatedMenu extends Menu {
 
-	protected int page = 0;
-	protected int maxItemsPerPage = getSlots() - 14 - (getRows()*2);
-	protected int index = 0;
+    protected int page = 0;
+    protected int maxItemsPerPage = getSlots() - 14 - (getRows()*2);
+    protected int index = 0;
 
-	protected PaginatedMenu(Player player) {
-		super(player);
-	}
-	
-	public int getElementAmount() {
-		return -1;
-	}
+    protected PaginatedMenu(Player player) {
+        super(player);
+    }
 
-	@Override
-	public void addMenuBorder(){
-		
-		index = page*getMaxItemsPerPage();
-		
-		int lastRowFirst = (getRows()-1)*9;
+    public int getElementAmount() {
+        return -1;
+    }
 
-		if(getElementAmount() != -1 && getElementAmount() > maxItemsPerPage && (index+getMaxItemsPerPage() + 1) <= getElementAmount()) {
-			inventory.setItem(lastRowFirst+5, makeItem(Material.GREEN_STAINED_GLASS_PANE, Lang.get("menus.paginated.next")));
-		}
+    @Override
+    public void addMenuBorder(){
 
-		if(page > 0) {
-			inventory.setItem(lastRowFirst+3, makeItem(Material.GREEN_STAINED_GLASS_PANE, Lang.get("menus.paginated.previous")));
-		}
+        index = page*getMaxItemsPerPage();
 
-		inventory.setItem(lastRowFirst+4, makeItem(Material.RED_STAINED_GLASS_PANE, Lang.get("menus.paginated.close")));
+        int lastRowFirst = (getRows()-1)*9;
 
-		super.addMenuBorder();
-	}
+        if(getElementAmount() != -1 && getElementAmount() > maxItemsPerPage && (index+getMaxItemsPerPage() + 1) <= getElementAmount()) {
+            inventory.setItem(
+                    lastRowFirst+5,
+                    makeItem(
+                            Material.GREEN_STAINED_GLASS_PANE,
+                            MessageBuilder.translatable(LangKey.MENUS_PAGINATED_NEXT).toLegacy()
+                    )
+            );
+        }
 
-	protected void checkBottonsClick(ItemStack item, Player player) {
-		checkNextBottonClick(item);
-		checkPreviousBottonClick(item);
-		checkCloseBottonClick(item, player);
-	}
+        if(page > 0) {
+            inventory.setItem(
+                    lastRowFirst+3,
+                    makeItem(
+                            Material.GREEN_STAINED_GLASS_PANE,
+                            MessageBuilder.translatable(LangKey.MENUS_PAGINATED_PREVIOUS).toLegacy()
+                    )
+            );
+        }
 
-	protected void checkNextBottonClick(ItemStack item) {
-		if(item.getItemMeta().getDisplayName().equalsIgnoreCase(Lang.get("menus.paginated.next"))){
-			page += 1;
-			super.open();
-		}
-	}
+        inventory.setItem(
+                lastRowFirst+4,
+                makeItem(
+                        Material.RED_STAINED_GLASS_PANE,
+                        MessageBuilder.translatable(LangKey.MENUS_PAGINATED_CLOSE).toLegacy()
+                )
+        );
 
-	protected void checkPreviousBottonClick(ItemStack item) {
-		if(item.getItemMeta().getDisplayName().equalsIgnoreCase(Lang.get("menus.paginated.previous"))){
-			page -= 1;
-			if(page == 0) {
-				index = 0;
-			}
-			super.open();
-		}
-	}
+        super.addMenuBorder();
+    }
 
-	protected void checkCloseBottonClick(ItemStack item, Player player) {
-		if(item.getItemMeta().getDisplayName().equalsIgnoreCase(Lang.get("menus.paginated.close"))){
-			player.closeInventory();
-		}
-	}
-	
-	public int getMaxItemsPerPage() {
-		return maxItemsPerPage;
-	}
+    protected void checkBottonsClick(ItemStack item, Player player) {
+        checkNextBottonClick(item);
+        checkPreviousBottonClick(item);
+        checkCloseBottonClick(item, player);
+    }
+
+    protected void checkNextBottonClick(ItemStack item) {
+        Component name = item.getItemMeta().displayName();
+        String plain = name == null ? "" : PlainTextComponentSerializer.plainText().serialize(name);
+
+        if(plain.equalsIgnoreCase(
+                MessageBuilder.translatable(LangKey.MENUS_PAGINATED_NEXT).toLegacy()
+        )){
+            page += 1;
+            super.open();
+        }
+    }
+
+    protected void checkPreviousBottonClick(ItemStack item) {
+        Component name = item.getItemMeta().displayName();
+        String plain = name == null ? "" : PlainTextComponentSerializer.plainText().serialize(name);
+
+        if(plain.equalsIgnoreCase(
+                MessageBuilder.translatable(LangKey.MENUS_PAGINATED_PREVIOUS).toLegacy()
+        )){
+            page -= 1;
+            if(page == 0) {
+                index = 0;
+            }
+            super.open();
+        }
+    }
+
+    protected void checkCloseBottonClick(ItemStack item, Player player) {
+        Component name = item.getItemMeta().displayName();
+        String plain = name == null ? "" : PlainTextComponentSerializer.plainText().serialize(name);
+
+        if(plain.equalsIgnoreCase(
+                MessageBuilder.translatable(LangKey.MENUS_PAGINATED_CLOSE).toLegacy()
+        )){
+            player.closeInventory();
+        }
+    }
+
+    public int getMaxItemsPerPage() {
+        return maxItemsPerPage;
+    }
 }

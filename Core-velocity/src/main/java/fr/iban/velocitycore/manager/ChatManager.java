@@ -8,7 +8,8 @@ import fr.iban.common.enums.Option;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.velocitycore.CoreVelocityPlugin;
-import fr.iban.velocitycore.util.Lang;
+import fr.iban.velocitycore.lang.LangKey;
+import fr.iban.velocitycore.lang.MessageBuilder;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
@@ -19,10 +20,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.william278.papiproxybridge.api.PlaceholderAPI;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -63,7 +61,7 @@ public class ChatManager {
         MSPlayerProfile senderProfile = playerManager.getProfile(senderUUID);
 
         if (!senderProfile.getOption(Option.CHAT)) {
-            sender.sendMessage(MineDown.parse(Lang.get("chat.disabled")));
+            sender.sendMessage(MessageBuilder.translatable(LangKey.CHAT_DISABLED).toComponent());
             logMessage(MineDown.parse("§8[§CDÉSACTIVÉ§8]§r " + message));
             return;
         }
@@ -106,7 +104,6 @@ public class ChatManager {
         final PlaceholderAPI api = PlaceholderAPI.createInstance();
         message = message.replace("%player%", sender.getUsername());
         message = message.replace("%premium%", getPremiumString(sender));
-
         return api.formatPlaceholders(message, sender.getUniqueId());
     }
 
@@ -121,11 +118,12 @@ public class ChatManager {
             return;
         }
 
-        plugin.getServer().sendMessage(MineDown.parse(
-                Lang.get("chat.annonce")
-                        .replace("%player%", player.getUsername())
-                        .replace("%message%", annonce)
-        ));
+        Component msg = MessageBuilder.translatable(LangKey.CHAT_ANNONCE)
+                .placeholder("player", player.getUsername())
+                .placeholder("message", annonce)
+                .toComponent();
+
+        plugin.getServer().sendMessage(msg);
     }
 
     private void sendStaffMessage(Player sender, String message) {
@@ -148,9 +146,9 @@ public class ChatManager {
     public void toggleChat(Player sender) {
         isMuted = !isMuted;
         if (isMuted) {
-            plugin.getServer().sendMessage(MineDown.parse(Lang.get("chat.muted")));
+            plugin.getServer().sendMessage(MessageBuilder.translatable(LangKey.CHAT_MUTED).toComponent());
         } else {
-            plugin.getServer().sendMessage(MineDown.parse(Lang.get("chat.unmuted")));
+            plugin.getServer().sendMessage(MessageBuilder.translatable(LangKey.CHAT_UNMUTED).toComponent());
         }
     }
 
@@ -161,12 +159,16 @@ public class ChatManager {
         MSPlayerProfile targetProfile = playerManager.getProfile(target.getUniqueId());
 
         if (!targetProfile.getOption(Option.MSG) && !sender.hasPermission("servercore.msgtogglebypass")) {
-            sender.sendMessage(MineDown.parse(Lang.get("msg.disabled").replace("%player%", targetName)));
+            sender.sendMessage(
+                    MessageBuilder.translatable(LangKey.MSG_DISABLED)
+                            .placeholder("player", targetName)
+                            .toComponent()
+            );
             return;
         }
 
         if (targetProfile.getIgnoredPlayers().contains(senderUUID)) {
-            sender.sendMessage(MineDown.parse(Lang.get("msg.ignored")));
+            sender.sendMessage(MessageBuilder.translatable(LangKey.MSG_IGNORED).toComponent());
             return;
         }
 
@@ -174,26 +176,33 @@ public class ChatManager {
         Component targetComponent;
 
         if (target.hasPermission("servercore.staff")) {
-            senderComponent = MineDown.parse(Lang.get("msg.sender-staff")
-                    .replace("%target%", targetName)
-                    .replace("%message%", message));
+            senderComponent = MessageBuilder.translatable(LangKey.MSG_SENDER_STAFF)
+                    .placeholder("target", targetName)
+                    .placeholder("message", message)
+                    .toComponent();
         } else {
-            senderComponent = MineDown.parse(Lang.get("msg.sender")
-                    .replace("%target%", targetName)
-                    .replace("%message%", message));
+            senderComponent = MessageBuilder.translatable(LangKey.MSG_SENDER)
+                    .placeholder("target", targetName)
+                    .placeholder("message", message)
+                    .toComponent();
         }
+
         if (sender.hasPermission("servercore.staff")) {
-            targetComponent = MineDown.parse(Lang.get("msg.target-staff")
-                    .replace("%sender%", senderName)
-                    .replace("%message%", message));
+            targetComponent = MessageBuilder.translatable(LangKey.MSG_TARGET_STAFF)
+                    .placeholder("sender", senderName)
+                    .placeholder("message", message)
+                    .toComponent();
         } else {
-            targetComponent = MineDown.parse(Lang.get("msg.target")
-                    .replace("%sender%", senderName)
-                    .replace("%message%", message));
+            targetComponent = MessageBuilder.translatable(LangKey.MSG_TARGET)
+                    .placeholder("sender", senderName)
+                    .placeholder("message", message)
+                    .toComponent();
         }
 
         targetComponent = targetComponent
-                .hoverEvent(HoverEvent.showText(Component.text(Lang.get("msg.hover"))))
+                .hoverEvent(HoverEvent.showText(
+                        MessageBuilder.translatable(LangKey.MSG_HOVER).toComponent()
+                ))
                 .clickEvent(ClickEvent.suggestCommand("/msg " + senderName + " "));
 
         sender.sendMessage(senderComponent);
@@ -249,10 +258,10 @@ public class ChatManager {
     public void toggleStaffChat(Player player) {
         if (staffChatDisabledPlayers.contains(player.getUniqueId())) {
             staffChatDisabledPlayers.remove(player.getUniqueId());
-            player.sendMessage(MineDown.parse(Lang.get("staffchat.enabled")));
+            player.sendMessage(MessageBuilder.translatable(LangKey.STAFFCHAT_ENABLED).toComponent());
         } else {
             staffChatDisabledPlayers.add(player.getUniqueId());
-            player.sendMessage(MineDown.parse(Lang.get("staffchat.disabled")));
+            player.sendMessage(MessageBuilder.translatable(LangKey.STAFFCHAT_DISABLED).toComponent());
         }
     }
 }

@@ -5,10 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import fr.iban.bukkitcore.menu.Menu;
 import fr.iban.bukkitcore.utils.ConfirmCallback;
 import fr.iban.bukkitcore.utils.ItemBuilder;
-import fr.iban.bukkitcore.utils.Lang;
+import fr.iban.bukkitcore.lang.LangKey;
+import fr.iban.bukkitcore.lang.MessageBuilder;
 
 public class ConfirmMenu extends Menu {
 	
@@ -17,11 +17,21 @@ public class ConfirmMenu extends Menu {
 	private final ConfirmCallback callback;
 
 	public ConfirmMenu(Player player, ConfirmCallback callback) {
-		this(player, Lang.get("menus.confirm.title"), Lang.get("menus.confirm.desc-default"), callback);
+		this(
+			player,
+			MessageBuilder.translatable(LangKey.MENUS_CONFIRM_TITLE).toLegacy(),
+			MessageBuilder.translatable(LangKey.MENUS_CONFIRM_DESC_DEFAULT).toLegacy(),
+			callback
+		);
 	}
 	
 	public ConfirmMenu(Player player, String desc, ConfirmCallback callback) {
-		this(player, Lang.get("menus.confirm.title"), desc, callback);
+		this(
+			player,
+			MessageBuilder.translatable(LangKey.MENUS_CONFIRM_TITLE).toLegacy(),
+			desc,
+			callback
+		);
 	}
 	
 	public ConfirmMenu(Player player, String title, String desc, ConfirmCallback callback) {
@@ -70,16 +80,22 @@ public class ConfirmMenu extends Menu {
 	}
 	
 	private ItemStack getConfirmItem() {
-		return new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE).setDisplayName(Lang.get("menus.confirm.confirm-button")).build();
+		return new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE)
+				.setDisplayName(
+						MessageBuilder.translatable(LangKey.MENUS_CONFIRM_BUTTON).toLegacy()
+				).build();
 	}
 	
 	private ItemStack getCancelItem() {
-		return new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setDisplayName(Lang.get("menus.confirm.cancel-button")).build();
+		return new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
+				.setDisplayName(
+						MessageBuilder.translatable(LangKey.MENUS_CANCEL_BUTTON).toLegacy()
+				).build();
 	}
 	
 	private ItemStack getMiddleItem() {
-		return new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setDisplayName(desc).build();
+		return new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
+				.setDisplayName(desc)
+				.build();
 	}
-	
-
 }

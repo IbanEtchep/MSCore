@@ -13,7 +13,8 @@ import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.utils.ArrayUtils;
 import fr.iban.velocitycore.CoreVelocityPlugin;
-import fr.iban.velocitycore.util.Lang;
+import fr.iban.velocitycore.lang.LangKey;
+import fr.iban.velocitycore.lang.MessageBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -32,43 +33,42 @@ public class ProxyJoinQuitListener {
 
     private final String[] joinMessages =
             {
-                    Lang.get("proxy.join-messages.1"),
-                    Lang.get("proxy.join-messages.2"),
-                    Lang.get("proxy.join-messages.3"),
-                    Lang.get("proxy.join-messages.4"),
-                    Lang.get("proxy.join-messages.5"),
-                    Lang.get("proxy.join-messages.6")
+                    MessageBuilder.translatable(LangKey.PROXY_JOIN_MESSAGE_1).toLegacy(),
+                    MessageBuilder.translatable(LangKey.PROXY_JOIN_MESSAGE_2).toLegacy(),
+                    MessageBuilder.translatable(LangKey.PROXY_JOIN_MESSAGE_3).toLegacy(),
+                    MessageBuilder.translatable(LangKey.PROXY_JOIN_MESSAGE_4).toLegacy(),
+                    MessageBuilder.translatable(LangKey.PROXY_JOIN_MESSAGE_5).toLegacy(),
+                    MessageBuilder.translatable(LangKey.PROXY_JOIN_MESSAGE_6).toLegacy()
             };
 
     private final String[] quitMessages =
             {
-                    Lang.get("proxy.quit-messages.1"),
-                    Lang.get("proxy.quit-messages.2"),
-                    Lang.get("proxy.quit-messages.3"),
-                    Lang.get("proxy.quit-messages.4")
+                    MessageBuilder.translatable(LangKey.PROXY_QUIT_MESSAGE_1).toLegacy(),
+                    MessageBuilder.translatable(LangKey.PROXY_QUIT_MESSAGE_2).toLegacy(),
+                    MessageBuilder.translatable(LangKey.PROXY_QUIT_MESSAGE_3).toLegacy(),
+                    MessageBuilder.translatable(LangKey.PROXY_QUIT_MESSAGE_4).toLegacy()
             };
 
     private final String[] longAbsenceMessages = {
-            Lang.get("proxy.long-absence.1"),
-            Lang.get("proxy.long-absence.2"),
-            Lang.get("proxy.long-absence.3"),
-            Lang.get("proxy.long-absence.4"),
-            Lang.get("proxy.long-absence.5")
+            MessageBuilder.translatable(LangKey.PROXY_LONG_ABSENCE_1).toLegacy(),
+            MessageBuilder.translatable(LangKey.PROXY_LONG_ABSENCE_2).toLegacy(),
+            MessageBuilder.translatable(LangKey.PROXY_LONG_ABSENCE_3).toLegacy(),
+            MessageBuilder.translatable(LangKey.PROXY_LONG_ABSENCE_4).toLegacy(),
+            MessageBuilder.translatable(LangKey.PROXY_LONG_ABSENCE_5).toLegacy()
     };
 
     private final String[] firstJoinMessages = {
-            Lang.get("proxy.first-join.1"),
-            Lang.get("proxy.first-join.2"),
-            Lang.get("proxy.first-join.3"),
-            Lang.get("proxy.first-join.4"),
-            Lang.get("proxy.first-join.5")
+            MessageBuilder.translatable(LangKey.PROXY_FIRST_JOIN_1).toLegacy(),
+            MessageBuilder.translatable(LangKey.PROXY_FIRST_JOIN_2).toLegacy(),
+            MessageBuilder.translatable(LangKey.PROXY_FIRST_JOIN_3).toLegacy(),
+            MessageBuilder.translatable(LangKey.PROXY_FIRST_JOIN_4).toLegacy(),
+            MessageBuilder.translatable(LangKey.PROXY_FIRST_JOIN_5).toLegacy()
     };
 
     public ProxyJoinQuitListener(CoreVelocityPlugin plugin) {
         this.plugin = plugin;
         this.playerManager = plugin.getPlayerManager();
     }
-
 
     @Subscribe
     public void onProxyJoin(ServerConnectedEvent e) {
@@ -85,20 +85,27 @@ public class ProxyJoinQuitListener {
         long lastSeen = profile.getLastSeen();
         if (lastSeen != 0) {
             if ((System.currentTimeMillis() - lastSeen) > 60000) {
-                String joinMessage = Lang.get("proxy.prefix.join") + " ";
+                String joinPrefix = MessageBuilder.translatable(LangKey.PROXY_PREFIX_JOIN).toLegacy() + " ";
+                String joinMessage;
+
                 if ((System.currentTimeMillis() - lastSeen) > 2592000000L) {
-                    joinMessage += String.format(ArrayUtils.getRandomFromArray(longAbsenceMessages), playerName);
+                    joinMessage = joinPrefix + String.format(ArrayUtils.getRandomFromArray(longAbsenceMessages), playerName);
                 } else {
-                    joinMessage += String.format(ArrayUtils.getRandomFromArray(joinMessages), playerName);
+                    joinMessage = joinPrefix + String.format(ArrayUtils.getRandomFromArray(joinMessages), playerName);
                 }
 
                 Component message = MineDown.parse(joinMessage).hoverEvent(HoverEvent.showText(
-                        Component.text(Lang.get("proxy.hover.last-seen").replace("%time%", getLastSeen(lastSeen)), NamedTextColor.GRAY)
+                        Component.text(
+                                MessageBuilder.translatable(LangKey.PROXY_HOVER_LAST_SEEN)
+                                        .placeholder("time", getLastSeen(lastSeen))
+                                        .toLegacy(),
+                                NamedTextColor.GRAY
+                        )
                 ));
 
                 proxy.getAllPlayers().forEach(p -> {
-                    MSPlayerProfile receiverAccount = playerManager.getProfile(p.getUniqueId());
-                    if (receiverAccount.getOption(Option.JOIN_MESSAGE) && !receiverAccount.getIgnoredPlayers().contains(uuid)) {
+                    MSPlayerProfile receiver = playerManager.getProfile(p.getUniqueId());
+                    if (receiver.getOption(Option.JOIN_MESSAGE) && !receiver.getIgnoredPlayers().contains(uuid)) {
                         p.sendMessage(message);
                     }
                 });
@@ -106,10 +113,18 @@ public class ProxyJoinQuitListener {
                 plugin.getServer().getConsoleCommandSource().sendMessage(message);
             }
         } else {
-            String firstJoinMessage = Lang.get("proxy.prefix.first-join") + " " + String.format(ArrayUtils.getRandomFromArray(firstJoinMessages), playerName);
-            Component welcomeComponent = MineDown.parse(firstJoinMessage)
-                    .hoverEvent(HoverEvent.showText(Component.text(Lang.get("proxy.hover.first-join"))))
-                    .clickEvent(ClickEvent.suggestCommand(Lang.get("proxy.click.first-join").replace("%player%", playerName)));
+            String joinPrefix = MessageBuilder.translatable(LangKey.PROXY_PREFIX_FIRST_JOIN).toLegacy() + " ";
+            String msg = joinPrefix + String.format(ArrayUtils.getRandomFromArray(firstJoinMessages), playerName);
+
+            Component welcomeComponent = MineDown.parse(msg)
+                    .hoverEvent(HoverEvent.showText(
+                            MessageBuilder.translatable(LangKey.PROXY_HOVER_FIRST_JOIN).toComponent()
+                    ))
+                    .clickEvent(ClickEvent.suggestCommand(
+                            MessageBuilder.translatable(LangKey.PROXY_CLICK_FIRST_JOIN)
+                                    .placeholder("player", playerName)
+                                    .toLegacy()
+                    ));
 
             proxy.sendMessage(welcomeComponent);
         }
@@ -135,18 +150,20 @@ public class ProxyJoinQuitListener {
         if(profile == null) return null;
 
         return EventTask.async(() -> {
-            String quitMessage = Lang.get("proxy.prefix.quit") + " " + String.format(ArrayUtils.getRandomFromArray(quitMessages), player.getUsername());
-            Component quitMessageComponent = MineDown.parse(quitMessage);
+            String quitPrefix = MessageBuilder.translatable(LangKey.PROXY_PREFIX_QUIT).toLegacy() + " ";
+            String quitMessage = quitPrefix + String.format(ArrayUtils.getRandomFromArray(quitMessages), player.getUsername());
+
+            Component quitComponent = MineDown.parse(quitMessage);
 
             if ((System.currentTimeMillis() - profile.getLastSeen()) > 60000) {
                 proxy.getAllPlayers().forEach(p -> {
-                    MSPlayerProfile account2 = playerManager.getProfile(p.getUniqueId());
-                    if (account2.getOption(Option.LEAVE_MESSAGE) && !account2.getIgnoredPlayers().contains(player.getUniqueId())) {
-                        p.sendMessage(quitMessageComponent);
+                    MSPlayerProfile data = playerManager.getProfile(p.getUniqueId());
+                    if (data.getOption(Option.LEAVE_MESSAGE) && !data.getIgnoredPlayers().contains(player.getUniqueId())) {
+                        p.sendMessage(quitComponent);
                     }
                 });
 
-                plugin.getServer().getConsoleCommandSource().sendMessage(quitMessageComponent);
+                plugin.getServer().getConsoleCommandSource().sendMessage(quitComponent);
             }
 
             profile.setLastSeen(System.currentTimeMillis());
@@ -159,7 +176,9 @@ public class ProxyJoinQuitListener {
     }
 
     private String getLastSeen(long time) {
-        if (time == 0) return Lang.get("proxy.last-seen.never");
+        if (time == 0) {
+            return MessageBuilder.translatable(LangKey.PROXY_LAST_SEEN_NEVER).toLegacy();
+        }
         PrettyTime prettyTime = new PrettyTime(Locale.FRANCE);
         return prettyTime.format(new Date(time));
     }
@@ -175,7 +194,7 @@ public class ProxyJoinQuitListener {
 
         String message = PlainTextComponentSerializer.plainText().serialize(serverKickReason);
 
-        if(message.contains(Lang.get("proxy.kick.keyword"))) {
+        if(message.contains(MessageBuilder.translatable(LangKey.PROXY_KICK_KEYWORD).toLegacy())) {
             player.disconnect(serverKickReason);
         }
     }

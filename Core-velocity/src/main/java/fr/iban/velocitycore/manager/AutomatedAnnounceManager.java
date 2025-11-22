@@ -4,7 +4,8 @@ import dev.dejvokep.boostedyaml.block.implementation.Section;
 import com.velocitypowered.api.proxy.Player;
 import fr.iban.common.utils.ArrayUtils;
 import fr.iban.velocitycore.CoreVelocityPlugin;
-import fr.iban.velocitycore.util.Lang;
+import fr.iban.velocitycore.lang.LangKey;
+import fr.iban.velocitycore.lang.MessageBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -32,10 +33,10 @@ public class AutomatedAnnounceManager {
     }
 
     private Component getMessage(int id, String msg) {
-        Component croix = Component.text(Lang.get("announce.prefix-left"), NamedTextColor.GRAY)
-                .append(Component.text(Lang.get("announce.close-symbol"), NamedTextColor.RED))
-                .append(Component.text(Lang.get("announce.prefix-right"), NamedTextColor.GRAY))
-                .hoverEvent(HoverEvent.showText(Component.text(Lang.get("announce.hover-disable"), NamedTextColor.RED)))
+        Component croix = Component.text(MessageBuilder.translatable(LangKey.ANNOUNCE_PREFIX_LEFT).toStringRaw(), NamedTextColor.GRAY)
+                .append(Component.text(MessageBuilder.translatable(LangKey.ANNOUNCE_CLOSE_SYMBOL).toStringRaw(), NamedTextColor.RED))
+                .append(Component.text(MessageBuilder.translatable(LangKey.ANNOUNCE_PREFIX_RIGHT).toStringRaw(), NamedTextColor.GRAY))
+                .hoverEvent(HoverEvent.showText(MessageBuilder.translatable(LangKey.ANNOUNCE_HOVER_DISABLE).toComponent()))
                 .clickEvent(ClickEvent.runCommand("/announce disable " + id));
 
         return miniMessage.deserialize(msg).append(croix);
@@ -45,7 +46,7 @@ public class AutomatedAnnounceManager {
         Section messagesSection = plugin.getConfig().getSection("announces.messages");
 
         if (messagesSection == null) {
-            plugin.getLogger().warn(Lang.get("announce.no-announces"));
+            plugin.getLogger().warn(MessageBuilder.translatable(LangKey.ANNOUNCE_NO_ANNOUNCES).toStringRaw());
             return;
         }
 
@@ -58,7 +59,11 @@ public class AutomatedAnnounceManager {
                     announces.put(id, getMessage(id, message));
                 }
             } catch (NumberFormatException e) {
-                plugin.getLogger().error(Lang.get("announce.invalid-id").replace("%id%", key));
+                plugin.getLogger().error(
+                        MessageBuilder.translatable(LangKey.ANNOUNCE_INVALID_ID)
+                                .placeholder("id", key)
+                                .toStringRaw()
+                );
             }
         }
     }

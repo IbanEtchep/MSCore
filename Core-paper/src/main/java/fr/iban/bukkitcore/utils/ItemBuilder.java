@@ -3,6 +3,9 @@ package fr.iban.bukkitcore.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -30,7 +33,7 @@ public class ItemBuilder {
     
     public ItemBuilder setName(String name) {
         ItemMeta meta = stack.getItemMeta();
-    	meta.setDisplayName(name);
+    	meta.displayName(Component.text(name));
     	stack.setItemMeta(meta);
     	return this;
     }
@@ -75,7 +78,7 @@ public class ItemBuilder {
 
     public ItemBuilder setDisplayName(String displayname) {
         ItemMeta meta = getItemMeta();
-        meta.setDisplayName(displayname);
+        meta.displayName(Component.text(displayname));
         setItemMeta(meta);
         return this;
     }
@@ -87,7 +90,9 @@ public class ItemBuilder {
 
     public ItemBuilder setLore(List<String> list) {
         ItemMeta meta = getItemMeta();
-        meta.setLore(list);
+        List<Component> lore = new ArrayList<>();
+        for (String s : list) lore.add(Component.text(s));
+        meta.lore(lore);
         setItemMeta(meta);
         return this;
     }
@@ -96,19 +101,31 @@ public class ItemBuilder {
         ArrayList<String> loreList = new ArrayList<>();
         loreList.add(lore);
         ItemMeta meta = getItemMeta();
-        meta.setLore(loreList);
+        List<Component> comp = new ArrayList<>();
+        comp.add(Component.text(lore));
+        meta.lore(comp);
         setItemMeta(meta);
         return this;
     }
     
     public ItemBuilder addLore (String lore) {
-        List<String> loreList = stack.getLore() == null ? new ArrayList<>() : stack.getLore();
+        ItemMeta metaCurrent = stack.getItemMeta();
+        List<Component> existing = metaCurrent.lore();
+        List<String> loreList = new ArrayList<>();
+        if (existing != null) {
+            for (Component c : existing) {
+                loreList.add(PlainTextComponentSerializer.plainText().serialize(c));
+            }
+        }
         loreList.add(lore);
         ItemMeta meta = getItemMeta();
-        meta.setLore(loreList);
+        List<Component> comp = new ArrayList<>();
+        for (String s : loreList) comp.add(Component.text(s));
+        meta.lore(comp);
         setItemMeta(meta);
         return this;
     }
+
 
     public ItemBuilder addEnchant(Enchantment enchantment, int level) {
         ItemMeta meta = getItemMeta();

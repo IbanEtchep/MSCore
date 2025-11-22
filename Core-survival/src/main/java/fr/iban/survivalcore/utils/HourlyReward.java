@@ -3,6 +3,8 @@ package fr.iban.survivalcore.utils;
 import fr.iban.bukkitcore.rewards.RewardsDAO;
 import fr.iban.common.data.sql.DbAccess;
 import fr.iban.survivalcore.SurvivalCorePlugin;
+import fr.iban.survivalcore.lang.LangKey;
+import fr.iban.survivalcore.lang.MessageBuilder;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -49,10 +51,16 @@ public class HourlyReward {
                 if(salary == 0) return;
                 Economy economy = plugin.getEconomy();
                 if (economy != null) {
-                    player.sendMessage(Lang.get("hourlyreward.received-money").replace("%amount%", economy.format(salary)));
+                    player.sendMessage(
+                            MessageBuilder.translatable(LangKey.HOURLY_REWARD)
+                                    .placeholder("amount", economy.format(salary))
+                                    .toLegacy()
+                    );
                     economy.depositPlayer(player, salary);
                 } else {
-                    player.sendMessage(Lang.get("hourlyreward.pending-reward"));
+                    player.sendMessage(
+                            MessageBuilder.translatable(LangKey.HOURLY_PENDING).toLegacy()
+                    );
                     RewardsDAO.addRewardAsync(player.getUniqueId().toString(), salary+"$§r", "Survie", "eco give {player} " + salary);
                 }
                 removePlayTime(uuid, 60);

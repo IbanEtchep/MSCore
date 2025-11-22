@@ -19,7 +19,7 @@ public class PluginMessageListener {
 
     @Subscribe
     public void onPluginMessage(PluginMessageEvent event) {
-        if (!(event.getTarget() instanceof Player player)) {
+        if (!(event.getTarget() instanceof Player)) {
             return;
         }
 

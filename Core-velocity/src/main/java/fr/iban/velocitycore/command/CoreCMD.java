@@ -3,9 +3,9 @@ package fr.iban.velocitycore.command;
 import com.velocitypowered.api.proxy.Player;
 import fr.iban.common.messaging.AbstractMessenger;
 import fr.iban.velocitycore.CoreVelocityPlugin;
-import fr.iban.velocitycore.util.Lang;
+import fr.iban.velocitycore.lang.LangKey;
+import fr.iban.velocitycore.lang.MessageBuilder;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.*;
 import revxrsal.commands.velocity.actor.VelocityCommandActor;
 import revxrsal.commands.velocity.annotation.CommandPermission;
@@ -28,32 +28,43 @@ public class CoreCMD {
     }
 
     @Subcommand("help")
-    @Description("Affiche les options de commande pour le serveur.")
     public void help(VelocityCommandActor actor) {
-        Component message = Component.text(Lang.get("vcore.help"), NamedTextColor.GRAY);
+        Component message = MessageBuilder.translatable(LangKey.VCORE_HELP).toComponent();
         actor.reply(message);
     }
 
     @Subcommand("reload")
-    @Description("Recharge la configuration du serveur.")
     @Usage("/vcore reload")
     public void reloadConfig(VelocityCommandActor actor) throws IOException {
         plugin.getConfig().reload();
         plugin.getAnnounceManager().reloadAnnounces();
-        actor.reply(Component.text(Lang.get("vcore.reload-success"), NamedTextColor.GREEN));
+        plugin.getTranslator().reload();
+
+        actor.reply(MessageBuilder.translatable(LangKey.VCORE_RELOAD_SUCCESS).toComponent());
+    }
+
+    @Subcommand("reloadlang")
+    @Usage("/vcore reloadlang")
+    public void reloadLang(VelocityCommandActor actor) {
+        plugin.getTranslator().reloadOnlyFile();
+
+        actor.reply(MessageBuilder.translatable(LangKey.VCORE_LANG_RELOAD_SUCCESS).toComponent());
     }
 
     @Subcommand("debug")
-    @Description("Active ou désactive le mode débogage.")
     @Usage("/vcore debug")
     public void toggleDebug(Player player) {
         AbstractMessenger messenger = plugin.getMessagingManager().getMessenger();
         messenger.setDebugMode(!messenger.isDebugMode());
-        player.sendMessage(Component.text(
-                Lang.get("vcore.debug", 
-                        java.util.Map.of("state", messenger.isDebugMode() ? Lang.get("vcore.enabled") : Lang.get("vcore.disabled"))
-                ),
-                NamedTextColor.YELLOW
-        ));
+
+        String state = messenger.isDebugMode()
+                ? MessageBuilder.translatable(LangKey.VCORE_ENABLED).toStringRaw()
+                : MessageBuilder.translatable(LangKey.VCORE_DISABLED).toStringRaw();
+
+        player.sendMessage(
+                MessageBuilder.translatable(LangKey.VCORE_DEBUG)
+                        .placeholder("state", state)
+                        .toComponent()
+        );
     }
 }

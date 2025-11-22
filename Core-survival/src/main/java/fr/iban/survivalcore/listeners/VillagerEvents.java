@@ -1,9 +1,7 @@
 package fr.iban.survivalcore.listeners;
 
 import com.google.common.collect.Lists;
-import fr.iban.bukkitcore.utils.ItemBuilder;
 import fr.iban.survivalcore.SurvivalCorePlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
@@ -16,8 +14,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class VillagerEvents implements Listener {

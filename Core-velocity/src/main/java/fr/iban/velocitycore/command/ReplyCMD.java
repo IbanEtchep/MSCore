@@ -2,10 +2,12 @@ package fr.iban.velocitycore.command;
 
 import com.velocitypowered.api.proxy.Player;
 import fr.iban.velocitycore.CoreVelocityPlugin;
-import fr.iban.velocitycore.util.Lang;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import revxrsal.commands.annotation.*;
+import fr.iban.velocitycore.lang.LangKey;
+import fr.iban.velocitycore.lang.MessageBuilder;
+import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Default;
+import revxrsal.commands.annotation.Named;
+import revxrsal.commands.annotation.Usage;
 
 public class ReplyCMD {
 
@@ -16,11 +18,12 @@ public class ReplyCMD {
     }
 
     @Command({"reply", "r"})
-    @Description("Répondre au dernier joueur qui vous a contacté.")
-    @Usage("/reply <message> - Répond au dernier message reçu.")
+    @Usage("/reply <message>")
     public void reply(Player player, @Default("") @Named("message") String message) {
         if (message.isEmpty()) {
-            player.sendMessage(Component.text(Lang.get("reply.usage")).color(NamedTextColor.YELLOW));
+            player.sendMessage(
+                    MessageBuilder.translatable(LangKey.REPLY_USAGE).toComponent()
+            );
             return;
         }
 
@@ -29,7 +32,9 @@ public class ReplyCMD {
         if (target != null) {
             plugin.getChatManager().sendMessage(player, target, message.trim());
         } else {
-            player.sendMessage(Component.text(Lang.get("reply.no-target"), NamedTextColor.RED));
+            player.sendMessage(
+                    MessageBuilder.translatable(LangKey.REPLY_NO_TARGET).toComponent()
+            );
         }
     }
 }

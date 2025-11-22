@@ -1,0 +1,147 @@
+file_version: 1
+
+dolphin:
+  enabled: "<green>Dolphin effect enabled."
+  disabled: "<red>Dolphin effect disabled."
+
+feed:
+  fed: "<green>You have been fed."
+  cooldown: "<red>You can do this again in %time%."
+
+pvp:
+  enabled: "<green>PVP enabled."
+  disabled: "<red>PVP disabled."
+  enabled-other: "<green>%player%'s PVP enabled."
+  disabled-other: "<red>%player%'s PVP disabled."
+
+repair:
+  done-hand: "<green>Item repaired."
+  done-all: "<green>All items repaired."
+  not-repairable: "<red>Error: <dark_red>This item cannot be repaired."
+  cooldown-hand: "<red>You can repair an item again in %time% seconds."
+  legendary-tag: " §c§l[LEGENDARY ITEM]"
+  cooldown-all: "<red>You can repair all your items again in %time% seconds."
+
+core:
+  reload-success: "<green>Configuration successfully reloaded."
+  lang-reload-success: "<green>The language file has been successfully reloaded."
+
+death:
+  prefix: "☠"
+  suicide: "committed suicide!"
+  block-explosion: "was blown up by TNT."
+  contact: "ran into a cactus!"
+  drowning: "drowned!"
+  entity-explosion: "was blown up by a Creeper!"
+  fire-tick: "burned."
+  lava: "tried to swim in lava!"
+  magic: "was killed by a potion!"
+  poison: "was poisoned!"
+  projectile-killer: "was sniped by %killer%!"
+  projectile: "took an arrow to the head."
+  starvation: "starved to death."
+  suffocation: "suffocated in a wall."
+  void: "fell into the void..."
+  fall: "fell from a high place!"
+  wither: "was killed by a Wither."
+  lightning: "was struck down by the wrath of Zeus!"
+  hot-floor: "stood on a very hot block!"
+  fly-into-wall: "hit a wall at supersonic speed!"
+  falling-block: "was crushed by a falling block!"
+  fire: "played with fire and got burned."
+  dragon-breath: "was hit by the Ender Dragon's breath!"
+  thorns-player: "killed themselves hitting %killer%!"
+  thorns-mob: "killed themselves hitting a %mob%!"
+  thorns-armorstand: "killed themselves hitting an armor stand..."
+  attack-player-air: "was punched by %killer%!"
+  attack-player-weapon: "was slain by %killer%!"
+  attack-warden: "was obliterated by a Warden!"
+  attack-mob: "was killed by a %mob%!"
+  default: "died."
+
+  location: "<dark_aqua><bold>You died at the following location:\n<aqua>Server: <white>%server%\n<aqua>World: <white>%world%\n<aqua>Coordinates: X: <white>%x% <aqua>Y: <white>%y% <aqua>Z: <white>%z%"
+
+  lastrtp: "<aqua><bold>You can teleport to your last random teleport location by clicking this message or executing /lastrtp.<hover:show_text:'<bold>Click here!'><click:run_command:/lastrtp>"
+
+raids:
+  disabled: "<red>Raids are disabled."
+
+rtp:
+  teleported: "<gold>ⓘ <white>You have been randomly teleported on server <dark_gray>%server%<white>. Consider setting a home using <dark_gray>/sethome<white> or sleeping in a bed so you can return later."
+
+announce:
+  not-enough-money: "<red>You need 250$ to make an announcement!"
+  cooldown: "<red>You can do this again in %time%."
+
+tools:
+  pickaxe3x3:
+    name: "<blue><bold>Hammer of the Gods"
+    lore:
+      - "<dark_aqua>|| <aqua>3x3 <blue>Mining<dark_aqua> ||"
+      - "<red><bold>[LEGENDARY ITEM]"
+    check: "<dark_aqua>|| <aqua>3x3 <blue>Mining<dark_aqua> ||"
+
+  cutclean:
+    name: "<yellow><bold>Pickaxe of Hades"
+    lore:
+      - "<yellow><bold>-------------"
+      - "<yellow><bold>This pickaxe automatically smelts"
+      - "<yellow><bold>the ores you mine."
+      - "<yellow><bold>-------------"
+      - "<red><bold>[LEGENDARY ITEM]"
+    check: "<yellow><bold>This pickaxe automatically smelts"
+
+  shovel3x3:
+    name: "<yellow><bold>God's Shovel"
+    lore:
+      - "<yellow><bold>-------------"
+      - "<yellow><bold>This shovel allows you to"
+      - "<yellow><bold>dig a 3x3 area."
+      - "<yellow><bold>-------------"
+      - "<red><bold>[LEGENDARY ITEM]"
+    check: "<yellow><bold>This shovel allows you"
+
+  lumberjack:
+    name: "<yellow><bold>Lumberjack's Axe"
+    lore:
+      - "<yellow><bold>-------------"
+      - "<yellow><bold>This axe destroys the entire tree"
+      - "<yellow><bold>you break."
+      - "<yellow><bold>-------------"
+      - "<red><bold>[LEGENDARY ITEM]"
+    check: "<yellow><bold>This axe destroys the entire tree"
+
+  hoe:
+    name: "<yellow><bold>Farmer's Hoe"
+    lore:
+      - "<yellow><bold>-------------"
+      - "<yellow><bold>This hoe automatically replants"
+      - "<yellow><bold>your crops."
+      - "<yellow><bold>-------------"
+      - "<red><bold>[LEGENDARY ITEM]"
+    check: "<yellow><bold>This hoe automatically replants"
+
+  hoe3x3:
+    name: "<yellow><bold>Demeter's Hoe"
+    lore:
+      - "<yellow><bold>-------------"
+      - "<yellow><bold>This hoe automatically replants"
+      - "<yellow><bold>your crops over"
+      - "<yellow><bold>a 3x3 area."
+      - "<yellow><bold>-------------"
+      - "<red><bold>[LEGENDARY ITEM]"
+    check: "<yellow><bold>a 3x3 area."
+
+  xpsword:
+    name: "<yellow><bold>Magic Sword"
+    lore:
+      - "<yellow><bold>-------------"
+      - "<yellow><bold>This sword grants"
+      - "<yellow><bold><red><bold>50%<yellow><bold> extra XP!"
+      - "<yellow><bold>-------------"
+      - "<red><bold>[LEGENDARY ITEM]"
+    check: "<yellow><bold>grants <red><bold>50%<yellow><bold> extra XP."
+
+hourlyreward:
+  received-money: "<green><bold>You received %amount% <green><bold>for playing 1 hour."
+  pending-reward: "<green><bold>You have a pending reward in /recompenses."

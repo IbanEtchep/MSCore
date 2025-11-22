@@ -20,25 +20,30 @@ public class MSPlayerProfileParameterType implements ParameterType<BukkitCommand
     }
 
     @Override
-    public MSPlayerProfile parse(@NotNull MutableStringStream input, @NotNull ExecutionContext<@NotNull BukkitCommandActor> executionContext) {
+    public MSPlayerProfile parse(
+            @NotNull MutableStringStream input,
+            @NotNull ExecutionContext<BukkitCommandActor> executionContext
+    ) {
         String name = input.readString();
         MSPlayerProfile profile = playerManager.getProfile(name);
 
-        if(profile == null) {
-            throw new CommandErrorException("Le joueur " + name + " n''est pas en ligne.");
+        if (profile == null) {
+            throw new CommandErrorException("Le joueur " + name + " n'a jamais joué sur le serveur.");
         }
 
         return profile;
     }
 
     @Override
-    public @NotNull SuggestionProvider<@NotNull BukkitCommandActor> defaultSuggestions() {
-        return (context) -> playerManager.getOnlinePlayerNames();
+    public @NotNull SuggestionProvider<BukkitCommandActor> defaultSuggestions() {
+        return (context) -> playerManager.getProfiles()
+                .stream()
+                .map(MSPlayerProfile::getName)
+                .collect(java.util.stream.Collectors.toSet());
     }
 
     @Override
     public @NotNull PrioritySpec parsePriority() {
         return PrioritySpec.highest();
     }
-
 }

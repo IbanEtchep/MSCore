@@ -8,11 +8,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
+import fr.iban.bukkitcore.lang.LangKey;
+import fr.iban.bukkitcore.lang.MessageBuilder;
 import fr.iban.bukkitcore.rewards.Reward;
 import fr.iban.bukkitcore.rewards.RewardSelectCallback;
 import fr.iban.bukkitcore.utils.Head;
 import fr.iban.bukkitcore.utils.ItemBuilder;
-import fr.iban.bukkitcore.utils.Lang;
 
 public class RewardSelectMenu extends PaginatedMenu {
 
@@ -28,7 +29,7 @@ public class RewardSelectMenu extends PaginatedMenu {
 
 	@Override
 	public String getMenuName() {
-		return Lang.get("menus.reward-select.title");
+		return MessageBuilder.translatable(LangKey.MENUS_REWARD_SELECT_TITLE).toLegacy();
 	}
 
 	@Override
@@ -78,13 +79,21 @@ public class RewardSelectMenu extends PaginatedMenu {
 					inventory.setItem(slot, getRewardItem(reward));
 				}
 			}
-		}	
+		}
 	}
 
 	private ItemStack getRewardItem(Reward reward) {
 		return new ItemBuilder(Head.BAG.get())
-				.setDisplayName(Lang.get("menus.reward-select.item-name").replace("%name%", reward.name()))
-				.addLore(Lang.get("menus.reward-select.item-lore"))
+				.setDisplayName(
+						MessageBuilder.translatable(LangKey.MENUS_REWARD_SELECT_ITEM_NAME)
+								.placeholder("name", reward.name())
+								.toLegacy()
+				)
+				.addLore(
+						MessageBuilder.translatable(LangKey.MENUS_REWARD_SELECT_ITEM_LORE)
+								.placeholder("name", reward.name())
+								.toLegacy()
+				)
 				.build();
 	}
 

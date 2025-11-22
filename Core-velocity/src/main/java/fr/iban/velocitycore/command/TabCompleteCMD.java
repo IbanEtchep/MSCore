@@ -2,11 +2,9 @@ package fr.iban.velocitycore.command;
 
 import com.velocitypowered.api.proxy.Player;
 import fr.iban.velocitycore.CoreVelocityPlugin;
-import fr.iban.velocitycore.util.Lang;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import fr.iban.velocitycore.lang.LangKey;
+import fr.iban.velocitycore.lang.MessageBuilder;
 import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.Description;
 import revxrsal.commands.annotation.Usage;
 import revxrsal.commands.velocity.annotation.CommandPermission;
 
@@ -23,18 +21,21 @@ public class TabCompleteCMD {
 
     @Command("addtabcomplete")
     @CommandPermission("servercore.addtabcomplete")
-    @Description("Ajoute une commande à l'auto-complétion des groupes spécifiés.")
-    @Usage("/addtabcomplete <global/moderation> <commandeSansSlash>")
+    @Usage("/addtabcomplete <global/moderation> <command>")
     public void execute(Player sender, String message) throws IOException {
         String[] args = message.split(" ");
 
         if (args.length <= 1) {
-            sender.sendMessage(Component.text(Lang.get("tabcomplete.usage"), NamedTextColor.RED));
+            sender.sendMessage(
+                    MessageBuilder.translatable(LangKey.TABCOMPLETE_USAGE).toComponent()
+            );
         } else if (args.length == 2) {
             switch (args[0]) {
                 case "global" -> addCommandToGroup(sender, "global", args[1]);
                 case "moderation" -> addCommandToGroup(sender, "moderation", args[1]);
-                default -> sender.sendMessage(Component.text(Lang.get("tabcomplete.unknown-group"), NamedTextColor.RED));
+                default -> sender.sendMessage(
+                        MessageBuilder.translatable(LangKey.TABCOMPLETE_UNKNOWN_GROUP).toComponent()
+                );
             }
         }
     }
@@ -44,12 +45,14 @@ public class TabCompleteCMD {
         List<String> list = plugin.getConfig().getStringList(path);
         list.add(command);
         plugin.getConfig().set(path, list);
-        sender.sendMessage(Component.text(
-                Lang.get("tabcomplete.added")
-                        .replace("%command%", command)
-                        .replace("%group%", group),
-                NamedTextColor.GREEN
-        ));
+
+        sender.sendMessage(
+                MessageBuilder.translatable(LangKey.TABCOMPLETE_ADDED)
+                        .placeholder("command", command)
+                        .placeholder("group", group)
+                        .toComponent()
+        );
+
         plugin.getConfig().save();
     }
 }

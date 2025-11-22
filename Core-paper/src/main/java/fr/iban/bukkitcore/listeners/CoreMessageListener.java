@@ -1,7 +1,6 @@
 package fr.iban.bukkitcore.listeners;
 
 import com.earth2me.essentials.User;
-import com.google.gson.Gson;
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.event.CoreMessageEvent;
 import fr.iban.common.messaging.CoreChannel;
