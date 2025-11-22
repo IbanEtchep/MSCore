@@ -1,10 +1,14 @@
 package fr.iban.bukkitcore.menu;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
+import fr.iban.bukkitcore.lang.LangKey;
+import fr.iban.bukkitcore.lang.MessageBuilder;
 import fr.iban.bukkitcore.manager.BukkitPlayerManager;
 import fr.iban.bukkitcore.utils.ItemBuilder;
 import fr.iban.bukkitcore.utils.Options;
 import fr.iban.common.model.MSPlayerProfile;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +26,8 @@ public class OptionsMenu extends PaginatedMenu {
 
     @Override
     public String getMenuName() {
-        return "§2Vos paramètres";
+        return MessageBuilder.translatable(LangKey.MENUS_OPTIONS_TITLE).toLegacy();
+
     }
 
     @Override
@@ -45,12 +50,15 @@ public class OptionsMenu extends PaginatedMenu {
 
         checkBottonsClick(item, player);
 
-        if (Options.getByDisplayName(item.getItemMeta().getDisplayName()) != null) {
-            if (item.getItemMeta().getDisplayName().startsWith("§4")) {
-                profile.setOption(Objects.requireNonNull(Options.getByDisplayName(item.getItemMeta().getDisplayName())).getOption(), true);
+        Component comp = item.getItemMeta().displayName();
+        String displayName = comp == null ? "" : PlainTextComponentSerializer.plainText().serialize(comp);
+
+        if (Options.getByDisplayName(displayName) != null) {
+            if (displayName.startsWith("§4")) {
+                profile.setOption(Objects.requireNonNull(Options.getByDisplayName(displayName)).getOption(), true);
                 playerManager.saveProfile(profile);
             } else {
-                profile.setOption(Objects.requireNonNull(Options.getByDisplayName(item.getItemMeta().getDisplayName())).getOption(), false);
+                profile.setOption(Objects.requireNonNull(Options.getByDisplayName(displayName)).getOption(), false);
                 playerManager.saveProfile(profile);
             }
             super.open();
@@ -76,5 +84,4 @@ public class OptionsMenu extends PaginatedMenu {
             }
         }
     }
-
 }

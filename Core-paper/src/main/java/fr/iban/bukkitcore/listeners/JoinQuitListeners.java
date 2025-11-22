@@ -1,16 +1,14 @@
 package fr.iban.bukkitcore.listeners;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
+import fr.iban.bukkitcore.lang.LangKey;
+import fr.iban.bukkitcore.lang.MessageBuilder;
 import fr.iban.bukkitcore.manager.BukkitPlayerManager;
 import fr.iban.bukkitcore.rewards.RewardsDAO;
-import fr.iban.bukkitcore.utils.PluginMessageHelper;
 import fr.iban.bukkitcore.utils.SLocationUtils;
 import fr.iban.common.manager.GlobalLoggerManager;
 import fr.iban.common.manager.PlayerManager;
-import fr.iban.common.messaging.CoreChannel;
-import fr.iban.common.messaging.message.PlayerStringMessage;
 import fr.iban.common.model.MSPlayerProfile;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,7 +21,6 @@ import java.util.UUID;
 public class JoinQuitListeners implements Listener {
 
     private final CoreBukkitPlugin plugin;
-
 
     public JoinQuitListeners(CoreBukkitPlugin plugin) {
         this.plugin = plugin;
@@ -39,7 +36,9 @@ public class JoinQuitListeners implements Listener {
 
         RewardsDAO.getRewardsAsync(uniqueId).thenAccept(list -> {
             if (!list.isEmpty()) {
-                player.sendMessage("§aVous avez une ou plusieurs récompenses en attente ! (recompenses)");
+                player.sendMessage(
+                        MessageBuilder.translatable(LangKey.JOIN_REWARDS_PENDING).toLegacy()
+                );
             }
         });
 
@@ -71,5 +70,4 @@ public class JoinQuitListeners implements Listener {
 
         GlobalLoggerManager.saveLog(plugin.getServerName(), player.getName() + " (" + Objects.requireNonNull(player.getAddress()).getHostString() + ") logged out at " + player.getLocation());
     }
-
 }

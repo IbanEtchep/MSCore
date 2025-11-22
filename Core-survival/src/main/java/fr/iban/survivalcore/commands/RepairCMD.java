@@ -4,8 +4,9 @@ import com.earth2me.essentials.utils.DateUtil;
 import fr.iban.survivalcore.SurvivalCorePlugin;
 import fr.iban.survivalcore.event.ItemRepairEvent;
 import fr.iban.survivalcore.tools.SpecialTools;
+import net.kyori.adventure.text.Component;
+
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -15,6 +16,9 @@ import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.util.*;
+
+import fr.iban.survivalcore.lang.LangKey;
+import fr.iban.survivalcore.lang.MessageBuilder;
 
 @Command("repair")
 public class RepairCMD {
@@ -43,10 +47,10 @@ public class RepairCMD {
         }
 
         if (isRepairable(item) && repairItem(item)) {
-            player.sendMessage(ChatColor.GOLD + "§aRéparation effectuée.");
+            player.sendMessage(MessageBuilder.translatable(LangKey.REPAIR_DONE_HAND).toLegacy());
             repairCooldowns.put(player.getUniqueId(), System.currentTimeMillis());
         } else {
-            player.sendMessage(ChatColor.RED + "Erreur: " + ChatColor.DARK_RED + "Cet item n'est pas réparable");
+            player.sendMessage(MessageBuilder.translatable(LangKey.REPAIR_NOT_REPAIRABLE).toLegacy());
         }
     }
 
@@ -65,19 +69,29 @@ public class RepairCMD {
                 }
             }
             repairAllCooldowns.put(player.getUniqueId(), System.currentTimeMillis());
-            player.sendMessage(ChatColor.GOLD + "§aRéparations effectuées.");
+            player.sendMessage(MessageBuilder.translatable(LangKey.REPAIR_DONE_ALL).toLegacy());
         }
     }
 
     private boolean isRepairable(ItemStack item) {
         if (item != null && item.getItemMeta() instanceof Damageable damageable) {
+
             if (damageable.getDamage() == 0) {
                 return false;
             }
-            return !SpecialTools.is3x3Pickaxe(item) || Objects.requireNonNull(item.getItemMeta().getLore()).contains("§c§l[ITEM LEGENDAIRE]");
+
+            List<Component> lore = item.getItemMeta().lore();
+            if (lore == null) {
+                return false;
+            }
+
+            Component legendary = MessageBuilder.translatable(LangKey.LEGENDARY_TAG).toComponent();
+
+            return !SpecialTools.is3x3Pickaxe(item) || lore.contains(legendary);
         }
         return false;
     }
+
 
     public boolean repairItem(ItemStack item) {
         if (item.getItemMeta() instanceof Damageable damageable) {
@@ -103,7 +117,9 @@ public class RepairCMD {
                 repairAllCooldowns.remove(player.getUniqueId());
                 return false;
             } else {
-                player.sendMessage("§cVous pourrez à nouveau réparer un item dans " + DateUtil.formatDateDiff(lastRep + cooldownTime) + " secondes.");
+                player.sendMessage(MessageBuilder.translatable(LangKey.REPAIR_COOLDOWN_ALL)
+                        .placeholder("time", DateUtil.formatDateDiff(lastRep + cooldownTime))
+                        .toLegacy());
                 return true;
             }
         }
@@ -122,7 +138,9 @@ public class RepairCMD {
                 return false;
             } else {
                 long remain = cooldownTime - (System.currentTimeMillis() - lastRep);
-                player.sendMessage("§cVous pourrez à nouveau réparer un item dans " + remain / 1000 + " secondes.");
+                player.sendMessage(MessageBuilder.translatable(LangKey.REPAIR_COOLDOWN_HAND)
+                        .placeholder("time", String.valueOf(remain / 1000))
+                        .toLegacy());
                 return true;
             }
         }

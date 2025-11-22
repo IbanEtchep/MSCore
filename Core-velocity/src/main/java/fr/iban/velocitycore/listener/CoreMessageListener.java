@@ -7,18 +7,18 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import fr.iban.common.messaging.CoreChannel;
 import fr.iban.common.messaging.Message;
 import fr.iban.common.messaging.message.EventAnnounce;
-import fr.iban.common.messaging.message.PlayerSLocationMessage;
 import fr.iban.common.teleport.RequestType;
 import fr.iban.common.teleport.TeleportToLocation;
 import fr.iban.common.teleport.TeleportToPlayer;
 import fr.iban.common.teleport.TpRequest;
 import fr.iban.velocitycore.CoreVelocityPlugin;
 import fr.iban.velocitycore.event.CoreMessageEvent;
+import fr.iban.velocitycore.lang.LangKey;
+import fr.iban.velocitycore.lang.MessageBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-
 
 import java.util.UUID;
 
@@ -48,7 +48,6 @@ public class CoreMessageListener {
             case CoreChannel.REMOVE_TP_REQUEST_CHANNEL -> consumeRemoveTpRequestMessage(message);
         }
     }
-
 
     public void consumeRemoveTpRequestMessage(Message message) {
         TpRequest request = gson.fromJson(message.getMessage(), TpRequest.class);
@@ -84,7 +83,6 @@ public class CoreMessageListener {
         }
     }
 
-
     private void consumeTeleportRequestBungeeMessage(Message message) {
         TpRequest request = gson.fromJson(message.getMessage(), TpRequest.class);
         Player playerFrom = plugin.getServer().getPlayer(request.getPlayerFrom()).orElse(null);
@@ -114,18 +112,38 @@ public class CoreMessageListener {
 
         if (!plugin.getCurrentEvents().containsKey(key)) {
             plugin.getCurrentEvents().put(key, announce.getLocation());
-            server.sendMessage(Component.text(announce.getHostName() + " a lancé un event " + announce.getName(), NamedTextColor.DARK_PURPLE, TextDecoration.BOLD));
+            server.sendMessage(
+                    MessageBuilder.translatable(LangKey.EVENT_STARTED)
+                            .placeholder("host", announce.getHostName())
+                            .placeholder("event", announce.getName())
+                            .toComponent()
+                            .color(NamedTextColor.DARK_PURPLE)
+                            .decoration(TextDecoration.BOLD, true)
+            );
         }
 
         broadcastLine();
         server.sendMessage(getCenteredText(" " + announce.getName() + " ", TextDecoration.BOLD));
         server.sendMessage(Component.text(announce.getDesc(), NamedTextColor.WHITE));
-        server.sendMessage(Component.text("Arene : " + announce.getArena(), NamedTextColor.WHITE));
-        server.sendMessage(Component.text("Cliquez pour rejoindre ou tapez /joinevent", NamedTextColor.DARK_PURPLE, TextDecoration.BOLD)
-                .clickEvent(ClickEvent.runCommand("/joinevent " + key)));
+
+        server.sendMessage(
+                MessageBuilder.translatable(LangKey.EVENT_ARENA)
+                        .placeholder("arena", announce.getArena())
+                        .toComponent()
+                        .color(NamedTextColor.WHITE)
+        );
+
+        server.sendMessage(
+                MessageBuilder.translatable(LangKey.EVENT_CLICK_TO_JOIN)
+                        .toComponent()
+                        .color(NamedTextColor.DARK_PURPLE)
+                        .decoration(TextDecoration.BOLD, true)
+                        .clickEvent(ClickEvent.runCommand("/joinevent " + key))
+        );
         broadcastLine();
     }
 
+    
     /*
     UTILS
      */

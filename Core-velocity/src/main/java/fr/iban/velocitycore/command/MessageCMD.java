@@ -2,8 +2,9 @@ package fr.iban.velocitycore.command;
 
 import com.velocitypowered.api.proxy.Player;
 import fr.iban.velocitycore.CoreVelocityPlugin;
+import fr.iban.velocitycore.lang.LangKey;
+import fr.iban.velocitycore.lang.MessageBuilder;
 import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.Description;
 import revxrsal.commands.annotation.Usage;
 
 public class MessageCMD {
@@ -15,9 +16,16 @@ public class MessageCMD {
     }
 
     @Command({"msg", "message", "m", "w", "tell", "t"})
-    @Description("Envoyer un message privé à un joueur.")
-    @Usage("/msg <joueur> <message>")
+    @Usage("/msg <player> <message>")
     public void msg(Player player, Player target, String message) {
-        plugin.getChatManager().sendMessage(player, target, message);
+        plugin.getChatManager().sendMessage(
+                player,
+                target,
+                MessageBuilder.translatable(LangKey.COMMANDS_MSG_FORMAT)
+                        .placeholder("sender", player.getUsername())
+                        .placeholder("target", target.getUsername())
+                        .placeholder("message", message)
+                        .toLegacy()
+        );
     }
 }

@@ -6,6 +6,7 @@ import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.commands.CoreCommandHandlerVisitor;
 import fr.iban.bukkitcore.utils.PluginMessageHelper;
 import fr.iban.survivalcore.commands.*;
+import fr.iban.survivalcore.lang.SurvivalTranslator;
 import fr.iban.survivalcore.listeners.*;
 import fr.iban.survivalcore.manager.AnnounceManager;
 import fr.iban.survivalcore.utils.HourlyReward;
@@ -24,7 +25,7 @@ public final class SurvivalCorePlugin extends JavaPlugin implements Listener {
     private Economy econ;
     private AnnounceManager announceManager;
     private FoliaLib foliaLib;
-
+    private SurvivalTranslator translator;
 
     @Override
     public void onEnable() {
@@ -35,6 +36,11 @@ public final class SurvivalCorePlugin extends JavaPlugin implements Listener {
 
         saveDefaultConfig();
         setupEconomy();
+
+        String lang = getConfig().getString("language", "fr");
+
+        translator = new SurvivalTranslator(this, lang);
+        translator.load();
 
         registerEvents(
                 new EntityDeathListener(this),
@@ -71,17 +77,18 @@ public final class SurvivalCorePlugin extends JavaPlugin implements Listener {
     }
 
     private void registerCommands() {
-        getCommand("dolphin").setExecutor(new DolphinCMD());
-        getCommand("pvp").setExecutor(new PvPCMD(CoreBukkitPlugin.getInstance()));
 
         Lamp.Builder<BukkitCommandActor> lampBuilder = BukkitLamp.builder(this);
         new CoreCommandHandlerVisitor(CoreBukkitPlugin.getInstance()).visitor().visit(lampBuilder);
         Lamp<BukkitCommandActor> lamp = lampBuilder.build();
 
+        lamp.register(new DolphinCMD());
+        lamp.register(new PvPCMD(CoreBukkitPlugin.getInstance()));
         lamp.register(new RepairCMD(this));
         lamp.register(new FeedCMD(this));
         lamp.register(new ShowGroupsCMD());
         lamp.register(new AnnounceCMD(this));
+        lamp.register(new SurvivalCoreCMD(this));
     }
 
     public void registerEvents(Listener... listeners) {
@@ -113,5 +120,9 @@ public final class SurvivalCorePlugin extends JavaPlugin implements Listener {
 
     public PlatformScheduler getScheduler() {
         return foliaLib.getScheduler();
+    }
+
+    public SurvivalTranslator getTranslator() {
+        return translator;
     }
 }

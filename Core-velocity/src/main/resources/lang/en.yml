@@ -1,0 +1,188 @@
+file-version: 1
+
+announce:
+  disabled: "<green>This announcement will no longer be shown to you.</green>"
+  already-disabled: "<red>You have already blocked this announcement.</red>"
+  not-exist: "<red>This announcement does not exist.</red>"
+
+announceevent:
+  usage: "<red>Incorrect usage. Please provide a message to announce.</red>"
+  prefix: "<gold>EVENT: </gold>"
+
+chat:
+  help:
+    title: "<green>Chat commands:</green>"
+    toggle: "<green>/chat toggle - mute/unmute the chat</green>"
+  clear: "<red>The chat has been cleared by <white>%player%</white>.</red>"
+
+vcore:
+  help: |
+    Use <green>/vcore reload</green><gray> to reload the configuration.</gray>
+    Use <green>/vcore debug</green><gray> to toggle debug mode.</gray>
+
+  reload-success: "<green>Configuration successfully reloaded.</green>"
+  lang-reload-success: "<green>The language file has been successfully reloaded."
+  debug: "Debug mode: %state%"
+
+  enabled: "enabled"
+  disabled: "disabled"
+
+ignore:
+  help:
+    prefix: "Use "
+    add: "/ignore add <player>"
+    add_suffix: " to ignore a player.\n"
+    remove: "/ignore remove <player>"
+    remove_suffix: " to stop ignoring a player."
+
+  add:
+    success: "<green>You are now ignoring <white>%player%</white>.</green>"
+    staff: "<red>You cannot ignore a staff member!</red>"
+    already: "<red>This player is already ignored.</red>"
+    self: "<red>You cannot ignore yourself.</red>"
+
+  remove:
+    success: "<green>You are no longer ignoring <white>%player%</white>.</green>"
+    not_ignored: "<red>This player is not ignored.</red>"
+
+  list:
+    header: "<gray>|| Ignored Players ||</gray>"
+    entry: "- %player%"
+    unknown: "Unknown player"
+    empty: "<gray>You are not ignoring anyone.</gray>"
+
+joinevent:
+  not-found: "<red>No event exists with that name.</red>"
+
+commands:
+  msg:
+    format: "<gray>[<light_purple>%sender% <gray>→ <light_purple>%target%</light_purple><gray>] <white>%message%</white>"
+
+miscellaneous:
+  geyser-offhand: "/geyser offhand"
+  not-bedrock: "<red>This command is reserved for Bedrock Edition players.</red>"
+
+msgtoggle:
+  disabled: "<red>You can no longer receive messages from players.</red>"
+  enabled: "<green>You can now receive messages from players again.</green>"
+
+reply:
+  usage: "<yellow>Usage: /r <message>"
+  no-target: "<red>You cannot reply because nobody has messaged you.</red>"
+
+tabcomplete:
+  usage: "/addtabcomplete global/moderation commandWithoutSlash"
+  unknown-group: "<red>Unknown command group.</red>"
+  added: "<green>%command%</green> added to group <yellow>%group%</yellow>"
+
+teleport:
+  back:
+    not-found: "<red>Your death location could not be found.</red>"
+  lastrtp:
+    not-found: "<red>The position could not be found.</red>"
+
+tptoggle:
+  opened: "<green>Your teleport requests are now open.</green>"
+  closed: "<red>Your teleport requests are now closed.</red>"
+
+event:
+  started: "<yellow>%host%</yellow> started an event <aqua>%event%</aqua>"
+  arena: "Arena: <gold>%arena%</gold>"
+  click-to-join: "<green>Click to join or type /joinevent</green>"
+
+proxy:
+
+  prefix:
+    join: "<dark_gray>[<green>+</green><dark_gray>]"
+    quit: "<dark_gray>[<red>-</red><dark_gray>]"
+    first-join: "<dark_gray>≫ <gray>"
+
+  hover:
+    last-seen: "Last seen %time%"
+    first-join: "Click!"
+
+  click:
+    first-join: "Welcome %player%"
+
+  last-seen:
+    never: "never"
+
+  kick:
+    keyword: "kicked"
+
+  join-messages:
+    1: "%s joined the server!"
+    2: "%s is now in the place!"
+    3: "%s has connected!"
+    4: "A wild %s appears!"
+    5: "Everybody say hello to %s!"
+    6: "%s just arrived, make some room!"
+
+  quit-messages:
+    1: "%s has left us :("
+    2: "%s disconnected."
+    3: "%s vanished into the shadows."
+    4: "%s has left."
+
+  long-absence:
+    1: "%s is finally back!"
+    2: "Oh my god, %s has returned!"
+    3: "The prodigy %s has returned!"
+    4: "%s, our lost legend, has finally returned!"
+    5: "Remember %s? Guess who's back!"
+
+  first-join:
+    1: "Welcome %s, glad to see you for the first time!"
+    2: "%s has entered the server for the first time!"
+    3: "This is %s's first time on the server!"
+    4: "Hey everyone, welcome our new member, %s!"
+    5: "A new face! Hello %s, welcome to the server!"
+
+announce:
+  prefix-left: " ["
+  close-symbol: "✕"
+  prefix-right: "]"
+  hover-disable: "Click to stop showing this announcement"
+  no-announces: "<red>No announcements found in the configuration!</red>"
+  invalid-id: "<red>Invalid announcement ID: <yellow>%id%</yellow></red>"
+
+chat:
+  disabled: "<red>You cannot send messages because your chat is disabled.</red>"
+  annonce: "<#f07e71><b>Announcement from </b><#fbb29e><b>%player%</b> <#f07e71>➤ <#7bc8fe><b>%message%</b>"
+  muted: "<red>The chat is now muted.</red>"
+  unmuted: "<green>The chat is no longer muted.</green>"
+
+msg:
+  disabled: "<red>%player% has disabled private messages.</red>"
+  ignored: "<red>You cannot message this player.</red>"
+  hover: "Click to reply"
+  sender: "<dark_gray>Me <gray>➔ <red>%target%</red> <gold>➤</gold><gray> %message%"
+  sender-staff: "<dark_gray>Me <gray>➔ <dark_gray>[<gold>Staff</gold>] <red>%target%</red> <gold>➤</gold><gray> %message%"
+  target: "<red>%sender%</red> <gray>➔ <dark_gray>Me</dark_gray> <gold>➤</gold><gray> %message%"
+  target-staff: "<dark_gray>[<gold>Staff</gold>] <red>%sender%</red> <gray>➔ <dark_gray>Me</dark_gray> <gold>➤</gold><gray> %message%"
+
+staffchat:
+  enabled: "<green>You can now receive staff messages again.</green>"
+  disabled: "<red>You can no longer receive staff messages.</red>"
+
+tp:
+  delayed: "<green>Teleporting in <white>%delay%</white> seconds.</green> <red>Do not move!</red>"
+  already-waiting: "<red>Only one teleportation at a time!</red>"
+
+  request:
+    sent: "<green>Teleport request sent, awaiting response...</green>"
+    expired: "<red>Your teleport request sent to <white>%player%</white> has expired.</red>"
+
+    to-player: |
+      <gray><strikethrough>---------------------------------------------</strikethrough>
+      <gold>%fromName%</gold><white> wants to teleport to you.</white>
+      <white>You can <green><hover:show_text:'Accept the request'><click:run_command:/tpyes %fromName%>[ACCEPT]</click></hover></green>
+      or <red><hover:show_text:'Decline the request'><click:run_command:/tpno %fromName%>[DECLINE]</click></hover></red>.
+      <gray><strikethrough>---------------------------------------------</strikethrough>
+
+    here: |
+      <gray><strikethrough>---------------------------------------------</strikethrough>
+      <gold>%fromName%</gold><white> wants you to teleport to them.</white>
+      <white>You can <green><hover:show_text:'Accept the request'><click:run_command:/tpyes %fromName%>[ACCEPT]</click></hover></green>
+      or <red><hover:show_text:'Decline the request'><click:run_command:/tpno %fromName%>[DECLINE]</click></hover></red>.
+      <gray><strikethrough>---------------------------------------------</strikethrough>

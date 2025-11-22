@@ -1,6 +1,8 @@
 package fr.iban.bukkitcore.listeners;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
+import fr.iban.bukkitcore.lang.LangKey;
+import fr.iban.bukkitcore.lang.MessageBuilder;
 import fr.iban.bukkitcore.manager.TeleportManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -19,8 +21,8 @@ public class PlayerMoveListener implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         Player player = e.getPlayer();
-        final Location from = e.getFrom();
-        final Location to = e.getTo();
+        Location from = e.getFrom();
+        Location to = e.getTo();
 
         int x = Math.abs(from.getBlockX() - to.getBlockX());
         int y = Math.abs(from.getBlockY() - to.getBlockY());
@@ -31,7 +33,9 @@ public class PlayerMoveListener implements Listener {
         TeleportManager teleportManager = plugin.getTeleportManager();
         if (teleportManager.getPendingTeleports().contains(player.getUniqueId())) {
             teleportManager.removeTeleportWaiting(player.getUniqueId());
-            player.sendMessage("§cVous avez bougé, téléportation annulée.");
+            player.sendMessage(
+                    MessageBuilder.translatable(LangKey.TELEPORT_CANCELLED_MOVE).toLegacy()
+            );
         }
     }
 }

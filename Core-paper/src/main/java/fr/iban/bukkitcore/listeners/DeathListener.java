@@ -2,7 +2,6 @@ package fr.iban.bukkitcore.listeners;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.utils.SLocationUtils;
-import fr.iban.common.messaging.message.PlayerSLocationMessage;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.teleport.SLocation;
 import org.bukkit.Location;

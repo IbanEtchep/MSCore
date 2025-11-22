@@ -3,11 +3,11 @@ package fr.iban.velocitycore.command;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import fr.iban.velocitycore.CoreVelocityPlugin;
+import fr.iban.velocitycore.lang.LangKey;
+import fr.iban.velocitycore.lang.MessageBuilder;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.CommandPlaceholder;
-import revxrsal.commands.annotation.Description;
 import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.velocity.annotation.CommandPermission;
 
@@ -29,14 +29,12 @@ public class ChatCMD {
     }
 
     @Subcommand("help")
-    @Description("Affiche les commandes de gestion du chat.")
     public void help(Player player) {
-        player.sendMessage(Component.text("Commandes chat :", NamedTextColor.GREEN));
-        player.sendMessage(Component.text("/chat toggle - mute/unmute le chat", NamedTextColor.GREEN));
+        player.sendMessage(MessageBuilder.translatable(LangKey.CHAT_HELP_TITLE).toComponent());
+        player.sendMessage(MessageBuilder.translatable(LangKey.CHAT_HELP_TOGGLE).toComponent());
     }
 
     @Subcommand("clear")
-    @Description("Efface le chat pour tous les utilisateurs.")
     public void clearChat(Player player) {
         Component emptyMessage = Component.empty();
         server.getAllPlayers().forEach(p -> {
@@ -44,11 +42,18 @@ public class ChatCMD {
                 p.sendMessage(emptyMessage);
             }
         });
-        server.getAllPlayers().forEach(p -> p.sendMessage(Component.text("Le chat a été clear par " + player.getUsername() + ".", NamedTextColor.RED)));
+
+        server.getAllPlayers().forEach(p ->
+                p.sendMessage(
+                        MessageBuilder
+                                .translatable(LangKey.CHAT_CLEAR)
+                                .placeholder("player", player.getUsername())
+                                .toComponent()
+                )
+        );
     }
 
     @Subcommand("toggle")
-    @Description("Active ou désactive le chat.")
     public void toggleChat(Player player) {
         plugin.getChatManager().toggleChat(player);
     }

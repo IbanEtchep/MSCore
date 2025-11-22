@@ -4,7 +4,6 @@ import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.event.CoreMessageEvent;
 import fr.iban.common.data.redis.RedisCredentials;
 import fr.iban.common.messaging.*;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class MessagingManager extends AbstractMessagingManager {

@@ -8,6 +8,8 @@ import fr.iban.common.enums.Option;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.velocitycore.CoreVelocityPlugin;
+import fr.iban.velocitycore.lang.LangKey;
+import fr.iban.velocitycore.lang.MessageBuilder;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
@@ -18,10 +20,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.william278.papiproxybridge.api.PlaceholderAPI;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -62,7 +61,7 @@ public class ChatManager {
         MSPlayerProfile senderProfile = playerManager.getProfile(senderUUID);
 
         if (!senderProfile.getOption(Option.CHAT)) {
-            sender.sendMessage(MineDown.parse("&cVous ne pouvez pas envoyer ce message car votre tchat est désactivé"));
+            sender.sendMessage(MessageBuilder.translatable(LangKey.CHAT_DISABLED).toComponent());
             logMessage(MineDown.parse("§8[§CDÉSACTIVÉ§8]§r " + message));
             return;
         }
@@ -105,7 +104,6 @@ public class ChatManager {
         final PlaceholderAPI api = PlaceholderAPI.createInstance();
         message = message.replace("%player%", sender.getUsername());
         message = message.replace("%premium%", getPremiumString(sender));
-
         return api.formatPlaceholders(message, sender.getUniqueId());
     }
 
@@ -120,8 +118,12 @@ public class ChatManager {
             return;
         }
 
+        Component msg = MessageBuilder.translatable(LangKey.CHAT_ANNONCE)
+                .placeholder("player", player.getUsername())
+                .placeholder("message", annonce)
+                .toComponent();
 
-        plugin.getServer().sendMessage(MineDown.parse("&#f07e71&&lAnnonce de &#fbb29e&&l" + player.getUsername() + " &#f07e71&➤ &#7bc8fe&&l" + annonce));
+        plugin.getServer().sendMessage(msg);
     }
 
     private void sendStaffMessage(Player sender, String message) {
@@ -144,9 +146,9 @@ public class ChatManager {
     public void toggleChat(Player sender) {
         isMuted = !isMuted;
         if (isMuted) {
-            plugin.getServer().sendMessage(MineDown.parse("&cLe chat est désormais muet."));
+            plugin.getServer().sendMessage(MessageBuilder.translatable(LangKey.CHAT_MUTED).toComponent());
         } else {
-            plugin.getServer().sendMessage(MineDown.parse("&aLe chat n'est plus muet."));
+            plugin.getServer().sendMessage(MessageBuilder.translatable(LangKey.CHAT_UNMUTED).toComponent());
         }
     }
 
@@ -157,12 +159,16 @@ public class ChatManager {
         MSPlayerProfile targetProfile = playerManager.getProfile(target.getUniqueId());
 
         if (!targetProfile.getOption(Option.MSG) && !sender.hasPermission("servercore.msgtogglebypass")) {
-            sender.sendMessage(MineDown.parse("&c" + target.getUsername() + " a désactivé ses messages"));
+            sender.sendMessage(
+                    MessageBuilder.translatable(LangKey.MSG_DISABLED)
+                            .placeholder("player", targetName)
+                            .toComponent()
+            );
             return;
         }
 
         if (targetProfile.getIgnoredPlayers().contains(senderUUID)) {
-            sender.sendMessage(MineDown.parse("&cVous ne pouvez pas envoyer de message à ce joueur"));
+            sender.sendMessage(MessageBuilder.translatable(LangKey.MSG_IGNORED).toComponent());
             return;
         }
 
@@ -170,18 +176,33 @@ public class ChatManager {
         Component targetComponent;
 
         if (target.hasPermission("servercore.staff")) {
-            senderComponent = MineDown.parse("&8Moi &7➔ &8[&6Staff&8] &c" + targetName + " &6➤&7 " + message);
+            senderComponent = MessageBuilder.translatable(LangKey.MSG_SENDER_STAFF)
+                    .placeholder("target", targetName)
+                    .placeholder("message", message)
+                    .toComponent();
         } else {
-            senderComponent = MineDown.parse("&8Moi &7➔ &c" + targetName + " &6➤&7 " + message);
+            senderComponent = MessageBuilder.translatable(LangKey.MSG_SENDER)
+                    .placeholder("target", targetName)
+                    .placeholder("message", message)
+                    .toComponent();
         }
+
         if (sender.hasPermission("servercore.staff")) {
-            targetComponent = MineDown.parse("&8[&6Staff&8] &c" + senderName + " &7➔ &8Moi &6➤&7 " + message);
+            targetComponent = MessageBuilder.translatable(LangKey.MSG_TARGET_STAFF)
+                    .placeholder("sender", senderName)
+                    .placeholder("message", message)
+                    .toComponent();
         } else {
-            targetComponent = MineDown.parse("&c" + senderName + " &7➔ &8Moi &6➤&7 " + message);
+            targetComponent = MessageBuilder.translatable(LangKey.MSG_TARGET)
+                    .placeholder("sender", senderName)
+                    .placeholder("message", message)
+                    .toComponent();
         }
 
         targetComponent = targetComponent
-                .hoverEvent(HoverEvent.showText(Component.text("Cliquez pour répondre")))
+                .hoverEvent(HoverEvent.showText(
+                        MessageBuilder.translatable(LangKey.MSG_HOVER).toComponent()
+                ))
                 .clickEvent(ClickEvent.suggestCommand("/msg " + senderName + " "));
 
         sender.sendMessage(senderComponent);
@@ -237,10 +258,10 @@ public class ChatManager {
     public void toggleStaffChat(Player player) {
         if (staffChatDisabledPlayers.contains(player.getUniqueId())) {
             staffChatDisabledPlayers.remove(player.getUniqueId());
-            player.sendMessage(MineDown.parse("&aVous pouvez à nouveau recevoir des messages du staff"));
+            player.sendMessage(MessageBuilder.translatable(LangKey.STAFFCHAT_ENABLED).toComponent());
         } else {
             staffChatDisabledPlayers.add(player.getUniqueId());
-            player.sendMessage(MineDown.parse("&cVous ne pouvez plus recevoir les messages du staff"));
+            player.sendMessage(MessageBuilder.translatable(LangKey.STAFFCHAT_DISABLED).toComponent());
         }
     }
 }

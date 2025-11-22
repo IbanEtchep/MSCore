@@ -1,6 +1,5 @@
 package fr.iban.survivalcore.listeners;
 
-import fr.iban.survivalcore.SurvivalCorePlugin;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

@@ -1,0 +1,115 @@
+file_version: 1
+
+core:
+  reload-success: "<green>La configuration a été rechargées."
+  lang-reload-success: "<green>La configuration linguistique a été rechargée avec succès."
+  enabled: "<green>activé"
+  disabled: "<red>désactivé"
+  debug: "<yellow>Mode débogage : <white>%state%"
+
+recompenses:
+  no-pending: "<red>Vous n'avez pas de récompense en attente."
+  received: "<green>Vous avez reçu une récompense (<yellow>/recompenses<green>)."
+  must-be-int: "<red>L'id doit être un nombre entier !"
+  player-not-found: "<red>Joueur non trouvé."
+  no-templates: "<red>Il n'y a pas de templates."
+  template-added: "<green>Template de récompense ajoutée."
+
+  usage-give: "<yellow>/recompenses give <joueur> <templateID>"
+  usage-removetemplate: "<yellow>/recompenses removetemplate <id>"
+  usage-addtemplate: "<yellow>/recompenses addtemplate <name> <server> <command...> <gray>({player} = pseudo)"
+
+  template-entry: "<green>%id% - %name% - %server% - %command%"
+
+ressources:
+  invalid-world: "<red>Ce type de monde n'existe pas."
+
+  tp-wait: "<red>Vous pourrez vous retéléporter en ressources dans %seconds% secondes."
+  tp-start: "<green>Téléportation au monde ressource."
+
+teleport:
+  cannot-self: "<red>Vous ne pouvez pas vous téléporter à vous-même."
+  
+  request-accepted: "<green>Demande de téléportation acceptée."
+  request-denied: "<red>Demande de téléportation rejetée."
+
+  no-request: "<red>Vous n'avez pas de requête de téléportation."
+  no-request-from-player: "<red>Vous n'avez pas de requête de téléportation de ce joueur."
+
+  cancelled-move: "<red>Vous avez bougé, téléportation annulée."
+
+  no-while-falling: "<red>Vous ne pouvez pas vous téléporter en étant en chute."
+
+  delay: "<green>Téléportation dans %seconds% secondes. <red>Ne bougez pas !"
+  loading: "<green>Chargement de la zone..."
+  success: "<green>Téléportation effectuée !"
+  failed: "<red>La téléportation a échoué !"
+
+  unsafe-warning: "⚠ La zone de téléportation n'est pas sécurisée.\nCliquez ici pour continuer. (ou tapez /tplastunsafe)"
+  unsafe-hover: "Se téléporter à vos risques et périls."
+  no-unsafe: "<red>Vous n'avez pas de téléportation en attente."
+  already-survival: "<red>Vous êtes déjà dans un serveur survie."
+
+trustcommand:
+  already-added: "<red>Cette commande est déjà ajoutée."
+  added: "<green>Commande ajoutée à la liste."
+  not-found: "<red>Cette commande n'est pas dans la liste."
+  removed: "<green>Commande retirée de la liste."
+  reloaded: "<green>Commandes rechargées."
+
+commands:
+  approval-required: "<red>Approbation requise."
+  approval-message: "%player% (%ip%) essaye d'exécuter la commande %command%."
+
+join:
+  rewards-pending: "<green>Vous avez une ou plusieurs récompenses en attente ! (<yellow>/recompenses<green>)"
+
+menus:
+  confirm:
+    title: "<dark_green>Confirmer"
+    desc-default: "<green>Voulez-vous vraiment faire cela?"
+    confirm-button: "<dark_green><bold>CONFIRMER"
+    cancel-button: "<dark_red><bold>ANNULER"
+
+  options:
+    title: "<dark_green>Vos paramètres"
+
+  paginated:
+    next: "<green>Suivant"
+    previous: "<green>Précédent"
+    close: "<dark_red>Fermer"
+
+  ressources:
+    title: "<light_purple>Sélectionnez un monde :"
+
+    normal:
+      name: "<dark_green><bold>Normal"
+      lore: "<green>Cliquez pour rejoindre le monde ressource normal."
+
+    nether:
+      name: "<dark_red><bold>Nether"
+      lore: "<green>Cliquez pour rejoindre le monde ressource nether."
+
+    end:
+      name: "<dark_purple><bold>Ender"
+      lore: "<green>Cliquez pour rejoindre le monde ressource ender."
+
+  reward-select:
+    title: "<dark_green>Vos récompenses :"
+    item-name: "<dark_green>%name%"
+    item-lore: "<green>Clic pour récupérer la récompense."
+
+  serveur:
+    title: "<light_purple>Sélectionnez un serveur :"
+    survie-name: "<dark_green><bold>Survie"
+    survie-lore: "<green>Cliquez pour rejoindre le serveur survie."
+    ressources-name: "<dark_green><bold>Ressources"
+    ressources-lore: "<green>Cliquez pour rejoindre le serveur ressources."
+
+options:
+  death: "Afficher les messages de morts"
+  join: "Afficher les messages de connexions"
+  leave: "Afficher les messages de déconnexions"
+  tp: "Afficher les demandes de téléportations"
+  chat: "Afficher les messages du tchat"
+  mention: "Activer les mentions dans le tchat les message du tchat"

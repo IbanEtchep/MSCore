@@ -5,10 +5,9 @@ import fr.iban.common.enums.Option;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.velocitycore.CoreVelocityPlugin;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import fr.iban.velocitycore.lang.LangKey;
+import fr.iban.velocitycore.lang.MessageBuilder;
 import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.Description;
 import revxrsal.commands.velocity.annotation.CommandPermission;
 
 public class MsgToggleCMD {
@@ -21,17 +20,16 @@ public class MsgToggleCMD {
 
     @Command("msgtoggle")
     @CommandPermission("servercore.msgtoggle")
-    @Description("Permet d'activer ou désactiver la réception de messages de la part des autres joueurs.")
     public void execute(Player player) {
         PlayerManager playerManager = plugin.getPlayerManager();
         MSPlayerProfile account = playerManager.getProfile(player.getUniqueId());
 
         if (account.getOption(Option.MSG)) {
             account.setOption(Option.MSG, false);
-            player.sendMessage(Component.text("Vous ne pouvez plus recevoir les messages des joueurs", NamedTextColor.RED));
+            player.sendMessage(MessageBuilder.translatable(LangKey.MSGTOGGLE_DISABLED).toComponent());
         } else {
             account.setOption(Option.MSG, true);
-            player.sendMessage(Component.text("Vous pouvez à nouveau recevoir les messages des joueurs", NamedTextColor.GREEN));
+            player.sendMessage(MessageBuilder.translatable(LangKey.MSGTOGGLE_ENABLED).toComponent());
         }
 
         playerManager.saveProfile(account);

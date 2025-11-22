@@ -1,0 +1,115 @@
+file_version: 1
+
+core:
+  reload-success: "<green>Configuration successfully reloaded."
+  lang-reload-success: "<green>The language file has been successfully reloaded."
+  enabled: "<green>enabled"
+  disabled: "<red>disabled"
+  debug: "<yellow>Debug mode: <white>%state%"
+
+recompenses:
+  no-pending: "<red>You have no pending rewards."
+  received: "<green>You have received a reward (<yellow>/recompenses<green>)."
+  must-be-int: "<red>The ID must be an integer!"
+  player-not-found: "<red>Player not found."
+  no-templates: "<red>There are no templates."
+  template-added: "<green>Reward template added."
+
+  usage-give: "<yellow>/recompenses give <player> <templateID>"
+  usage-removetemplate: "<yellow>/recompenses removetemplate <id>"
+  usage-addtemplate: "<yellow>/recompenses addtemplate <name> <server> <command...> <gray>({player} = player name)"
+
+  template-entry: "<green>%id% - %name% - %server% - %command%"
+
+ressources:
+  invalid-world: "<red>This world type does not exist."
+
+  tp-wait: "<red>You can teleport back to ressources in %seconds% seconds."
+  tp-start: "<green>Teleporting to the resource world..."
+
+teleport:
+  cannot-self: "<red>You cannot teleport to yourself."
+  
+  request-accepted: "<green>Teleport request accepted."
+  request-denied: "<red>Teleport request denied."
+
+  no-request: "<red>You have no teleport request."
+  no-request-from-player: "<red>You have no teleport request from this player."
+
+  cancelled-move: "<red>You moved, teleportation cancelled."
+
+  no-while-falling: "<red>You cannot teleport while falling."
+
+  delay: "<green>Teleporting in %seconds% seconds. <red>Do not move!"
+  loading: "<green>Loading area..."
+  success: "<green>Teleportation successful!"
+  failed: "<red>Teleportation failed!"
+
+  unsafe-warning: "⚠ The teleport location is unsafe.\nClick here to continue (or use /tplastunsafe)"
+  unsafe-hover: "Teleport at your own risk."
+  no-unsafe: "<red>You have no pending unsafe teleport."
+  already-survival: "<red>You are already in a survival server."
+
+trustcommand:
+  already-added: "<red>This command is already added."
+  added: "<green>Command added to the list."
+  not-found: "<red>This command is not in the list."
+  removed: "<green>Command removed from the list."
+  reloaded: "<green>Commands reloaded."
+
+commands:
+  approval-required: "<red>Approval required."
+  approval-message: "%player% (%ip%) is trying to run command %command%."
+
+join:
+  rewards-pending: "<green>You have one or more pending rewards! (<yellow>/recompenses<green>)"
+
+menus:
+  confirm:
+    title: "<dark_green>Confirm"
+    desc-default: "<green>Are you sure you want to do this?"
+    confirm-button: "<dark_green><bold>CONFIRM"
+    cancel-button: "<dark_red><bold>CANCEL"
+
+  options:
+    title: "<dark_green>Your settings"
+
+  paginated:
+    next: "<green>Next"
+    previous: "<green>Previous"
+    close: "<dark_red>Close"
+
+  ressources:
+    title: "<light_purple>Select a world:"
+
+    normal:
+      name: "<dark_green><bold>Normal"
+      lore: "<green>Click to join the normal resource world."
+
+    nether:
+      name: "<dark_red><bold>Nether"
+      lore: "<green>Click to join the Nether resource world."
+
+    end:
+      name: "<dark_purple><bold>End"
+      lore: "<green>Click to join the End resource world."
+
+  reward-select:
+    title: "<dark_green>Your rewards:"
+    item-name: "<dark_green>%name%"
+    item-lore: "<green>Click to claim the reward."
+
+  serveur:
+    title: "<light_purple>Select a server:"
+    survie-name: "<dark_green><bold>Survival"
+    survie-lore: "<green>Click to join the survival server."
+    ressources-name: "<dark_green><bold>Resources"
+    ressources-lore: "<green>Click to join the resource server."
+
+options:
+  death: "Show death messages"
+  join: "Show join messages"
+  leave: "Show quit messages"
+  tp: "Show teleport requests"
+  chat: "Show chat messages"
+  mention: "Enable mentions in chat"

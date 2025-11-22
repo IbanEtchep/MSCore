@@ -34,12 +34,18 @@ public class SLocationUtils {
 	 */
 	public static boolean isSafeLocation(Location location) {
 		Block feet = location.getBlock();
-		if (!feet.getType().isTransparent() && !feet.getLocation().add(0, 1, 0).getBlock().getType().isTransparent()) {
-			return false; // not transparent (will suffocate)
+		if (feet.getType().isSolid() || !feet.getLocation().add(0, 1, 0).getBlock().getType().isSolid()) {
+			if (feet.getType().isSolid()) {
+				return false;
+			}
 		}
+		if (feet.getLocation().add(0, 1, 0).getBlock().getType().isSolid()) {
+			return false;
+		}
+
 		Block head = feet.getRelative(BlockFace.UP);
-		if (!head.getType().isTransparent()) {
-			return false; // not transparent (will suffocate)
+		if (head.getType().isSolid()) {
+			return false;
 		}
 
 		for (int i = 1; i < 5; i++) {

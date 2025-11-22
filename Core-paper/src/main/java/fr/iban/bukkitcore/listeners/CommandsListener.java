@@ -3,6 +3,8 @@ package fr.iban.bukkitcore.listeners;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import fr.iban.bukkitcore.CoreBukkitPlugin;
+import fr.iban.bukkitcore.lang.LangKey;
+import fr.iban.bukkitcore.lang.MessageBuilder;
 import fr.iban.common.manager.GlobalLoggerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -67,14 +69,20 @@ public class CommandsListener implements Listener {
             approvedCommands.remove(player.getUniqueId(), command);
             return;
         }
-        
+
         Command bukkitCommand = Bukkit.getCommandMap().getCommand(command);
         if (bukkitCommand != null) {
             if (!bukkitCommand.testPermission(player)) return;
             e.setCancelled(true);
-            player.sendMessage("§cApprobation requise.");
+
+            player.sendMessage(MessageBuilder.translatable(LangKey.COMMANDS_APPROVAL_REQUIRED).toLegacy());
+
             plugin.getApprovalManager().sendRequest(player,
-                    player.getName() + " (" + ip + ") essaye d'exécuter la commande " + e.getMessage() + ".",
+                    MessageBuilder.translatable(LangKey.COMMANDS_APPROVAL_MESSAGE)
+                            .placeholder("player", player.getName())
+                            .placeholder("ip", ip)
+                            .placeholder("command", e.getMessage())
+                            .toLegacy(),
                     result -> {
                         if (result) {
                             plugin.getScheduler().runAtEntity(player, task -> {
@@ -93,6 +101,9 @@ public class CommandsListener implements Listener {
 
         if (e.isCancelled()) return;
 
-        GlobalLoggerManager.saveLog(plugin.getServerName(), player.getName() + " issued server command: " + e.getMessage() + ".");
+        GlobalLoggerManager.saveLog(
+                plugin.getServerName(),
+                player.getName() + " issued server command: " + e.getMessage() + "."
+        );
     }
 }

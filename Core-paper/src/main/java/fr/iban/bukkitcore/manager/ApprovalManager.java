@@ -7,7 +7,6 @@ import fr.iban.common.messaging.Message;
 import fr.iban.common.messaging.message.ApprovalReply;
 import fr.iban.common.messaging.message.ApprovalRequest;
 import fr.iban.common.messaging.message.PlayerInfo;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

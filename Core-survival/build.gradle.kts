@@ -31,6 +31,7 @@ dependencies {
 
     compileOnly("io.github.revxrsal:lamp.common:4.0.0-rc.13")
     compileOnly("io.github.revxrsal:lamp.bukkit:4.0.0-rc.13")
+    implementation("dev.dejvokep:boosted-yaml:1.3.7")
 
     implementation("com.tcoded:FoliaLib:0.5.1")
 }

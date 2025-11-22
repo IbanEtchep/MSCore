@@ -20,19 +20,22 @@ public class MSPlayerParameterType implements ParameterType<BukkitCommandActor, 
     }
 
     @Override
-    public MSPlayer parse(@NotNull MutableStringStream input, @NotNull ExecutionContext<@NotNull BukkitCommandActor> executionContext) {
+    public MSPlayer parse(
+            @NotNull MutableStringStream input,
+            @NotNull ExecutionContext<BukkitCommandActor> executionContext
+    ) {
         String name = input.readString();
         MSPlayer player = playerManager.getOfflinePlayer(name);
 
-        if(player == null) {
-            throw new CommandErrorException("Le joueur " + name + " n''a jamais joué sur le serveur.");
+        if (player == null) {
+            throw new CommandErrorException("Le joueur " + name + " n'a jamais joué sur le serveur.");
         }
 
         return player;
     }
 
     @Override
-    public @NotNull SuggestionProvider<@NotNull BukkitCommandActor> defaultSuggestions() {
+    public @NotNull SuggestionProvider<BukkitCommandActor> defaultSuggestions() {
         return (context) -> playerManager.getOnlinePlayerNames();
     }
 

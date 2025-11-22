@@ -1,7 +1,6 @@
 package fr.iban.survivalcore.listeners;
 
 import fr.iban.survivalcore.SurvivalCorePlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

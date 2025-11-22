@@ -23,6 +23,7 @@ import fr.iban.common.data.sql.DbTables;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.teleport.SLocation;
 import fr.iban.velocitycore.command.*;
+import fr.iban.velocitycore.lang.VelocityTranslator;
 import fr.iban.velocitycore.listener.*;
 import fr.iban.velocitycore.manager.*;
 import fr.iban.velocitycore.util.TabHook;
@@ -61,14 +62,18 @@ public class CoreVelocityPlugin {
     private TeleportManager teleportManager;
     private PlayerManager playerManager;
     private MessagingManager messagingManager;
+    private final Path dataDirectory;
 
     private TabHook tabHook;
     private final TreeMap<String, SLocation> currentEvents = new TreeMap<>();
+
+    private VelocityTranslator translator;
 
     @Inject
     public CoreVelocityPlugin(Logger logger, ProxyServer server, @DataDirectory Path dataDirectory) {
         this.logger = logger;
         this.server = server;
+        this.dataDirectory = dataDirectory;
 
         try {
             config = YamlDocument.create(new File(dataDirectory.toFile(), "config.yml"),
@@ -94,6 +99,11 @@ public class CoreVelocityPlugin {
         instance = this;
         initDatabase();
 
+        String lang = config.getString("language", "fr");
+
+        translator = new VelocityTranslator(this, server, logger, lang);
+        translator.load();
+
         ChannelRegistrar channelRegistrar = getServer().getChannelRegistrar();
         channelRegistrar.register(MinecraftChannelIdentifier.from("proxy:chat"));
         channelRegistrar.register(MinecraftChannelIdentifier.from("proxy:annonce"));
@@ -106,7 +116,6 @@ public class CoreVelocityPlugin {
         playerManager.clearOnlinePlayers();
         chatManager = new ChatManager(this);
         announceManager = new AutomatedAnnounceManager(this);
-
 
         EventManager eventManager = server.getEventManager();
         eventManager.register(this, new PluginMessageListener(this));
@@ -215,4 +224,11 @@ public class CoreVelocityPlugin {
         return currentEvents;
     }
 
+    public Path getDataDirectory() {
+        return dataDirectory;
+    }
+
+    public VelocityTranslator getTranslator() {
+        return translator;
+    }
 }

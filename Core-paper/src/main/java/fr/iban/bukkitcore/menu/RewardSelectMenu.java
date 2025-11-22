@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
+import fr.iban.bukkitcore.lang.LangKey;
+import fr.iban.bukkitcore.lang.MessageBuilder;
 import fr.iban.bukkitcore.rewards.Reward;
 import fr.iban.bukkitcore.rewards.RewardSelectCallback;
 import fr.iban.bukkitcore.utils.Head;
@@ -27,7 +29,7 @@ public class RewardSelectMenu extends PaginatedMenu {
 
 	@Override
 	public String getMenuName() {
-		return "§2Vos récompenses :";
+		return MessageBuilder.translatable(LangKey.MENUS_REWARD_SELECT_TITLE).toLegacy();
 	}
 
 	@Override
@@ -45,7 +47,6 @@ public class RewardSelectMenu extends PaginatedMenu {
 		}
 
 		checkBottonsClick(item, player);
-
 
 		Reward reward = rewardAtSlot.get(e.getSlot());
 
@@ -78,13 +79,21 @@ public class RewardSelectMenu extends PaginatedMenu {
 					inventory.setItem(slot, getRewardItem(reward));
 				}
 			}
-		}	
+		}
 	}
 
 	private ItemStack getRewardItem(Reward reward) {
 		return new ItemBuilder(Head.BAG.get())
-				.setDisplayName("§2" + reward.name())
-				.addLore("§aClic pour récupérer la récompense.")
+				.setDisplayName(
+						MessageBuilder.translatable(LangKey.MENUS_REWARD_SELECT_ITEM_NAME)
+								.placeholder("name", reward.name())
+								.toLegacy()
+				)
+				.addLore(
+						MessageBuilder.translatable(LangKey.MENUS_REWARD_SELECT_ITEM_LORE)
+								.placeholder("name", reward.name())
+								.toLegacy()
+				)
 				.build();
 	}
 
