@@ -1,7 +1,5 @@
 package fr.iban.bukkitcore.listeners;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.common.manager.GlobalLoggerManager;
 import org.bukkit.Bukkit;
@@ -15,12 +13,10 @@ import org.bukkit.event.player.PlayerCommandSendEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class CommandsListener implements Listener {
 
     private final CoreBukkitPlugin plugin;
-    private final Multimap<UUID, String> approvedCommands = ArrayListMultimap.create();
 
     public CommandsListener(CoreBukkitPlugin plugin) {
         this.plugin = plugin;
@@ -47,13 +43,11 @@ public class CommandsListener implements Listener {
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
         Player player = e.getPlayer();
-        String ip = player.getAddress() != null ? player.getAddress().getHostString() : "unknown";
 
-        if (!plugin.getConfig().getBoolean("command-approval", true)) {
+        if (!plugin.getConfig().getBoolean("command-curation", false)) {
             return;
         }
-
-        if (plugin.getTrustedUserManager().isTrusted(player)) {
+        if (player.hasPermission("servercore.admin")) {
             return;
         }
 
@@ -63,28 +57,12 @@ public class CommandsListener implements Listener {
             return;
         }
 
-        if (approvedCommands.get(player.getUniqueId()).contains(command.toLowerCase())) {
-            approvedCommands.remove(player.getUniqueId(), command);
+        Command bukkitCommand = Bukkit.getCommandMap().getCommand(command);
+        if (bukkitCommand == null || !bukkitCommand.testPermission(player)) {
             return;
         }
-        
-        Command bukkitCommand = Bukkit.getCommandMap().getCommand(command);
-        if (bukkitCommand != null) {
-            if (!bukkitCommand.testPermission(player)) return;
-            e.setCancelled(true);
-            player.sendMessage("§cApprobation requise.");
-            plugin.getApprovalManager().sendRequest(player,
-                    player.getName() + " (" + ip + ") essaye d'exécuter la commande " + e.getMessage() + ".",
-                    result -> {
-                        if (result) {
-                            plugin.getScheduler().runAtEntity(player, task -> {
-                                approvedCommands.put(player.getUniqueId(), command);
-                                player.chat(e.getMessage());
-                            });
-                        }
-                    }
-            );
-        }
+
+        plugin.getCommandCurationManager().request(command, "bukkit", player.getName());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

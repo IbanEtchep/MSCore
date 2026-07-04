@@ -39,8 +39,7 @@ public final class CoreBukkitPlugin extends JavaPlugin {
     private MessagingManager messagingManager;
     private BukkitPlayerManager playerManager;
     private TrustedCommandsManager trustedCommandManager;
-    private BukkitTrustedUserManager trustedUserManager;
-    private ApprovalManager approvalManager;
+    private CommandCurationManager commandCurationManager;
     private PlanDataManager planDataManager;
     private ServerManager serverManager;
     private BukkitLangManager langManager;
@@ -78,8 +77,7 @@ public final class CoreBukkitPlugin extends JavaPlugin {
         foliaLib.getScheduler().runAsync(task -> getTrustedCommandManager().loadTrustedCommands());
         messagingManager.init();
         this.playerManager = new BukkitPlayerManager(messagingManager);
-        this.trustedUserManager = new BukkitTrustedUserManager(this);
-        this.approvalManager = new ApprovalManager(this, messagingManager, trustedUserManager);
+        this.commandCurationManager = new CommandCurationManager(this, messagingManager);
         this.planDataManager = new PlanDataManager(this);
         this.serverManager = new ServerManager(this);
 
@@ -183,12 +181,8 @@ public final class CoreBukkitPlugin extends JavaPlugin {
         return playerManager;
     }
 
-    public BukkitTrustedUserManager getTrustedUserManager() {
-        return trustedUserManager;
-    }
-
-    public ApprovalManager getApprovalManager() {
-        return approvalManager;
+    public CommandCurationManager getCommandCurationManager() {
+        return commandCurationManager;
     }
 
     public PlanDataManager getPlanDataManager() {

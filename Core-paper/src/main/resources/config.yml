@@ -28,7 +28,7 @@ world:
 plan-rtp-balancer: true
 
 # Send approval request to discord on each non whitelisted commad by non-trusted users.
-command-approval: false
+command-curation: false
 
 global-chat: true
 
