@@ -150,12 +150,10 @@ public class MSPlayerDAO {
         );
     }
 
-    public Set<MSPlayer> getOfflinePlayers() {
+    public Set<MSPlayer> getAllPlayers() {
         return jdbi.withHandle(handle -> handle.createQuery("""
-            SELECT * 
-            FROM sc_players P 
-            LEFT JOIN sc_online_players OP ON P.id = OP.player_id
-            WHERE OP.player_id IS NULL
+            SELECT *
+            FROM sc_players
             """).map((rs, ctx) -> {
                     MSPlayer player = new MSPlayer(UUID.fromString(rs.getString("uuid")));
                     player.setName(rs.getString("name"));

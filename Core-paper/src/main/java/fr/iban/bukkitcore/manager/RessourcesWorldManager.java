@@ -26,8 +26,19 @@ public class RessourcesWorldManager {
 
         lastTeleportTime.put(player.getUniqueId(), System.currentTimeMillis());
         player.sendMessage("§aTéléportation au monde ressource.");
-        String ressourcesServer = plugin.getConfig().getString("ressources.servername", "ressources");
-        plugin.getTeleportManager().randomTeleport(player, ressourcesServer, worldname);
+        plugin.getTeleportManager().randomTeleport(player, getResourceServerName(), worldname);
+    }
+
+    public String getOverworldName() {
+        return plugin.getConfig().getString("resources.worlds.overworld", "resource_world");
+    }
+
+    public String getNetherName() {
+        return plugin.getConfig().getString("resources.worlds.nether", "resource_nether");
+    }
+
+    public String getEndName() {
+        return plugin.getConfig().getString("resources.worlds.end", "resource_end");
     }
 
     private int getSecondsLeft(UUID uuid){
@@ -43,7 +54,7 @@ public class RessourcesWorldManager {
     }
 
     public String getResourceServerName() {
-        return plugin.getConfig().getString("ressources.servername", "ressources");
+        return plugin.getConfig().getString("resources.servername", "ressources");
     }
 
 }

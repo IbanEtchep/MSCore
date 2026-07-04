@@ -95,11 +95,12 @@ public class ProxyJoinQuitListener {
                         Component.text("Vu pour la dernière fois " + getLastSeen(lastSeen), NamedTextColor.GRAY)
                 ));
 
-                proxy.getAllPlayers().forEach(p -> {
-                    MSPlayerProfile receiverAccount = playerManager.getProfile(p.getUniqueId());
-                    if (receiverAccount.getOption(Option.JOIN_MESSAGE) && !receiverAccount.getIgnoredPlayers().contains(uuid)) {
-                        p.sendMessage(message);
-                    }
+                playerManager.getProfiles().forEach(receiverAccount -> {
+                    proxy.getPlayer(receiverAccount.getUniqueId()).ifPresent(p -> {
+                        if (receiverAccount.getOption(Option.JOIN_MESSAGE) && !receiverAccount.getIgnoredPlayers().contains(uuid)) {
+                            p.sendMessage(message);
+                        }
+                    });
                 });
 
                 plugin.getServer().getConsoleCommandSource().sendMessage(message);
@@ -138,11 +139,12 @@ public class ProxyJoinQuitListener {
             Component quitMessageComponent = MineDown.parse(quitMessage);
 
             if ((System.currentTimeMillis() - profile.getLastSeen()) > 60000) {
-                proxy.getAllPlayers().forEach(p -> {
-                    MSPlayerProfile account2 = playerManager.getProfile(p.getUniqueId());
-                    if (account2.getOption(Option.LEAVE_MESSAGE) && !account2.getIgnoredPlayers().contains(player.getUniqueId())) {
-                        p.sendMessage(quitMessageComponent);
-                    }
+                playerManager.getProfiles().forEach(account2 -> {
+                    proxy.getPlayer(account2.getUniqueId()).ifPresent(p -> {
+                        if (account2.getOption(Option.LEAVE_MESSAGE) && !account2.getIgnoredPlayers().contains(player.getUniqueId())) {
+                            p.sendMessage(quitMessageComponent);
+                        }
+                    });
                 });
 
                 plugin.getServer().getConsoleCommandSource().sendMessage(quitMessageComponent);

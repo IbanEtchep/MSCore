@@ -4,6 +4,7 @@ import com.earth2me.essentials.Essentials;
 import com.tcoded.folialib.FoliaLib;
 import com.tcoded.folialib.impl.PlatformScheduler;
 import fr.iban.bukkitcore.commands.*;
+import fr.iban.bukkitcore.lang.BukkitLangManager;
 import fr.iban.bukkitcore.listeners.*;
 import fr.iban.bukkitcore.manager.*;
 import fr.iban.bukkitcore.plan.PlanDataManager;
@@ -42,10 +43,12 @@ public final class CoreBukkitPlugin extends JavaPlugin {
     private ApprovalManager approvalManager;
     private PlanDataManager planDataManager;
     private ServerManager serverManager;
+    private BukkitLangManager langManager;
 
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
+        this.langManager = new BukkitLangManager(this);
 
         GlobalLoggerManager.initLogger();
 
@@ -114,11 +117,14 @@ public final class CoreBukkitPlugin extends JavaPlugin {
         lamp.register(new TeleportCommands(this));
         lamp.register(new TrustCommandsCMD(this));
         lamp.register(new ServerSwitchCommands(this));
+        if(getConfig().getBoolean("server-menu.enabled", true)) {
+            lamp.register(new ServerMenuCommand());
+        }
         lamp.register(new CoreCMD(this));
         lamp.register(new ActionBarCMD(this));
         lamp.register(new BungeeBroadcastCMD(this));
 
-        if(getConfig().getBoolean("ressources.enabled", true)) {
+        if(getConfig().getBoolean("resources.enabled", true)) {
             lamp.register(new RessourcesCommand(this));
         }
 
@@ -195,5 +201,9 @@ public final class CoreBukkitPlugin extends JavaPlugin {
 
     public PlatformScheduler getScheduler() {
         return foliaLib.getScheduler();
+    }
+
+    public BukkitLangManager getLangManager() {
+        return langManager;
     }
 }

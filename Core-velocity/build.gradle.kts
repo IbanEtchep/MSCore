@@ -28,9 +28,9 @@ dependencies {
     implementation("mysql:mysql-connector-java:8.0.33")
     implementation("org.apache.commons:commons-pool2:2.12.0")
 
-    implementation("io.github.revxrsal:lamp.common:4.0.0-rc.13")
-    implementation("io.github.revxrsal:lamp.velocity:4.0.0-rc.13")
-    implementation("io.github.revxrsal:lamp.brigadier:4.0.0-rc.13")
+    implementation("io.github.revxrsal:lamp.common:4.0.0-rc.16")
+    implementation("io.github.revxrsal:lamp.velocity:4.0.0-rc.16")
+    implementation("io.github.revxrsal:lamp.brigadier:4.0.0-rc.16")
 
     compileOnly("net.luckperms:api:5.4")
     compileOnly("com.github.NEZNAMY:TAB-API:5.3.2")

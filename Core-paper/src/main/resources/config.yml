@@ -1,3 +1,5 @@
+language: fr
+
 redis:
   host: 172.18.0.1
   port: 6379
@@ -30,6 +32,13 @@ command-approval: false
 
 global-chat: true
 
-ressources:
+server-menu:
+  enabled: true
+
+resources:
   enabled: true
   servername: "ressources"
+  worlds:
+    overworld: "resource_world"
+    nether: "resource_nether"
+    end: "resource_end"

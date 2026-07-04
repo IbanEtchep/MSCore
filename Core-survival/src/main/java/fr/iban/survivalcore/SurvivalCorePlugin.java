@@ -4,6 +4,7 @@ import com.tcoded.folialib.FoliaLib;
 import com.tcoded.folialib.impl.PlatformScheduler;
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.commands.CoreCommandHandlerVisitor;
+import fr.iban.bukkitcore.lang.BukkitLangManager;
 import fr.iban.bukkitcore.utils.PluginMessageHelper;
 import fr.iban.survivalcore.commands.*;
 import fr.iban.survivalcore.listeners.*;
@@ -24,6 +25,7 @@ public final class SurvivalCorePlugin extends JavaPlugin implements Listener {
     private Economy econ;
     private AnnounceManager announceManager;
     private FoliaLib foliaLib;
+    private BukkitLangManager langManager;
 
 
     @Override
@@ -34,6 +36,7 @@ public final class SurvivalCorePlugin extends JavaPlugin implements Listener {
         foliaLib = new FoliaLib(this);
 
         saveDefaultConfig();
+        langManager = new BukkitLangManager(this);
         setupEconomy();
 
         registerEvents(
@@ -54,7 +57,7 @@ public final class SurvivalCorePlugin extends JavaPlugin implements Listener {
         if (betterrtp != null) {
             if (betterrtp.isEnabled()) {
                 getLogger().info("Listening BetterRTP");
-                getServer().getPluginManager().registerEvents(new RTPListeners(), this);
+                getServer().getPluginManager().registerEvents(new RTPListeners(this), this);
             }
         }
 
@@ -113,5 +116,9 @@ public final class SurvivalCorePlugin extends JavaPlugin implements Listener {
 
     public PlatformScheduler getScheduler() {
         return foliaLib.getScheduler();
+    }
+
+    public BukkitLangManager getLangManager() {
+        return langManager;
     }
 }

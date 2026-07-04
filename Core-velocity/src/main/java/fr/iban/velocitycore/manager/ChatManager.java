@@ -4,6 +4,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import de.themoep.minedown.adventure.MineDown;
 import de.themoep.minedown.adventure.MineDownParser;
+import fr.iban.common.chat.ChatItemRenderer;
 import fr.iban.common.enums.Option;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
@@ -11,9 +12,12 @@ import fr.iban.velocitycore.CoreVelocityPlugin;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.william278.papiproxybridge.api.PlaceholderAPI;
 import org.jetbrains.annotations.Nullable;
@@ -44,10 +48,16 @@ public class ChatManager {
     }
 
     public void sendGlobalMessage(UUID senderUUID, String message) {
+        sendGlobalMessage(senderUUID, message, null);
+    }
+
+    public void sendGlobalMessage(UUID senderUUID, String message, @Nullable String itemJson) {
         Player sender = server.getPlayer(senderUUID).orElseThrow();
 
+        Component itemComponent = itemJson == null ? null : buildItemComponent(itemJson);
+
         if (message.startsWith("$") && sender.hasPermission("servercore.staffchat")) {
-            sendStaffMessage(sender, message.substring(1));
+            sendStaffMessage(sender, message.substring(1), itemComponent);
             return;
         }
 
@@ -68,13 +78,15 @@ public class ChatManager {
         }
 
         String finalMessage = message;
+        Component finalItemComponent = itemComponent;
         replacePlaceHolders(plugin.getConfig().getString("chat-format").trim(), sender).thenAccept(chatFormat -> {
             Component prefixComponent = MiniMessage.miniMessage().deserialize(chatFormat);
 
-            for (Player receiverPlayer : server.getAllPlayers()) {
+            for (MSPlayerProfile receiverProfile : playerManager.getProfiles()) {
+                Player receiverPlayer = server.getPlayer(receiverProfile.getUniqueId()).orElse(null);
+                if (receiverPlayer == null) continue;
+
                 String pmessage = finalMessage;
-                UUID receiverUUID = receiverPlayer.getUniqueId();
-                MSPlayerProfile receiverProfile = playerManager.getProfile(receiverUUID);
                 String receiverUsername = receiverPlayer.getUsername();
 
                 if (!receiverProfile.getOption(Option.CHAT) || receiverProfile.getIgnoredPlayers().contains(sender.getUniqueId())) {
@@ -88,13 +100,15 @@ public class ChatManager {
                     pmessage = pmessage.replace(receiverUsername, legacyFormattedPing + "§f");
                 }
 
-                Component messageComponent = componentFromLegacy(pmessage);
+                Component messageComponent = ChatItemRenderer.inject(componentFromLegacy(pmessage), finalItemComponent);
                 Component finalMessageComponent = Component.empty().append(prefixComponent).append(messageComponent);
 
                 receiverPlayer.sendMessage(finalMessageComponent);
             }
 
-            logMessage(prefixComponent.append(componentFromLegacy(finalMessage)));
+            Component logItemComponent = finalItemComponent == null ? null : Component.text("[item]");
+            Component loggedMessage = ChatItemRenderer.inject(componentFromLegacy(finalMessage), logItemComponent);
+            logMessage(prefixComponent.append(loggedMessage));
         }).exceptionally(e -> {
             plugin.getLogger().error("Error while sending global message", e);
             return null;
@@ -110,6 +124,10 @@ public class ChatManager {
     }
 
     public void sendAnnonce(UUID uuid, String annonce) {
+        sendAnnonce(uuid, annonce, null);
+    }
+
+    public void sendAnnonce(UUID uuid, String annonce, @Nullable String itemJson) {
         Player player = server.getPlayer(uuid).orElse(null);
 
         if (player == null) {
@@ -120,16 +138,32 @@ public class ChatManager {
             return;
         }
 
+        Component itemComponent = itemJson == null ? null : buildItemComponent(itemJson);
 
-        plugin.getServer().sendMessage(MineDown.parse("&#f07e71&&lAnnonce de &#fbb29e&&l" + player.getUsername() + " &#f07e71&➤ &#7bc8fe&&l" + annonce));
+        String defaultFormat = plugin.getConfig().getString("announce-format",
+                "<color:#f07e71><bold>Annonce de <color:#fbb29e><bold><player></bold></color> <color:#f07e71>➤ <color:#7bc8fe><bold><message>");
+        String premiumFormat = plugin.getConfig().getString("announce-premium-format", defaultFormat);
+
+        MiniMessage mini = MiniMessage.miniMessage();
+
+        for (Player target : plugin.getServer().getAllPlayers()) {
+            String format = target.hasPermission("premium") ? premiumFormat : defaultFormat;
+            Component component = mini.deserialize(format,
+                    Placeholder.unparsed("player", player.getUsername()),
+                    Placeholder.parsed("message", annonce)
+            );
+            component = ChatItemRenderer.inject(component, itemComponent);
+            target.sendMessage(component);
+        }
     }
 
-    private void sendStaffMessage(Player sender, String message) {
+    private void sendStaffMessage(Player sender, String message, @Nullable Component itemComponent) {
         String prefix = plugin.getConfig().getString("staff-chat-format");
         replacePlaceHolders(prefix, sender).thenAccept(chatFormat -> {
             String chatPrefix = componentToLegacy(MiniMessage.miniMessage().deserialize(chatFormat));
             String messageComponent = componentToLegacy(MineDown.parse(message));
-            Component fullMessage = componentFromLegacy(chatPrefix + messageComponent);
+            Component base = componentFromLegacy(chatPrefix + messageComponent);
+            Component fullMessage = ChatItemRenderer.inject(base, itemComponent);
 
             plugin.getServer().getAllPlayers().forEach(p -> {
                 if (p.hasPermission("servercore.staffchat") && !staffChatDisabledPlayers.contains(p.getUniqueId())) {
@@ -137,7 +171,8 @@ public class ChatManager {
                 }
             });
 
-            logMessage(fullMessage);
+            Component loggedMessage = ChatItemRenderer.inject(base, itemComponent == null ? null : Component.text("[item]"));
+            logMessage(loggedMessage);
         });
     }
 
@@ -156,7 +191,7 @@ public class ChatManager {
         String targetName = target.getUsername();
         MSPlayerProfile targetProfile = playerManager.getProfile(target.getUniqueId());
 
-        if (!targetProfile.getOption(Option.MSG) && !sender.hasPermission("servercore.msgtogglebypass")) {
+        if (targetProfile == null || (!targetProfile.getOption(Option.MSG) && !sender.hasPermission("servercore.msgtogglebypass"))) {
             sender.sendMessage(MineDown.parse("&c" + target.getUsername() + " a désactivé ses messages"));
             return;
         }
@@ -205,6 +240,38 @@ public class ChatManager {
                 .disable(MineDownParser.Option.SIMPLE_FORMATTING)
                 .replace(replacements)
                 .toComponent();
+    }
+
+    /**
+     * Construit le composant visuel de l'item à partir du JSON reçu du backend : extrait le nom
+     * (sans les crochets natifs), l'insère dans le format configurable "item-format" (MiniMessage,
+     * placeholder %item%), et réapplique le survol natif (showItem) sur l'ensemble.
+     */
+    private Component buildItemComponent(String itemJson) {
+        Component display = GsonComponentSerializer.gson().deserialize(itemJson);
+        HoverEvent<?> hover = display.hoverEvent();
+        Component name = extractItemName(display);
+        String format = plugin.getConfig().getString("item-format", "[%item%]");
+        Component formatted = MiniMessage.miniMessage().deserialize(
+                format.replace("%item%", "<item>"),
+                Placeholder.component("item", name)
+        );
+        if (hover != null) {
+            formatted = formatted.hoverEvent(hover);
+        }
+        return formatted;
+    }
+
+    /**
+     * Le displayName() vanilla d'un item est un composant traduisible "chat.square_brackets" dont
+     * le seul argument est le nom de l'item. On en extrait ce nom pour pouvoir contrôler les
+     * crochets via la config. En cas de structure inattendue, on retombe sur le composant complet.
+     */
+    private Component extractItemName(Component display) {
+        if (display instanceof TranslatableComponent translatable && !translatable.arguments().isEmpty()) {
+            return translatable.arguments().get(0).asComponent();
+        }
+        return display;
     }
 
     private String componentToLegacy(Component component) {

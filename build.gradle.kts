@@ -7,13 +7,19 @@ allprojects {
     apply(plugin = "java")
 
     group = "com.github.IbanEtchep.MSCore"
-    version = "1.1.0"
+    version = "1.1.1"
 
     repositories {
         mavenCentral()
         maven("https://repo.papermc.io/repository/maven-public/")
         maven("https://jitpack.io")
         maven("https://repo.tcoded.com/releases")
+    }
+
+    extensions.configure<JavaPluginExtension> {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        }
     }
 
     tasks.withType<JavaCompile> {
@@ -28,11 +34,5 @@ subprojects {
                 "project_version" to project.version
             )
         }
-    }
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }

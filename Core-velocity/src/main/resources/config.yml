@@ -1,4 +1,6 @@
-file-version: 2
+file-version: 3
+
+language: fr
 
 redis:
     host: 172.18.0.1
@@ -18,15 +20,23 @@ messenger: redis
 
 motd:
     - "motd"
-chat-format: |
-    [&7[%levels_level%&7] &#feca57&%premium%&r%vault_suffix%%vault_prefix% %player% %vault_suffix% ➤ &r](Informations:
-    
-    &#55efc4&Argent: &f%bungeeeconomy_balance%
-    &#55efc4&Guilde: &f%guilds_name%
-    
-    &7Clic pour envoyer un message suggest_command=/msg %player% )
-staff-chat-format: '&8[&3&lStaff&8] &#feca57&%premium%&r%vault_suffix%%vault_prefix% %player% %vault_suffix% ➤ &r'
+
+chat-format: '<hover:show_text:''<gray>Informations:<newline><color:#55efc4>Argent: <white>%vault_eco_balance_2dp%$<newline><color:#55efc4>Guilde: <white>%guilds_name%<newline><newline><gray>Clic pour envoyer un message''><click:suggest_command:''/msg %player% ''><gray>[%levels_level%]</gray> <color:#feca57>%premium%</color>%vault_suffix%%vault_prefix% %player% %vault_suffix% ➤ <reset>'
+
+
+staff-chat-format: '<dark_gray>[<dark_aqua><b>Staff</b><dark_gray>] <b>%vault_suffix%%vault_prefix% %player% %vault_suffix% ➤ '
+
 ping-prefix: '&#fdcb6e&@'
+
+# Format de l'item partagé dans le chat via [i] / [item] - MiniMessage
+# Placeholder: %item% (le nom de l'item). Le survol natif (hover) est réappliqué sur l'ensemble.
+item-format: "[%item%]"
+
+# Format des annonces joueurs (/annonce) - MiniMessage
+# Placeholders: <player> (nom du joueur), <message> (contenu de l'annonce)
+announce-format: "<color:#f07e71><bold>Annonce de <color:#fbb29e><player></bold></color> <color:#f07e71>➤ <color:#7bc8fe><bold><message>"
+# Format pour les joueurs ayant la permission "premium"
+announce-premium-format: "<color:#FFD700>★ <color:#f07e71><bold>Annonce de <color:#fbb29e><player></bold></color> <color:#f07e71>➤ <color:#7bc8fe><bold><message>"
 
 messages:
     site: "url du site"

@@ -8,6 +8,7 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.ChannelRegistrar;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
@@ -21,8 +22,11 @@ import fr.iban.common.data.sql.DbAccess;
 import fr.iban.common.data.sql.DbCredentials;
 import fr.iban.common.data.sql.DbTables;
 import fr.iban.common.manager.PlayerManager;
+import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.teleport.SLocation;
 import fr.iban.velocitycore.command.*;
+import fr.iban.velocitycore.command.parametertypes.MSPlayerProfileParameterType;
+import fr.iban.velocitycore.lang.VelocityLangManager;
 import fr.iban.velocitycore.listener.*;
 import fr.iban.velocitycore.manager.*;
 import fr.iban.velocitycore.util.TabHook;
@@ -42,7 +46,7 @@ import static revxrsal.commands.velocity.VelocityVisitors.brigadier;
 @Plugin(
         id = "corevelocity",
         name = "CoreVelocity",
-        version = "1.1.0",
+        version = "1.1.1",
         dependencies = {
                 @Dependency(id = "tab", optional = true),
                 @Dependency(id = "luckperms"),
@@ -61,6 +65,8 @@ public class CoreVelocityPlugin {
     private TeleportManager teleportManager;
     private PlayerManager playerManager;
     private MessagingManager messagingManager;
+    private VelocityLangManager langManager;
+    private final Path dataDirectory;
 
     private TabHook tabHook;
     private final TreeMap<String, SLocation> currentEvents = new TreeMap<>();
@@ -69,6 +75,7 @@ public class CoreVelocityPlugin {
     public CoreVelocityPlugin(Logger logger, ProxyServer server, @DataDirectory Path dataDirectory) {
         this.logger = logger;
         this.server = server;
+        this.dataDirectory = dataDirectory;
 
         try {
             config = YamlDocument.create(new File(dataDirectory.toFile(), "config.yml"),
@@ -92,6 +99,7 @@ public class CoreVelocityPlugin {
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
         instance = this;
+        langManager = new VelocityLangManager(this, dataDirectory.toFile());
         initDatabase();
 
         ChannelRegistrar channelRegistrar = getServer().getChannelRegistrar();
@@ -128,7 +136,11 @@ public class CoreVelocityPlugin {
     }
 
     public void registerCommands() {
-        Lamp<VelocityCommandActor> lamp = VelocityLamp.builder(this, server).build();
+        Lamp<VelocityCommandActor> lamp = VelocityLamp.builder(this, server)
+                .parameterTypes(typeBuilder -> {
+                    typeBuilder.addParameterType(MSPlayerProfile.class, new MSPlayerProfileParameterType(this));
+                })
+                .build();
 
         lamp.register(new AnnounceCMD(this));
         lamp.register(new AnnounceEventCMD(this));
@@ -209,6 +221,10 @@ public class CoreVelocityPlugin {
 
     public String getServerName() {
         return "proxy";
+    }
+
+    public VelocityLangManager getLangManager() {
+        return langManager;
     }
 
     public TreeMap<String, SLocation> getCurrentEvents() {

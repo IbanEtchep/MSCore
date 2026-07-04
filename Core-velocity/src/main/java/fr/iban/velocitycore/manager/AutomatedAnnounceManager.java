@@ -2,6 +2,7 @@ package fr.iban.velocitycore.manager;
 
 import dev.dejvokep.boostedyaml.block.implementation.Section;
 import com.velocitypowered.api.proxy.Player;
+import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.utils.ArrayUtils;
 import fr.iban.velocitycore.CoreVelocityPlugin;
 import net.kyori.adventure.text.Component;
@@ -72,7 +73,9 @@ public class AutomatedAnnounceManager {
 			Component announce = announces.get(id);
 
 			for (Player player : plugin.getServer().getAllPlayers()) {
-				if (!plugin.getPlayerManager().getProfile(player.getUniqueId()).getBlackListedAnnounces().contains(id)) {
+				MSPlayerProfile profile = plugin.getPlayerManager().getProfile(player.getUniqueId());
+
+				if (profile != null && !profile.getBlackListedAnnounces().contains(id)) {
 					player.sendMessage(announce);
 				}
 			}
