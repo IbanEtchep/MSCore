@@ -51,9 +51,9 @@ public class CommandsListener implements Listener {
             return;
         }
 
-        String command = e.getMessage().split(" ")[0].replace("/", "");
+        String command = e.getMessage().split(" ")[0].replace("/", "").toLowerCase();
 
-        if (plugin.getTrustedCommandManager().getTrustedBukkitCommands().contains(command.toLowerCase())) {
+        if (plugin.getTrustedCommandManager().getTrustedBukkitCommands().contains(command)) {
             return;
         }
 
