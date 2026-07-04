@@ -7,7 +7,7 @@ allprojects {
     apply(plugin = "java")
 
     group = "com.github.IbanEtchep.MSCore"
-    version = "1.1.2"
+    version = "1.1.1"
 
     repositories {
         mavenCentral()

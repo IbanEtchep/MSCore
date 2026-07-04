@@ -2,8 +2,6 @@ package fr.iban.bukkitcore.listeners;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.common.manager.GlobalLoggerManager;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -38,31 +36,6 @@ public class CommandsListener implements Listener {
 
         e.getCommands().clear();
         e.getCommands().addAll(allowed);
-    }
-
-    @EventHandler
-    public void onCommand(PlayerCommandPreprocessEvent e) {
-        Player player = e.getPlayer();
-
-        if (!plugin.getConfig().getBoolean("command-curation", false)) {
-            return;
-        }
-        if (player.hasPermission("servercore.admin")) {
-            return;
-        }
-
-        String command = e.getMessage().split(" ")[0].replace("/", "").toLowerCase();
-
-        if (plugin.getTrustedCommandManager().getTrustedBukkitCommands().contains(command)) {
-            return;
-        }
-
-        Command bukkitCommand = Bukkit.getCommandMap().getCommand(command);
-        if (bukkitCommand == null || !bukkitCommand.testPermission(player)) {
-            return;
-        }
-
-        plugin.getCommandCurationManager().request(command, "bukkit", player.getName());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

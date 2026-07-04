@@ -27,9 +27,6 @@ world:
 
 plan-rtp-balancer: true
 
-# Envoie une notification Discord (boutons Staff/Joueurs/Rejeter) pour classer une commande hors tab-complete. Ne bloque jamais l'exécution.
-command-curation: false
-
 global-chat: true
 
 server-menu:
