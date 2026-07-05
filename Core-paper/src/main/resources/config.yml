@@ -39,3 +39,6 @@ resources:
     overworld: "resource_world"
     nether: "resource_nether"
     end: "resource_end"
+
+# Bloque les commandes hors tab-complete des non-admins et propose de les classer (Staff/Joueurs) sur Discord.
+command-approval: false

@@ -42,6 +42,7 @@ public final class CoreBukkitPlugin extends JavaPlugin {
     private PlanDataManager planDataManager;
     private ServerManager serverManager;
     private BukkitLangManager langManager;
+    private CommandCurationManager commandCurationManager;
 
     public void onEnable() {
         instance = this;
@@ -75,6 +76,7 @@ public final class CoreBukkitPlugin extends JavaPlugin {
         this.trustedCommandManager = new TrustedCommandsManager();
         foliaLib.getScheduler().runAsync(task -> getTrustedCommandManager().loadTrustedCommands());
         messagingManager.init();
+        this.commandCurationManager = new CommandCurationManager(this, messagingManager);
         this.playerManager = new BukkitPlayerManager(messagingManager);
         this.planDataManager = new PlanDataManager(this);
         this.serverManager = new ServerManager(this);
@@ -193,5 +195,9 @@ public final class CoreBukkitPlugin extends JavaPlugin {
 
     public BukkitLangManager getLangManager() {
         return langManager;
+    }
+
+    public CommandCurationManager getCommandCurationManager() {
+        return commandCurationManager;
     }
 }
