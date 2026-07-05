@@ -2,12 +2,12 @@ package fr.iban.common.messaging.message;
 
 import java.util.UUID;
 
-public class CurationReply {
+public class WhitelistReply {
 
     private UUID requestId;
     private String category;
 
-    public CurationReply(UUID requestId, String category) {
+    public WhitelistReply(UUID requestId, String category) {
         this.requestId = requestId;
         this.category = category;
     }

@@ -4,8 +4,8 @@ import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.bukkitcore.event.CoreMessageEvent;
 import fr.iban.common.TrustedCommand;
 import fr.iban.common.messaging.Message;
-import fr.iban.common.messaging.message.CurationReply;
-import fr.iban.common.messaging.message.CurationRequest;
+import fr.iban.common.messaging.message.WhitelistReply;
+import fr.iban.common.messaging.message.WhitelistRequest;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -14,17 +14,17 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CommandCurationManager implements Listener {
+public class CommandWhitelistManager implements Listener {
 
-    private static final String REQUEST_CHANNEL = "CommandCurationRequestChannel";
-    private static final String REPLY_CHANNEL = "CommandCurationReplyChannel";
+    private static final String REQUEST_CHANNEL = "CommandWhitelistRequestChannel";
+    private static final String REPLY_CHANNEL = "CommandWhitelistReplyChannel";
 
     private final CoreBukkitPlugin plugin;
     private final MessagingManager messagingManager;
-    private final Map<UUID, CurationRequest> requests = new ConcurrentHashMap<>();
+    private final Map<UUID, WhitelistRequest> requests = new ConcurrentHashMap<>();
     private final Set<String> alreadyRequested = ConcurrentHashMap.newKeySet();
 
-    public CommandCurationManager(CoreBukkitPlugin plugin, MessagingManager messagingManager) {
+    public CommandWhitelistManager(CoreBukkitPlugin plugin, MessagingManager messagingManager) {
         this.plugin = plugin;
         this.messagingManager = messagingManager;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -36,13 +36,13 @@ public class CommandCurationManager implements Listener {
         if (!alreadyRequested.add(key)) {
             return;
         }
-        CurationRequest request = new CurationRequest(UUID.randomUUID(), command, context, playerName);
+        WhitelistRequest request = new WhitelistRequest(UUID.randomUUID(), command, context, playerName);
         requests.put(request.getRequestId(), request);
         messagingManager.sendMessage(REQUEST_CHANNEL, request);
     }
 
-    private void handleReply(CurationReply reply) {
-        CurationRequest request = requests.remove(reply.getRequestId());
+    private void handleReply(WhitelistReply reply) {
+        WhitelistRequest request = requests.remove(reply.getRequestId());
         if (request == null) {
             return;
         }
@@ -67,6 +67,6 @@ public class CommandCurationManager implements Listener {
         if (!message.getChannel().equals(REPLY_CHANNEL)) {
             return;
         }
-        handleReply(message.getMessage(CurationReply.class));
+        handleReply(message.getMessage(WhitelistReply.class));
     }
 }

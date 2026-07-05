@@ -41,4 +41,4 @@ resources:
     end: "resource_end"
 
 # Bloque les commandes hors tab-complete des non-admins et propose de les classer (Staff/Joueurs) sur Discord.
-command-approval: false
+command-whitelist: false

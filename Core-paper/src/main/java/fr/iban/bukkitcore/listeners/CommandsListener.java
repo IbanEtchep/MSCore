@@ -53,7 +53,7 @@ public class CommandsListener implements Listener {
     public void onCommand(PlayerCommandPreprocessEvent e) {
         Player player = e.getPlayer();
 
-        if (!plugin.getConfig().getBoolean("command-approval", false)) {
+        if (!plugin.getConfig().getBoolean("command-whitelist", false)) {
             return;
         }
         if (player.hasPermission("servercore.admin")) {
@@ -73,6 +73,6 @@ public class CommandsListener implements Listener {
 
         e.setCancelled(true);
         player.sendMessage("§cApprobation requise.");
-        plugin.getCommandCurationManager().request(command, "bukkit", player.getName());
+        plugin.getCommandWhitelistManager().request(command, "bukkit", player.getName());
     }
 }

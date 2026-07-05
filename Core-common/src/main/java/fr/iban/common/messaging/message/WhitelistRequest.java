@@ -2,7 +2,7 @@ package fr.iban.common.messaging.message;
 
 import java.util.UUID;
 
-public class CurationRequest {
+public class WhitelistRequest {
 
     private final UUID requestId;
     private final String command;
@@ -10,7 +10,7 @@ public class CurationRequest {
     private final String playerName;
     private final long createdAt = System.currentTimeMillis();
 
-    public CurationRequest(UUID requestId, String command, String context, String playerName) {
+    public WhitelistRequest(UUID requestId, String command, String context, String playerName) {
         this.requestId = requestId;
         this.command = command;
         this.context = context;
