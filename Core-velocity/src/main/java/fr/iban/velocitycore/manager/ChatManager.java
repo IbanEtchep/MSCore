@@ -35,16 +35,27 @@ public class ChatManager {
     private final PlayerManager playerManager;
     private final ProxyServer server;
     private boolean isMuted = false;
-    private final String pingPrefix;
+    private final String pingFormat;
     private final Map<Player, Player> replies = new ConcurrentHashMap<>();
     private final LegacyComponentSerializer legacyComponentSerializer = LegacyComponentSerializer.builder().hexColors().extractUrls().build();
     private final Set<UUID> staffChatDisabledPlayers = new HashSet<>();
+
+    private static final String DEFAULT_PING_FORMAT = "<color:#fdcb6e>@<player>";
+    private static final String CHAT_DISABLED = "<red>Vous ne pouvez pas envoyer ce message car votre tchat est désactivé";
+    private static final String CHAT_DISABLED_LOG_PREFIX = "<dark_gray>[<red>DÉSACTIVÉ</red>]</dark_gray><reset> ";
+    private static final String CHAT_MUTED = "<red>Le chat est désormais muet.";
+    private static final String CHAT_UNMUTED = "<green>Le chat n'est plus muet.";
+    private static final String MSG_TARGET_DISABLED = "<red><player> a désactivé ses messages";
+    private static final String MSG_IGNORED = "<red>Vous ne pouvez pas envoyer de message à ce joueur";
+    private static final String STAFF_CHAT_ENABLED = "<green>Vous pouvez à nouveau recevoir des messages du staff";
+    private static final String STAFF_CHAT_DISABLED = "<red>Vous ne pouvez plus recevoir les messages du staff";
+    private static final String STAFF_TAG = "<dark_gray>[<gold>Staff</gold>]</dark_gray> ";
 
     public ChatManager(CoreVelocityPlugin plugin) {
         this.plugin = plugin;
         this.server = plugin.getServer();
         this.playerManager = plugin.getPlayerManager();
-        this.pingPrefix = plugin.getConfig().getString("ping-prefix", "&e");
+        this.pingFormat = plugin.getConfig().getString("ping-format", DEFAULT_PING_FORMAT);
     }
 
     public void sendGlobalMessage(UUID senderUUID, String message) {
@@ -72,8 +83,8 @@ public class ChatManager {
         MSPlayerProfile senderProfile = playerManager.getProfile(senderUUID);
 
         if (!senderProfile.getOption(Option.CHAT)) {
-            sender.sendMessage(MineDown.parse("&cVous ne pouvez pas envoyer ce message car votre tchat est désactivé"));
-            logMessage(MineDown.parse("§8[§CDÉSACTIVÉ§8]§r " + message));
+            sender.sendMessage(mm(CHAT_DISABLED));
+            logMessage(mm(CHAT_DISABLED_LOG_PREFIX).append(componentFromLegacy(message)));
             return;
         }
 
@@ -94,8 +105,7 @@ public class ChatManager {
                 }
 
                 if (pmessage.toLowerCase().contains(receiverUsername.toLowerCase()) && receiverProfile.getOption(Option.MENTION)) {
-                    String ping = pingPrefix + receiverUsername;
-                    String legacyFormattedPing = componentToLegacy(MineDown.parse(ping));
+                    String legacyFormattedPing = componentToLegacy(mm(pingFormat, receiverUsername));
                     receiverPlayer.playSound(Sound.sound(Key.key("block.note_block.guitar"), Sound.Source.MASTER, 1f, 0.5f));
                     pmessage = pmessage.replace(receiverUsername, legacyFormattedPing + "§f");
                 }
@@ -161,7 +171,7 @@ public class ChatManager {
         String prefix = plugin.getConfig().getString("staff-chat-format");
         replacePlaceHolders(prefix, sender).thenAccept(chatFormat -> {
             String chatPrefix = componentToLegacy(MiniMessage.miniMessage().deserialize(chatFormat));
-            String messageComponent = componentToLegacy(MineDown.parse(message));
+            String messageComponent = componentToLegacy(parseMineDownInlineFormatting(message));
             Component base = componentFromLegacy(chatPrefix + messageComponent);
             Component fullMessage = ChatItemRenderer.inject(base, itemComponent);
 
@@ -179,9 +189,9 @@ public class ChatManager {
     public void toggleChat(Player sender) {
         isMuted = !isMuted;
         if (isMuted) {
-            plugin.getServer().sendMessage(MineDown.parse("&cLe chat est désormais muet."));
+            plugin.getServer().sendMessage(mm(CHAT_MUTED));
         } else {
-            plugin.getServer().sendMessage(MineDown.parse("&aLe chat n'est plus muet."));
+            plugin.getServer().sendMessage(mm(CHAT_UNMUTED));
         }
     }
 
@@ -192,28 +202,22 @@ public class ChatManager {
         MSPlayerProfile targetProfile = playerManager.getProfile(target.getUniqueId());
 
         if (targetProfile == null || (!targetProfile.getOption(Option.MSG) && !sender.hasPermission("servercore.msgtogglebypass"))) {
-            sender.sendMessage(MineDown.parse("&c" + target.getUsername() + " a désactivé ses messages"));
+            sender.sendMessage(mm(MSG_TARGET_DISABLED, target.getUsername()));
             return;
         }
 
         if (targetProfile.getIgnoredPlayers().contains(senderUUID)) {
-            sender.sendMessage(MineDown.parse("&cVous ne pouvez pas envoyer de message à ce joueur"));
+            sender.sendMessage(mm(MSG_IGNORED));
             return;
         }
 
-        Component senderComponent;
-        Component targetComponent;
+        String targetTag = target.hasPermission("servercore.staff") ? STAFF_TAG : "";
+        String senderTag = sender.hasPermission("servercore.staff") ? STAFF_TAG : "";
 
-        if (target.hasPermission("servercore.staff")) {
-            senderComponent = MineDown.parse("&8Moi &7➔ &8[&6Staff&8] &c" + targetName + " &6➤&7 " + message);
-        } else {
-            senderComponent = MineDown.parse("&8Moi &7➔ &c" + targetName + " &6➤&7 " + message);
-        }
-        if (sender.hasPermission("servercore.staff")) {
-            targetComponent = MineDown.parse("&8[&6Staff&8] &c" + senderName + " &7➔ &8Moi &6➤&7 " + message);
-        } else {
-            targetComponent = MineDown.parse("&c" + senderName + " &7➔ &8Moi &6➤&7 " + message);
-        }
+        Component senderComponent = mmMessage(
+                "<dark_gray>Moi <gray>➔ " + targetTag + "<red><player></red> <gold>➤<gray> <message>", targetName, message);
+        Component targetComponent = mmMessage(
+                senderTag + "<red><player></red> <gray>➔ <dark_gray>Moi <gold>➤<gray> <message>", senderName, message);
 
         targetComponent = targetComponent
                 .hoverEvent(HoverEvent.showText(Component.text("Cliquez pour répondre")))
@@ -221,7 +225,11 @@ public class ChatManager {
 
         sender.sendMessage(senderComponent);
         target.sendMessage(targetComponent);
-        logMessage(MineDown.parse("&c" + senderName + " &7 ➔  " + "&8" + targetName + " &6➤ " + "&7 " + message));
+        logMessage(MiniMessage.miniMessage().deserialize(
+                "<red><sender></red> <gray>➔ <dark_gray><target></dark_gray> <gold>➤ <gray><message>",
+                Placeholder.unparsed("sender", senderName),
+                Placeholder.unparsed("target", targetName),
+                Placeholder.unparsed("message", message)));
         replies.put(sender, target);
         replies.put(target, sender);
     }
@@ -234,6 +242,11 @@ public class ChatManager {
         }
     }
 
+    /**
+     * Seul point d'entrée MineDown conservé : les joueurs écrivent en codes &-legacy, pas en
+     * MiniMessage. Les options avancées sont désactivées, seules les couleurs passent, ce qui
+     * empêche l'injection de clics / survols via le chat.
+     */
     private Component parseMineDownInlineFormatting(String message, String... replacements) {
         return new MineDown(message)
                 .disable(MineDownParser.Option.ADVANCED_FORMATTING)
@@ -274,6 +287,20 @@ public class ChatManager {
         return display;
     }
 
+    private Component mm(String message) {
+        return MiniMessage.miniMessage().deserialize(message);
+    }
+
+    private Component mm(String message, String playerName) {
+        return MiniMessage.miniMessage().deserialize(message, Placeholder.unparsed("player", playerName));
+    }
+
+    private Component mmMessage(String format, String playerName, String message) {
+        return MiniMessage.miniMessage().deserialize(format,
+                Placeholder.unparsed("player", playerName),
+                Placeholder.unparsed("message", message));
+    }
+
     private String componentToLegacy(Component component) {
         return legacyComponentSerializer.serialize(component);
     }
@@ -304,10 +331,10 @@ public class ChatManager {
     public void toggleStaffChat(Player player) {
         if (staffChatDisabledPlayers.contains(player.getUniqueId())) {
             staffChatDisabledPlayers.remove(player.getUniqueId());
-            player.sendMessage(MineDown.parse("&aVous pouvez à nouveau recevoir des messages du staff"));
+            player.sendMessage(mm(STAFF_CHAT_ENABLED));
         } else {
             staffChatDisabledPlayers.add(player.getUniqueId());
-            player.sendMessage(MineDown.parse("&cVous ne pouvez plus recevoir les messages du staff"));
+            player.sendMessage(mm(STAFF_CHAT_DISABLED));
         }
     }
 }

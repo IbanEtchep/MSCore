@@ -50,7 +50,9 @@ chat-format: '<hover:show_text:''<gray>Informations:<newline><color:#55efc4>Arge
 
 staff-chat-format: '<dark_gray>[<dark_aqua><b>Staff</b><dark_gray>] <b>%vault_suffix%%vault_prefix% %player% %vault_suffix% ➤ '
 
-ping-prefix: '&#fdcb6e&@'
+# Format du ping lorsqu'un joueur est mentionné dans le chat - MiniMessage
+# Placeholder: <player> (le pseudo mentionné)
+ping-format: '<color:#fdcb6e>@<player>'
 
 # Format de l'item partagé dans le chat via [i] / [item] - MiniMessage
 # Placeholder: %item% (le nom de l'item). Le survol natif (hover) est réappliqué sur l'ensemble.
