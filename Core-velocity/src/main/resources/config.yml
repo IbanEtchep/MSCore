@@ -18,7 +18,7 @@ database:
 #sql or redis
 messenger: redis
 
-# MOTD au format MiniMessage (utiliser <newline> pour la 2e ligne)
+# MOTD - MiniMessage ou codes legacy (&a, &#rrggbb). <newline> pour la 2e ligne.
 motd:
     - "<dark_green><bold>Primal</bold></dark_green><green><bold>Craft</bold></green> <dark_gray><bold>></bold></dark_gray> <white><bold>Serveur survie 1.21.11</bold></white><newline><gray>Claims <dark_gray>● <gray>Shops <dark_gray>● <gray>Guildes <dark_gray>● <gray>Métiers <dark_gray>● <gray>Warps joueurs"
 # Exemples de MOTD aléatoires (SpΛrtaCube) :
@@ -50,9 +50,9 @@ chat-format: '<hover:show_text:''<gray>Informations:<newline><color:#55efc4>Arge
 
 staff-chat-format: '<dark_gray>[<dark_aqua><b>Staff</b><dark_gray>] <b>%vault_suffix%%vault_prefix% %player% %vault_suffix% ➤ '
 
-# Format du ping lorsqu'un joueur est mentionné dans le chat - MiniMessage
-# Placeholder: <player> (le pseudo mentionné)
-ping-format: '<color:#fdcb6e>@<player>'
+# Prefixe ajoute devant le pseudo lorsqu'un joueur est mentionne dans le chat.
+# MiniMessage ou codes legacy (&a, &#rrggbb).
+ping-prefix: '&#fdcb6e&@'
 
 # Format de l'item partagé dans le chat via [i] / [item] - MiniMessage
 # Placeholder: %item% (le nom de l'item). Le survol natif (hover) est réappliqué sur l'ensemble.
@@ -64,13 +64,14 @@ announce-format: "<color:#f07e71><bold>Annonce de <color:#fbb29e><player></bold>
 # Format pour les joueurs ayant la permission "premium"
 announce-premium-format: "<color:#FFD700>★ <color:#f07e71><bold>Annonce de <color:#fbb29e><player></bold></color> <color:#f07e71>➤ <color:#7bc8fe><bold><message>"
 
-# Messages des commandes /site, /vote, /discord, /grades, /wiki - MiniMessage
+# Messages des commandes /site, /vote, /discord, /grades, /wiki.
+# MiniMessage ou codes legacy (&a, &#rrggbb), les deux syntaxes cohabitent.
 messages:
-    site: "<gray>Notre site : <aqua><click:open_url:'https://example.com'>https://example.com</click>"
-    vote: "<gray>Votez ici : <aqua><click:open_url:'https://example.com/vote'>https://example.com/vote</click>"
-    discord: "<gray>Rejoignez le Discord : <aqua><click:open_url:'https://discord.gg/example'>https://discord.gg/example</click>"
-    grades: "<gray>Infos sur les grades : <aqua><click:open_url:'https://example.com/grades'>https://example.com/grades</click>"
-    wiki: "<gray>Le wiki : <aqua><click:open_url:'https://example.com/wiki'>https://example.com/wiki</click>"
+    site: "url du site"
+    vote: "url pour voter"
+    discord: "url du discord"
+    grades: "url des info sur les grades"
+    wiki: "url du wiki"
 
 announces:
     interval: 300

@@ -10,13 +10,13 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import fr.iban.common.enums.Option;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
+import fr.iban.common.chat.MessageParser;
 import fr.iban.common.utils.ArrayUtils;
 import fr.iban.velocitycore.CoreVelocityPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.ocpsoft.prettytime.PrettyTime;
@@ -161,7 +161,7 @@ public class ProxyJoinQuitListener {
     }
 
     private Component deserialize(String message, String playerName) {
-        return MiniMessage.miniMessage().deserialize(message, Placeholder.unparsed("player", playerName));
+        return MessageParser.parse(message, Placeholder.unparsed("player", playerName));
     }
 
     private String getLastSeen(long time) {

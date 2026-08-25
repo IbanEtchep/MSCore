@@ -7,6 +7,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
+import fr.iban.common.chat.MessageParser;
 import fr.iban.common.messaging.CoreChannel;
 import fr.iban.common.teleport.*;
 import fr.iban.velocitycore.CoreVelocityPlugin;
@@ -14,7 +15,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 import java.util.*;
@@ -161,15 +161,15 @@ public class TeleportManager {
     }
 
     private Component mm(String message) {
-        return MiniMessage.miniMessage().deserialize(message);
+        return MessageParser.parse(message);
     }
 
     private Component mm(String message, String playerName) {
-        return MiniMessage.miniMessage().deserialize(message, Placeholder.unparsed("player", playerName));
+        return MessageParser.parse(message, Placeholder.unparsed("player", playerName));
     }
 
     private Component countdown(int delay) {
-        return MiniMessage.miniMessage().deserialize(TP_COUNTDOWN, Placeholder.unparsed("delay", String.valueOf(delay)));
+        return MessageParser.parse(TP_COUNTDOWN, Placeholder.unparsed("delay", String.valueOf(delay)));
     }
 
     private Component buildTpRequest(String line, String fromName) {

@@ -5,6 +5,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import de.themoep.minedown.adventure.MineDown;
 import de.themoep.minedown.adventure.MineDownParser;
 import fr.iban.common.chat.ChatItemRenderer;
+import fr.iban.common.chat.MessageParser;
 import fr.iban.common.enums.Option;
 import fr.iban.common.manager.PlayerManager;
 import fr.iban.common.model.MSPlayerProfile;
@@ -15,7 +16,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -35,12 +35,12 @@ public class ChatManager {
     private final PlayerManager playerManager;
     private final ProxyServer server;
     private boolean isMuted = false;
-    private final String pingFormat;
+    private final String pingPrefix;
     private final Map<Player, Player> replies = new ConcurrentHashMap<>();
     private final LegacyComponentSerializer legacyComponentSerializer = LegacyComponentSerializer.builder().hexColors().extractUrls().build();
     private final Set<UUID> staffChatDisabledPlayers = new HashSet<>();
 
-    private static final String DEFAULT_PING_FORMAT = "<color:#fdcb6e>@<player>";
+    private static final String DEFAULT_PING_PREFIX = "&#fdcb6e&@";
     private static final String CHAT_DISABLED = "<red>Vous ne pouvez pas envoyer ce message car votre tchat est désactivé";
     private static final String CHAT_DISABLED_LOG_PREFIX = "<dark_gray>[<red>DÉSACTIVÉ</red>]</dark_gray><reset> ";
     private static final String CHAT_MUTED = "<red>Le chat est désormais muet.";
@@ -55,7 +55,7 @@ public class ChatManager {
         this.plugin = plugin;
         this.server = plugin.getServer();
         this.playerManager = plugin.getPlayerManager();
-        this.pingFormat = plugin.getConfig().getString("ping-format", DEFAULT_PING_FORMAT);
+        this.pingPrefix = plugin.getConfig().getString("ping-prefix", DEFAULT_PING_PREFIX);
     }
 
     public void sendGlobalMessage(UUID senderUUID, String message) {
@@ -91,7 +91,7 @@ public class ChatManager {
         String finalMessage = message;
         Component finalItemComponent = itemComponent;
         replacePlaceHolders(plugin.getConfig().getString("chat-format").trim(), sender).thenAccept(chatFormat -> {
-            Component prefixComponent = MiniMessage.miniMessage().deserialize(chatFormat);
+            Component prefixComponent = MessageParser.parse(chatFormat);
 
             for (MSPlayerProfile receiverProfile : playerManager.getProfiles()) {
                 Player receiverPlayer = server.getPlayer(receiverProfile.getUniqueId()).orElse(null);
@@ -105,7 +105,8 @@ public class ChatManager {
                 }
 
                 if (pmessage.toLowerCase().contains(receiverUsername.toLowerCase()) && receiverProfile.getOption(Option.MENTION)) {
-                    String legacyFormattedPing = componentToLegacy(mm(pingFormat, receiverUsername));
+                    String legacyFormattedPing = componentToLegacy(
+                            MessageParser.parse(pingPrefix).append(Component.text(receiverUsername)));
                     receiverPlayer.playSound(Sound.sound(Key.key("block.note_block.guitar"), Sound.Source.MASTER, 1f, 0.5f));
                     pmessage = pmessage.replace(receiverUsername, legacyFormattedPing + "§f");
                 }
@@ -154,11 +155,9 @@ public class ChatManager {
                 "<color:#f07e71><bold>Annonce de <color:#fbb29e><bold><player></bold></color> <color:#f07e71>➤ <color:#7bc8fe><bold><message>");
         String premiumFormat = plugin.getConfig().getString("announce-premium-format", defaultFormat);
 
-        MiniMessage mini = MiniMessage.miniMessage();
-
         for (Player target : plugin.getServer().getAllPlayers()) {
             String format = target.hasPermission("premium") ? premiumFormat : defaultFormat;
-            Component component = mini.deserialize(format,
+            Component component = MessageParser.parse(format,
                     Placeholder.unparsed("player", player.getUsername()),
                     Placeholder.parsed("message", annonce)
             );
@@ -170,7 +169,7 @@ public class ChatManager {
     private void sendStaffMessage(Player sender, String message, @Nullable Component itemComponent) {
         String prefix = plugin.getConfig().getString("staff-chat-format");
         replacePlaceHolders(prefix, sender).thenAccept(chatFormat -> {
-            String chatPrefix = componentToLegacy(MiniMessage.miniMessage().deserialize(chatFormat));
+            String chatPrefix = componentToLegacy(MessageParser.parse(chatFormat));
             String messageComponent = componentToLegacy(parseMineDownInlineFormatting(message));
             Component base = componentFromLegacy(chatPrefix + messageComponent);
             Component fullMessage = ChatItemRenderer.inject(base, itemComponent);
@@ -225,7 +224,7 @@ public class ChatManager {
 
         sender.sendMessage(senderComponent);
         target.sendMessage(targetComponent);
-        logMessage(MiniMessage.miniMessage().deserialize(
+        logMessage(MessageParser.parse(
                 "<red><sender></red> <gray>➔ <dark_gray><target></dark_gray> <gold>➤ <gray><message>",
                 Placeholder.unparsed("sender", senderName),
                 Placeholder.unparsed("target", targetName),
@@ -265,7 +264,7 @@ public class ChatManager {
         HoverEvent<?> hover = display.hoverEvent();
         Component name = extractItemName(display);
         String format = plugin.getConfig().getString("item-format", "[%item%]");
-        Component formatted = MiniMessage.miniMessage().deserialize(
+        Component formatted = MessageParser.parse(
                 format.replace("%item%", "<item>"),
                 Placeholder.component("item", name)
         );
@@ -288,15 +287,15 @@ public class ChatManager {
     }
 
     private Component mm(String message) {
-        return MiniMessage.miniMessage().deserialize(message);
+        return MessageParser.parse(message);
     }
 
     private Component mm(String message, String playerName) {
-        return MiniMessage.miniMessage().deserialize(message, Placeholder.unparsed("player", playerName));
+        return MessageParser.parse(message, Placeholder.unparsed("player", playerName));
     }
 
     private Component mmMessage(String format, String playerName, String message) {
-        return MiniMessage.miniMessage().deserialize(format,
+        return MessageParser.parse(format,
                 Placeholder.unparsed("player", playerName),
                 Placeholder.unparsed("message", message));
     }

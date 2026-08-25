@@ -2,7 +2,7 @@
  * CoreVelocity
  */
 plugins {
-    id("io.github.goooler.shadow")
+    id("com.gradleup.shadow")
     id("maven-publish")
 }
 
@@ -17,8 +17,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
-    annotationProcessor("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
+    compileOnly("com.velocitypowered:velocity-api:4.1.0-SNAPSHOT")
+    annotationProcessor("com.velocitypowered:velocity-api:4.1.0-SNAPSHOT")
 
     implementation(project(":core-common"))
     implementation("org.ocpsoft.prettytime:prettytime:5.0.9.Final")

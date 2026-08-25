@@ -1,9 +1,9 @@
 package fr.iban.velocitycore.command;
 
 import com.velocitypowered.api.proxy.Player;
+import fr.iban.common.chat.MessageParser;
 import fr.iban.velocitycore.CoreVelocityPlugin;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.velocity.actor.VelocityCommandActor;
 
@@ -48,7 +48,7 @@ public class CoreCommands {
             return;
         }
 
-        Component component = MiniMessage.miniMessage().deserialize(message);
+        Component component = MessageParser.parse(message);
 
         if (actor instanceof Player player) {
             player.sendMessage(component);
