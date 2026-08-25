@@ -2,7 +2,7 @@
  * CoreCommon
  */
 plugins {
-    id("io.github.goooler.shadow")
+    id("com.gradleup.shadow")
 }
 
 dependencies {
@@ -17,6 +17,9 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("net.kyori:adventure-api:4.17.0")
     testImplementation("net.kyori:adventure-text-serializer-gson:4.17.0")
+    testImplementation("net.kyori:adventure-text-serializer-legacy:4.17.0")
+    testImplementation("net.kyori:adventure-text-serializer-plain:4.17.0")
+    testImplementation("net.kyori:adventure-text-minimessage:4.17.0")
 }
 
 tasks.test {
