@@ -44,6 +44,15 @@ public class PluginMessageHelper {
 	    player.sendPluginMessage(CoreBukkitPlugin.getInstance(), "proxy:chat", out.toByteArray());
 	}
 	
+	public static void sendGlobalItemMessage(Player player, String message, String itemJson) {
+	    ByteArrayDataOutput out = ByteStreams.newDataOutput();
+	    out.writeUTF("GlobalItem");
+	    out.writeUTF(player.getUniqueId().toString());
+	    out.writeUTF(message);
+	    out.writeUTF(itemJson);
+	    player.sendPluginMessage(CoreBukkitPlugin.getInstance(), "proxy:chat", out.toByteArray());
+	}
+
 	public static void sendServer(Player player) {
 	    ByteArrayDataOutput out = ByteStreams.newDataOutput();
 	    out.writeUTF("Server");
@@ -56,6 +65,15 @@ public class PluginMessageHelper {
 	    out.writeUTF("Annonce");
 	    out.writeUTF(player.getUniqueId().toString());
 	    out.writeUTF(annonce);
+	    player.sendPluginMessage(CoreBukkitPlugin.getInstance(), "proxy:annonce", out.toByteArray());
+	}
+
+	public static void sendAnnonceItem(Player player, String annonce, String itemJson) {
+	    ByteArrayDataOutput out = ByteStreams.newDataOutput();
+	    out.writeUTF("AnnonceItem");
+	    out.writeUTF(player.getUniqueId().toString());
+	    out.writeUTF(annonce);
+	    out.writeUTF(itemJson);
 	    player.sendPluginMessage(CoreBukkitPlugin.getInstance(), "proxy:annonce", out.toByteArray());
 	}
 	

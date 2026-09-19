@@ -42,6 +42,11 @@ public class PluginMessageListener {
             UUID uuid = UUID.fromString(in.readUTF());
             String message = in.readUTF();
             plugin.getChatManager().sendGlobalMessage(uuid, message);
+        } else if ("GlobalItem".equals(sub)) {
+            UUID uuid = UUID.fromString(in.readUTF());
+            String message = in.readUTF();
+            String itemJson = in.readUTF();
+            plugin.getChatManager().sendGlobalMessage(uuid, message, itemJson);
         }
     }
 
@@ -52,6 +57,11 @@ public class PluginMessageListener {
             UUID uuid = UUID.fromString(in.readUTF());
             String message = in.readUTF();
             plugin.getChatManager().sendAnnonce(uuid, message);
+        } else if ("AnnonceItem".equals(sub)) {
+            UUID uuid = UUID.fromString(in.readUTF());
+            String message = in.readUTF();
+            String itemJson = in.readUTF();
+            plugin.getChatManager().sendAnnonce(uuid, message, itemJson);
         }
     }
 }

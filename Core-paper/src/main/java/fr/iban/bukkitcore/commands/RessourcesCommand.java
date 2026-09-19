@@ -36,9 +36,9 @@ public class RessourcesCommand {
         } else {
             RessourcesWorldManager ressourcesWorldManager = plugin.getRessourcesWorldManager();
             switch (world) {
-                case "world" -> ressourcesWorldManager.randomTpResourceWorld(sender, "resource_world");
-                case "nether" -> ressourcesWorldManager.randomTpResourceWorld(sender, "resource_nether");
-                case "end" -> ressourcesWorldManager.randomTpResourceWorld(sender, "resource_end");
+                case "world" -> ressourcesWorldManager.randomTpResourceWorld(sender, ressourcesWorldManager.getOverworldName());
+                case "nether" -> ressourcesWorldManager.randomTpResourceWorld(sender, ressourcesWorldManager.getNetherName());
+                case "end" -> ressourcesWorldManager.randomTpResourceWorld(sender, ressourcesWorldManager.getEndName());
                 case "lastpos" -> teleportManager.teleport(sender, ressourcesWorldManager.getResourceServerName());
                 default -> sender.sendMessage("§cCe type de monde n'existe pas.");
             }

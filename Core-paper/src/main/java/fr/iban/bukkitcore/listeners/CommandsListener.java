@@ -1,7 +1,5 @@
 package fr.iban.bukkitcore.listeners;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import fr.iban.bukkitcore.CoreBukkitPlugin;
 import fr.iban.common.manager.GlobalLoggerManager;
 import org.bukkit.Bukkit;
@@ -15,12 +13,10 @@ import org.bukkit.event.player.PlayerCommandSendEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class CommandsListener implements Listener {
 
     private final CoreBukkitPlugin plugin;
-    private final Multimap<UUID, String> approvedCommands = ArrayListMultimap.create();
 
     public CommandsListener(CoreBukkitPlugin plugin) {
         this.plugin = plugin;
@@ -44,49 +40,6 @@ public class CommandsListener implements Listener {
         e.getCommands().addAll(allowed);
     }
 
-    @EventHandler
-    public void onCommand(PlayerCommandPreprocessEvent e) {
-        Player player = e.getPlayer();
-        String ip = player.getAddress() != null ? player.getAddress().getHostString() : "unknown";
-
-        if (!plugin.getConfig().getBoolean("command-approval", true)) {
-            return;
-        }
-
-        if (plugin.getTrustedUserManager().isTrusted(player)) {
-            return;
-        }
-
-        String command = e.getMessage().split(" ")[0].replace("/", "");
-
-        if (plugin.getTrustedCommandManager().getTrustedBukkitCommands().contains(command.toLowerCase())) {
-            return;
-        }
-
-        if (approvedCommands.get(player.getUniqueId()).contains(command.toLowerCase())) {
-            approvedCommands.remove(player.getUniqueId(), command);
-            return;
-        }
-        
-        Command bukkitCommand = Bukkit.getCommandMap().getCommand(command);
-        if (bukkitCommand != null) {
-            if (!bukkitCommand.testPermission(player)) return;
-            e.setCancelled(true);
-            player.sendMessage("§cApprobation requise.");
-            plugin.getApprovalManager().sendRequest(player,
-                    player.getName() + " (" + ip + ") essaye d'exécuter la commande " + e.getMessage() + ".",
-                    result -> {
-                        if (result) {
-                            plugin.getScheduler().runAtEntity(player, task -> {
-                                approvedCommands.put(player.getUniqueId(), command);
-                                player.chat(e.getMessage());
-                            });
-                        }
-                    }
-            );
-        }
-    }
-
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCommandLogger(PlayerCommandPreprocessEvent e) {
         Player player = e.getPlayer();
@@ -94,5 +47,32 @@ public class CommandsListener implements Listener {
         if (e.isCancelled()) return;
 
         GlobalLoggerManager.saveLog(plugin.getServerName(), player.getName() + " issued server command: " + e.getMessage() + ".");
+    }
+
+    @EventHandler
+    public void onCommand(PlayerCommandPreprocessEvent e) {
+        Player player = e.getPlayer();
+
+        if (!plugin.getConfig().getBoolean("command-whitelist", false)) {
+            return;
+        }
+        if (player.hasPermission("servercore.admin")) {
+            return;
+        }
+
+        String command = e.getMessage().split(" ")[0].replace("/", "").toLowerCase();
+
+        if (plugin.getTrustedCommandManager().getTrustedBukkitCommands().contains(command)) {
+            return;
+        }
+
+        Command bukkitCommand = Bukkit.getCommandMap().getCommand(command);
+        if (bukkitCommand == null || !bukkitCommand.testPermission(player)) {
+            return;
+        }
+
+        e.setCancelled(true);
+        player.sendMessage("§cApprobation requise.");
+        plugin.getCommandWhitelistManager().request(command, "bukkit", player.getName());
     }
 }

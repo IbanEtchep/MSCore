@@ -1,4 +1,6 @@
-file-version: 2
+file-version: 4
+
+language: fr
 
 redis:
     host: 172.18.0.1
@@ -16,23 +18,60 @@ database:
 #sql or redis
 messenger: redis
 
+# MOTD - MiniMessage ou codes legacy (&a, &#rrggbb). <newline> pour la 2e ligne.
 motd:
-    - "motd"
-chat-format: |
-    [&7[%levels_level%&7] &#feca57&%premium%&r%vault_suffix%%vault_prefix% %player% %vault_suffix% ➤ &r](Informations:
-    
-    &#55efc4&Argent: &f%bungeeeconomy_balance%
-    &#55efc4&Guilde: &f%guilds_name%
-    
-    &7Clic pour envoyer un message suggest_command=/msg %player% )
-staff-chat-format: '&8[&3&lStaff&8] &#feca57&%premium%&r%vault_suffix%%vault_prefix% %player% %vault_suffix% ➤ &r'
+    - "<dark_green><bold>Primal</bold></dark_green><green><bold>Craft</bold></green> <dark_gray><bold>></bold></dark_gray> <white><bold>Serveur survie 1.21.11</bold></white><newline><gray>Claims <dark_gray>● <gray>Shops <dark_gray>● <gray>Guildes <dark_gray>● <gray>Métiers <dark_gray>● <gray>Warps joueurs"
+# Exemples de MOTD aléatoires (SpΛrtaCube) :
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Ici, on arrive à monter en bas et à descendre en haut.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Danette se lève pour nous.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Nous sommes contre les radars automatiques : ça éblouit lorsqu''on fait du vélo...'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Quand on lance une pièce elle fait toujours pile ; personne ne nous fait face.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Ici on sait étrangler quelqu''un avec un téléphone sans fil.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Ici on ne dort pas. On attend.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Ici on ne coupe ni de pommes ni de poires... avec nous, pas de quartier.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Ici on sait diviser par zéro.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Ici on sait compter jusqu''à l''infini.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>La seule chose qui nous arrive à la cheville ce sont nos chaussettes.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Ici, on sait faire pleurer les oignons quand on les coupe.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Un jour au restaurant, nos joueurs ont commandé un steak, et le steak a obéi.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Si un spartiate te rate, c''est qu''il visait quelqu''un d''autre.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Quand la nuit tombe, on la ramasse.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Le mot "impossible" désigne une action que seul ici on peut réussir.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Ici on sait faire des loopings avec une montgolfière.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>Ici, on sait faire des ricochets avec des parpaings.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>La foudre est tombée à 1 mètre de nous... Elle a eu chaud.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>On a trouvé le chemin qui ne mène pas à Rome.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>On a planté la Lune sous le drapeau américain.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>On ne croit pas en Dieu, Dieu croit en nous.'
+#   - '<color:#fea647>✷ <color:#cb3839><bold>SpΛrta</bold><color:#fea647><bold>Cube</bold> <color:#cb3839>✷ <yellow>On est timbré et fier de lettre.'
+
+chat-format: '<hover:show_text:''<gray>Informations:<newline><color:#55efc4>Argent: <white>%vault_eco_balance_2dp%$<newline><color:#55efc4>Guilde: <white>%guilds_name%<newline><newline><gray>Clic pour envoyer un message''><click:suggest_command:''/msg %player% ''><gray>[%levels_level%]</gray> <color:#feca57>%premium%</color>%vault_suffix%%vault_prefix% %player% %vault_suffix% ➤ <reset>'
+
+
+staff-chat-format: '<dark_gray>[<dark_aqua><b>Staff</b><dark_gray>] <b>%vault_suffix%%vault_prefix% %player% %vault_suffix% ➤ '
+
+# Prefixe ajoute devant le pseudo lorsqu'un joueur est mentionne dans le chat.
+# MiniMessage ou codes legacy (&a, &#rrggbb).
 ping-prefix: '&#fdcb6e&@'
 
+# Format de l'item partagé dans le chat via [i] / [item] - MiniMessage
+# Placeholder: %item% (le nom de l'item). Le survol natif (hover) est réappliqué sur l'ensemble.
+item-format: "[%item%]"
+
+# Format des annonces joueurs (/annonce) - MiniMessage
+# Placeholders: <player> (nom du joueur), <message> (contenu de l'annonce)
+announce-format: "<color:#f07e71><bold>Annonce de <color:#fbb29e><player></bold></color> <color:#f07e71>➤ <color:#7bc8fe><bold><message>"
+# Format pour les joueurs ayant la permission "premium"
+announce-premium-format: "<color:#FFD700>★ <color:#f07e71><bold>Annonce de <color:#fbb29e><player></bold></color> <color:#f07e71>➤ <color:#7bc8fe><bold><message>"
+
+# Messages des commandes /site, /vote, /discord, /grades, /wiki.
+# MiniMessage ou codes legacy (&a, &#rrggbb), les deux syntaxes cohabitent.
 messages:
     site: "url du site"
     vote: "url pour voter"
     discord: "url du discord"
     grades: "url des info sur les grades"
+    wiki: "url du wiki"
 
 announces:
     interval: 300

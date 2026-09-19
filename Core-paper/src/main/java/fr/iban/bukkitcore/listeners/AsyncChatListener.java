@@ -10,7 +10,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import fr.iban.bukkitcore.CoreBukkitPlugin;
+import fr.iban.bukkitcore.utils.ChatItemHelper;
 import fr.iban.bukkitcore.utils.PluginMessageHelper;
+import fr.iban.common.chat.ChatItemTokens;
 
 public class AsyncChatListener implements Listener {
 
@@ -36,7 +38,12 @@ public class AsyncChatListener implements Listener {
 		}
 
 		if(!e.isCancelled() && plugin.getConfig().getBoolean("global-chat", true)) {
-			PluginMessageHelper.sendGlobalMessage(player, message);
+			String itemJson = ChatItemHelper.captureHeldItemJson(player, message);
+			if (itemJson != null) {
+				PluginMessageHelper.sendGlobalItemMessage(player, ChatItemTokens.replaceWithSentinel(message), itemJson);
+			} else {
+				PluginMessageHelper.sendGlobalMessage(player, message);
+			}
 			e.setCancelled(true);
 		}
 	}

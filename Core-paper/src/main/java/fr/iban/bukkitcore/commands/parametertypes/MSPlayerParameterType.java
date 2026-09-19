@@ -11,6 +11,8 @@ import revxrsal.commands.parameter.ParameterType;
 import revxrsal.commands.parameter.PrioritySpec;
 import revxrsal.commands.stream.MutableStringStream;
 
+import java.util.stream.Collectors;
+
 public class MSPlayerParameterType implements ParameterType<BukkitCommandActor, MSPlayer> {
 
     private final PlayerManager playerManager;
@@ -20,7 +22,7 @@ public class MSPlayerParameterType implements ParameterType<BukkitCommandActor, 
     }
 
     @Override
-    public MSPlayer parse(@NotNull MutableStringStream input, @NotNull ExecutionContext<@NotNull BukkitCommandActor> executionContext) {
+    public MSPlayer parse(@NotNull MutableStringStream input, @NotNull ExecutionContext<BukkitCommandActor> executionContext) {
         String name = input.readString();
         MSPlayer player = playerManager.getOfflinePlayer(name);
 
@@ -33,7 +35,15 @@ public class MSPlayerParameterType implements ParameterType<BukkitCommandActor, 
 
     @Override
     public @NotNull SuggestionProvider<@NotNull BukkitCommandActor> defaultSuggestions() {
-        return (context) -> playerManager.getOnlinePlayerNames();
+        // Lamp 4.0.0-rc.16 Brigadier adapter doesn't filter by the typed prefix; filter here.
+        return (context) -> {
+            String source = context.input().source();
+            int lastSpace = source.lastIndexOf(' ');
+            String prefix = (lastSpace < 0 ? "" : source.substring(lastSpace + 1)).toLowerCase();
+            return playerManager.getOnlinePlayerNames().stream()
+                    .filter(name -> name.toLowerCase().startsWith(prefix))
+                    .collect(Collectors.toList());
+        };
     }
 
     @Override

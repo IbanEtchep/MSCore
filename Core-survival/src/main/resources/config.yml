@@ -1,3 +1,10 @@
+language: fr
+
+resource-worlds:
+  - resource_world
+  - resource_nether
+  - resource_end
+
 mending-trade-price: 64
 mending-trade-material: DIAMOND
 
@@ -21,6 +28,9 @@ cooldowns:
   feed:
     permissions:
       - permission:3000
+  annonce:
+    permissions:
+      - permission:3600
 
 loots:
   # disable enemy drops https://jd.papermc.io/paper/1.21.1/org/bukkit/entity/Enemy.html

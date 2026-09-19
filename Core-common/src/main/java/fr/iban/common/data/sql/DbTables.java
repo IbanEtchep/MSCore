@@ -53,12 +53,8 @@ public class DbTables {
     }
 
     private static void createTrustedPlayersTable() {
-        createTable("CREATE TABLE IF NOT EXISTS sc_trusted_players (" +
-                "  uuid varchar(36)," +
-                "  ip VARCHAR(45)," +
-                "  date_time DATETIME DEFAULT NOW()," +
-                "  PRIMARY KEY (uuid, ip)" +
-                ");");
+        // sc_trusted_players : supprimée (blocage par-commande retiré, données sans valeur)
+        createTable("DROP TABLE IF EXISTS sc_trusted_players;");
     }
 
     private static void createTrustedCommandsTable() {

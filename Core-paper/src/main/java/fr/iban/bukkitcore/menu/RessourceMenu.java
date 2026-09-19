@@ -23,11 +23,11 @@ public class RessourceMenu extends Menu {
 		if(e.getClickedInventory() == e.getView().getTopInventory() && e.getCurrentItem() != null) {
 			RessourcesWorldManager ressourcesWorldManager = CoreBukkitPlugin.getInstance().getRessourcesWorldManager();
 			if(e.getCurrentItem().getType() == Material.GRASS_BLOCK) {
-				ressourcesWorldManager.randomTpResourceWorld(player, "resource_world");
+				ressourcesWorldManager.randomTpResourceWorld(player, ressourcesWorldManager.getOverworldName());
 			}else if (e.getCurrentItem().getType() == Material.NETHERRACK) {
-				ressourcesWorldManager.randomTpResourceWorld(player, "resource_nether");
+				ressourcesWorldManager.randomTpResourceWorld(player, ressourcesWorldManager.getNetherName());
 			}else if (e.getCurrentItem().getType() == Material.END_STONE) {
-				ressourcesWorldManager.randomTpResourceWorld(player, "resource_end");
+				ressourcesWorldManager.randomTpResourceWorld(player, ressourcesWorldManager.getEndName());
 			}
 		}
 	}

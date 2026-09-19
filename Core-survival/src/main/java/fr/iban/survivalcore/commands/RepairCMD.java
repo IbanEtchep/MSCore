@@ -29,6 +29,7 @@ public class RepairCMD {
     }
 
     @CommandPlaceholder
+    @CommandPermission("servercore.repair")
     public void repair(Player player) {
         repairHand(player);
     }

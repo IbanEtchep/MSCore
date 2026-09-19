@@ -2,13 +2,14 @@ package fr.iban.velocitycore.manager;
 
 import dev.dejvokep.boostedyaml.block.implementation.Section;
 import com.velocitypowered.api.proxy.Player;
+import fr.iban.common.chat.MessageParser;
+import fr.iban.common.model.MSPlayerProfile;
 import fr.iban.common.utils.ArrayUtils;
 import fr.iban.velocitycore.CoreVelocityPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +19,6 @@ public class AutomatedAnnounceManager {
 
 	private final CoreVelocityPlugin plugin;
 	private final Map<Integer, Component> announces = new HashMap<>();
-	private final MiniMessage miniMessage = MiniMessage.miniMessage();
 
 	public AutomatedAnnounceManager(CoreVelocityPlugin plugin) {
 		this.plugin = plugin;
@@ -37,7 +37,7 @@ public class AutomatedAnnounceManager {
 				.hoverEvent(HoverEvent.showText(Component.text("Clic pour ne plus afficher cette annonce", NamedTextColor.RED)))
 				.clickEvent(ClickEvent.runCommand("/announce disable " + id));
 
-		return miniMessage.deserialize(msg).append(croix);
+			return MessageParser.parse(msg).append(croix);
 	}
 
 	private void loadAnnounces() {
@@ -72,7 +72,9 @@ public class AutomatedAnnounceManager {
 			Component announce = announces.get(id);
 
 			for (Player player : plugin.getServer().getAllPlayers()) {
-				if (!plugin.getPlayerManager().getProfile(player.getUniqueId()).getBlackListedAnnounces().contains(id)) {
+				MSPlayerProfile profile = plugin.getPlayerManager().getProfile(player.getUniqueId());
+
+				if (profile != null && !profile.getBlackListedAnnounces().contains(id)) {
 					player.sendMessage(announce);
 				}
 			}

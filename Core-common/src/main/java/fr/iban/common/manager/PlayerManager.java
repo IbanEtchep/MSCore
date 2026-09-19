@@ -34,7 +34,7 @@ public class PlayerManager {
 
     public void load() {
         CompletableFuture.runAsync(() -> {
-                    dao.getOfflinePlayers().forEach(msPlayer -> {
+                    dao.getAllPlayers().forEach(msPlayer -> {
                         playersByUUID.put(msPlayer.getUniqueId(), msPlayer);
                         playersByName.put(msPlayer.getName(), msPlayer);
                     });
@@ -72,7 +72,9 @@ public class PlayerManager {
 
     public Set<String> getOnlinePlayerNames() {
         return onlinePlayers.stream()
-                .map(uuid -> playersByUUID.get(uuid).getName())
+                .map(playersByUUID::get)
+                .filter(Objects::nonNull)
+                .map(MSPlayer::getName)
                 .collect(Collectors.toSet());
     }
 
@@ -113,6 +115,7 @@ public class PlayerManager {
 
         dao.addOnlinePlayer(uuid);
         dao.saveLoginToDb(uuid, System.currentTimeMillis(), profile.getIp());
+        onlinePlayers.add(uuid);
         messagingManager.sendMessage(CoreChannel.PLAYER_JOIN_CHANNEL, uuid.toString());
     }
 

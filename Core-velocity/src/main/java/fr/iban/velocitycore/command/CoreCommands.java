@@ -1,8 +1,9 @@
 package fr.iban.velocitycore.command;
 
 import com.velocitypowered.api.proxy.Player;
-import de.themoep.minedown.adventure.MineDown;
+import fr.iban.common.chat.MessageParser;
 import fr.iban.velocitycore.CoreVelocityPlugin;
+import net.kyori.adventure.text.Component;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.velocity.actor.VelocityCommandActor;
 
@@ -40,10 +41,19 @@ public class CoreCommands {
     }
 
     private void sendMessage(VelocityCommandActor actor, String configPath) {
+        String message = plugin.getConfig().getString(configPath);
+
+        if (message == null || message.isBlank()) {
+            plugin.getLogger().warn("Clé de configuration manquante ou vide : {}", configPath);
+            return;
+        }
+
+        Component component = MessageParser.parse(message);
+
         if (actor instanceof Player player) {
-            player.sendMessage(MineDown.parse(plugin.getConfig().getString(configPath)));
+            player.sendMessage(component);
         } else {
-            actor.reply(MineDown.parse(plugin.getConfig().getString(configPath)));
+            actor.reply(component);
         }
     }
 }

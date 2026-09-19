@@ -2,7 +2,7 @@
  * CoreVelocity
  */
 plugins {
-    id("io.github.goooler.shadow")
+    id("com.gradleup.shadow")
     id("maven-publish")
 }
 
@@ -17,8 +17,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
-    annotationProcessor("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
+    compileOnly("com.velocitypowered:velocity-api:4.1.0-SNAPSHOT")
+    annotationProcessor("com.velocitypowered:velocity-api:4.1.0-SNAPSHOT")
 
     implementation(project(":core-common"))
     implementation("org.ocpsoft.prettytime:prettytime:5.0.9.Final")
@@ -28,9 +28,9 @@ dependencies {
     implementation("mysql:mysql-connector-java:8.0.33")
     implementation("org.apache.commons:commons-pool2:2.12.0")
 
-    implementation("io.github.revxrsal:lamp.common:4.0.0-rc.13")
-    implementation("io.github.revxrsal:lamp.velocity:4.0.0-rc.13")
-    implementation("io.github.revxrsal:lamp.brigadier:4.0.0-rc.13")
+    implementation("io.github.revxrsal:lamp.common:4.0.0-rc.18")
+    implementation("io.github.revxrsal:lamp.velocity:4.0.0-rc.18")
+    implementation("io.github.revxrsal:lamp.brigadier:4.0.0-rc.18")
 
     compileOnly("net.luckperms:api:5.4")
     compileOnly("com.github.NEZNAMY:TAB-API:5.3.2")

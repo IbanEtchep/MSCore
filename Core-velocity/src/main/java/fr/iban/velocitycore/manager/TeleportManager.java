@@ -7,10 +7,15 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
-import de.themoep.minedown.adventure.MineDown;
+import fr.iban.common.chat.MessageParser;
 import fr.iban.common.messaging.CoreChannel;
 import fr.iban.common.teleport.*;
 import fr.iban.velocitycore.CoreVelocityPlugin;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +25,12 @@ public class TeleportManager {
     private final CoreVelocityPlugin plugin;
     private final List<UUID> pendingTeleports = new ArrayList<>();
     private final ListMultimap<UUID, TpRequest> tpRequests = ArrayListMultimap.create();
+
+    private static final String SEPARATOR = "<gray><st>---------------------------------------------</st></gray>";
+    private static final String TP_REQUEST_SENT = "<green>Requête de téléportation envoyée, en attente d'une réponse...";
+    private static final String TP_REQUEST_EXPIRED = "<red>Votre requête de téléportation envoyée à <player> a expiré.";
+    private static final String TP_ALREADY_WAITING = "<red>Une seule téléportation à la fois !";
+    private static final String TP_COUNTDOWN = "<green>Téléportation dans <delay> secondes. <red>Ne bougez pas !";
 
 
     public TeleportManager(CoreVelocityPlugin plugin) {
@@ -54,9 +65,9 @@ public class TeleportManager {
             return;
         }
 
-        player.sendMessage(MineDown.parse("&aTéléportation dans " + delay + " secondes. &cNe bougez pas !"));
+        player.sendMessage(countdown(delay));
         if (isTeleportWaiting(player)) {
-            player.sendMessage(MineDown.parse("&cUne seule téléportation à la fois !"));
+            player.sendMessage(mm(TP_ALREADY_WAITING));
             return;
         }
 
@@ -91,9 +102,9 @@ public class TeleportManager {
 
 
     public void delayedTeleport(Player player, Player target, int delay) {
-        player.sendMessage(MineDown.parse("&aTéléportation dans %delay% secondes. &cNe bougez pas !", "delay", String.valueOf(delay)));
+        player.sendMessage(countdown(delay));
         if (isTeleportWaiting(player)) {
-            player.sendMessage(MineDown.parse("&cUne seule téléportation à la fois !"));
+            player.sendMessage(mm(TP_ALREADY_WAITING));
             return;
         }
 
@@ -108,18 +119,8 @@ public class TeleportManager {
     }
 
     public void sendTeleportRequest(Player from, Player to) {
-        from.sendMessage(MineDown.parse("&aRequête de téléportation envoyée, en attente d'une réponse..."));
-        String minedownMessage = """
-                &7&m---------------------------------------------
-                &6%fromName%&f souhaite se téléporter à vous.
-                &fVous pouvez [&aACCEPTER](&aCliquez pour accepter la demande run_command=/tpyes %fromName%) ou [&cREFUSER](&cCliquez pour refuser la demande run_command=/tpno %fromName%).
-                &7&m---------------------------------------------
-                """;
-
-        to.sendMessage(MineDown.parse(
-                minedownMessage,
-                "fromName", from.getUsername()
-        ));
+        from.sendMessage(mm(TP_REQUEST_SENT));
+        to.sendMessage(buildTpRequest("<gold><player></gold><white> souhaite se téléporter à vous.", from.getUsername()));
 
         //Retirer la requête déjà existante si il y en a une.
         TpRequest req = getTpRequestFrom(from, to);
@@ -133,25 +134,14 @@ public class TeleportManager {
             TpRequest req2 = getTpRequestFrom(from, to);
             if (req2 != null) {
                 removeTpRequest(to.getUniqueId(), req2);
-                from.sendMessage(MineDown.parse("&cVotre requête de téléportation envoyée à %player% a expiré.", "player", to.getUsername()));
+                from.sendMessage(mm(TP_REQUEST_EXPIRED, to.getUsername()));
             }
         }).delay(2, TimeUnit.MINUTES).schedule();
     }
 
     public void sendTeleportHereRequest(Player from, Player to) {
-        from.sendMessage(MineDown.parse("&aRequête de téléportation envoyée, en attente d'une réponse..."));
-
-        String minedownMessage = """
-                &7&m---------------------------------------------
-                &6%fromName%&f souhaite que vous vous téléportiez à lui.
-                &fVous pouvez [&aACCEPTER](&aCliquez pour accepter la demande run_command=/tpyes %fromName%) ou [&cREFUSER](&cCliquez pour refuser la demande run_command=/tpno %fromName%).
-                &7&m---------------------------------------------
-                """;
-
-        to.sendMessage(MineDown.parse(
-                minedownMessage,
-                "fromName", from.getUsername()
-        ));
+        from.sendMessage(mm(TP_REQUEST_SENT));
+        to.sendMessage(buildTpRequest("<gold><player></gold><white> souhaite que vous vous téléportiez à lui.", from.getUsername()));
 
         //Retirer la requête déjà existante si il y en a une.
         TpRequest req = getTpRequestFrom(to, from);
@@ -165,9 +155,50 @@ public class TeleportManager {
             TpRequest req2 = getTpRequestFrom(to, from);
             if (req2 != null) {
                 removeTpRequest(to.getUniqueId(), req2);
-                from.sendMessage(MineDown.parse("&cVotre requête de téléportation envoyée à %player% a expiré.", "player", to.getUsername()));
+                from.sendMessage(mm(TP_REQUEST_EXPIRED, to.getUsername()));
             }
         }).delay(2, TimeUnit.MINUTES).schedule();
+    }
+
+    private Component mm(String message) {
+        return MessageParser.parse(message);
+    }
+
+    private Component mm(String message, String playerName) {
+        return MessageParser.parse(message, Placeholder.unparsed("player", playerName));
+    }
+
+    private Component countdown(int delay) {
+        return MessageParser.parse(TP_COUNTDOWN, Placeholder.unparsed("delay", String.valueOf(delay)));
+    }
+
+    private Component buildTpRequest(String line, String fromName) {
+        // MessageParser.lines part d'une racine neutre : sans cela le <strikethrough> du
+        // separateur serait herite par les lignes suivantes et barrerait tout le message.
+        return MessageParser.lines(
+                mm(SEPARATOR),
+                mm(line, fromName),
+                buildRequestActions(fromName),
+                mm(SEPARATOR));
+    }
+
+    /**
+     * Les boutons sont construits en Java plutot qu'en MiniMessage : un placeholder n'est pas
+     * resolu a l'interieur d'un argument de tag (&lt;click:run_command:'...'&gt;), le pseudo doit
+     * donc etre injecte dans la commande cote code.
+     */
+    private Component buildRequestActions(String fromName) {
+        return mm("<white>Vous pouvez ")
+                .append(action("[ACCEPTER]", NamedTextColor.GREEN, "/tpyes " + fromName, "Cliquez pour accepter la demande"))
+                .append(mm("<white> ou "))
+                .append(action("[REFUSER]", NamedTextColor.RED, "/tpno " + fromName, "Cliquez pour refuser la demande"))
+                .append(mm("<white>."));
+    }
+
+    private Component action(String label, NamedTextColor color, String command, String hover) {
+        return Component.text(label, color)
+                .clickEvent(ClickEvent.runCommand(command))
+                .hoverEvent(HoverEvent.showText(Component.text(hover, color)));
     }
 
     public List<UUID> getPendingTeleports() {
