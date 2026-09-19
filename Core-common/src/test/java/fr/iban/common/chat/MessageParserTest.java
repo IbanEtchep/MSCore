@@ -152,4 +152,23 @@ class MessageParserTest {
         assertEquals("<red>&cfaux", plain(component));
         assertFalse(component.children().stream().anyMatch(c -> c.hasDecoration(TextDecoration.BOLD)));
     }
+
+    @Test
+    void unSeparateurBarreNeBarrePasLesLignesSuivantes() {
+        Component separator = MessageParser.parse("<gray><st>---------------------------------</st></gray>");
+        Component line = MessageParser.parse("<white>Vous pouvez accepter.");
+
+        // Temoin : le style d'un composant est herite par ses enfants, donc composer avec
+        // premier.append(suite) propage le <strikethrough> du separateur a tout le message.
+        assertEquals(TextDecoration.State.TRUE,
+                separator.append(line).style().decoration(TextDecoration.STRIKETHROUGH));
+
+        // lines() part d'une racine neutre : rien n'est herite par les lignes suivantes.
+        Component message = MessageParser.lines(separator, line);
+        assertTrue(message.style().isEmpty());
+        assertEquals(TextDecoration.State.TRUE,
+                message.children().get(0).style().decoration(TextDecoration.STRIKETHROUGH));
+        assertEquals(TextDecoration.State.NOT_SET,
+                message.children().get(2).style().decoration(TextDecoration.STRIKETHROUGH));
+    }
 }

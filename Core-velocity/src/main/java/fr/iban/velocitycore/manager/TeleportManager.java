@@ -173,13 +173,13 @@ public class TeleportManager {
     }
 
     private Component buildTpRequest(String line, String fromName) {
-        return mm(SEPARATOR)
-                .append(Component.newline())
-                .append(mm(line, fromName))
-                .append(Component.newline())
-                .append(buildRequestActions(fromName))
-                .append(Component.newline())
-                .append(mm(SEPARATOR));
+        // MessageParser.lines part d'une racine neutre : sans cela le <strikethrough> du
+        // separateur serait herite par les lignes suivantes et barrerait tout le message.
+        return MessageParser.lines(
+                mm(SEPARATOR),
+                mm(line, fromName),
+                buildRequestActions(fromName),
+                mm(SEPARATOR));
     }
 
     /**

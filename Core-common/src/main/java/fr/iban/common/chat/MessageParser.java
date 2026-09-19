@@ -49,6 +49,26 @@ public final class MessageParser {
     }
 
     /**
+     * Assemble des composants en un message de plusieurs lignes, separees par des retours a la
+     * ligne.
+     *
+     * <p>La racine du message est neutre. C'est necessaire car un composant herite du style de
+     * son parent : en composant avec {@code premier.append(suite)}, le style du premier morceau
+     * s'appliquerait a tout le reste (un separateur {@code <strikethrough>} barrerait les lignes
+     * suivantes). Passer par cette methode rend chaque ligne independante.
+     */
+    public static Component lines(Component... lines) {
+        Component message = Component.empty();
+        for (int i = 0; i < lines.length; i++) {
+            if (i > 0) {
+                message = message.append(Component.newline());
+            }
+            message = message.append(lines[i]);
+        }
+        return message;
+    }
+
+    /**
      * Traduit les codes legacy de {@code message} en balises MiniMessage. Les balises MiniMessage
      * deja presentes sont laissees telles quelles.
      */

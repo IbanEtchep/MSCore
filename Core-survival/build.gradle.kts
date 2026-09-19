@@ -3,7 +3,7 @@
  */
 
 plugins {
-    id("io.github.goooler.shadow")
+    id("com.gradleup.shadow")
     id("maven-publish")
 }
 
@@ -20,17 +20,17 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.2.build.+")
     compileOnly(project(":core-common"))
     compileOnly(project(":core-paper"))
     compileOnly("org.ocpsoft.prettytime:prettytime:5.0.9.Final")
     compileOnly("net.luckperms:api:5.4")
-    compileOnly("net.essentialsx:EssentialsX:2.20.0")
+    compileOnly("net.essentialsx:EssentialsX:2.21.2")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly(files("${projectDir}/lib/BetterRTP-3.6.13.jar"))
 
-    compileOnly("io.github.revxrsal:lamp.common:4.0.0-rc.13")
-    compileOnly("io.github.revxrsal:lamp.bukkit:4.0.0-rc.13")
+    compileOnly("io.github.revxrsal:lamp.common:4.0.0-rc.18")
+    compileOnly("io.github.revxrsal:lamp.bukkit:4.0.0-rc.18")
 
     implementation("com.tcoded:FoliaLib:0.5.1")
 }

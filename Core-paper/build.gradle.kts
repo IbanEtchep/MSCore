@@ -1,5 +1,5 @@
 plugins {
-    id("io.github.goooler.shadow")
+    id("com.gradleup.shadow")
     id("maven-publish")
 }
 
@@ -14,15 +14,15 @@ repositories {
 
 dependencies {
     implementation(project(":core-common"))
-    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.2.build.+")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly("com.arcaniax:HeadDatabase-API:1.3.2")
-    compileOnly("net.essentialsx:EssentialsX:2.20.0")
+    compileOnly("net.essentialsx:EssentialsX:2.21.2")
     compileOnly("com.github.plan-player-analytics:Plan:5.5.2150")
 
-    implementation("io.github.revxrsal:lamp.common:4.0.0-rc.16")
-    implementation("io.github.revxrsal:lamp.bukkit:4.0.0-rc.16")
-    implementation("io.github.revxrsal:lamp.brigadier:4.0.0-rc.16")
+    implementation("io.github.revxrsal:lamp.common:4.0.0-rc.18")
+    implementation("io.github.revxrsal:lamp.bukkit:4.0.0-rc.18")
+    implementation("io.github.revxrsal:lamp.brigadier:4.0.0-rc.18")
 
     implementation("com.tcoded:FoliaLib:0.5.1")
 }
