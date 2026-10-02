@@ -165,7 +165,7 @@ public class EntityDeathListener implements Listener {
         MSPlayerProfile profile = core.getPlayerManager().getProfile(player.getUniqueId());
         SLocation rtpLocation = profile.getLastRTPLocation();
 
-        if(rtpLocation != null && rtpLocation.getWorld().equals(location.getWorld().getName())) {
+        if(player.hasPermission("servercore.lastrtp") && rtpLocation != null && rtpLocation.getWorld().equals(location.getWorld().getName())) {
             String miniMessageText = "<aqua><bold>Vous pouvez vous téléporter à la position de votre dernière téléportation aléatoire en cliquant sur ce message ou en exécutant la commande /lastrtp."
                     + "<hover:show_text:'<bold>Clic ici !'>"
                     + "<click:run_command:/lastrtp>";
