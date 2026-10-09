@@ -11,7 +11,8 @@ plugins {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
     // Only loaded at runtime when the MSCore plugin ("Core") is enabled.
-    compileOnly(project(":core-paper"))
+    // core-paper only produces a shadow jar (it bundles core-common), so depend on that variant.
+    compileOnly(project(path = ":core-paper", configuration = "shadowRuntimeElements"))
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
